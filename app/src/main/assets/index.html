@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>رحلة الأذكياء</title>
+<style>
+:root{--bg1:#1b1f5e;--bg2:#3a1c71;--card:#ffffff;--ink:#1d1d3a;--gold:#ffc83d;--ok:#22c55e;--bad:#ef4444;--acc:#7c5cff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{margin:0;height:100%;font-family:"Noto Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;color:#fff;overflow:hidden}
+body{background:linear-gradient(160deg,var(--bg1),var(--bg2));}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen.on{display:flex}
+button{font-family:inherit;border:0;cursor:pointer}
+.bigbtn{background:linear-gradient(180deg,#ffd75e,#ffb31a);color:#4a2b00;font-size:22px;font-weight:800;padding:16px 30px;border-radius:22px;box-shadow:0 6px 0 #c77f00,0 10px 20px #0005;transition:transform .1s}
+.bigbtn:active{transform:translateY(4px);box-shadow:0 2px 0 #c77f00}
+.bigbtn.alt{background:linear-gradient(180deg,#8f7bff,#6246ea);color:#fff;box-shadow:0 6px 0 #3d26b5,0 10px 20px #0005}
+.bigbtn.green{background:linear-gradient(180deg,#4ade80,#16a34a);color:#fff;box-shadow:0 6px 0 #0f7a36,0 10px 20px #0005}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;gap:8px}
+.pill{background:#0004;border-radius:30px;padding:8px 14px;font-weight:800;font-size:16px;display:flex;align-items:center;gap:6px}
+.iconbtn{background:#ffffff22;color:#fff;width:44px;height:44px;border-radius:14px;font-size:22px}
+/* stars bg */
+.sky{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.sky i{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;opacity:.6;animation:tw 3s infinite}
+@keyframes tw{50%{opacity:.1}}
+/* home */
+#home{align-items:center;justify-content:center;text-align:center;gap:18px;padding:20px}
+.logo{font-size:84px;animation:bob 2.4s ease-in-out infinite;filter:drop-shadow(0 8px 12px #0006)}
+@keyframes bob{50%{transform:translateY(-12px) rotate(-4deg)}}
+h1.title{margin:0;font-size:44px;font-weight:900;background:linear-gradient(90deg,#ffe27a,#ffb3e6,#8be9ff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+.sub{opacity:.85;font-size:17px;margin-top:-8px}
+.homestats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.credit{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:14px;opacity:.8}
+/* map: طريق متعرّج */
+#map .topbar{position:absolute;top:0;left:0;right:0;z-index:5;background:linear-gradient(#0008,#0000)}
+#map .scroll{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;scroll-behavior:auto}
+.road{position:relative;width:100%}
+.zone{position:absolute;left:0;right:0}
+.zone .zname{position:absolute;bottom:14px;left:10px;background:#0006;padding:6px 12px;border-radius:14px;font-weight:800;font-size:15px;z-index:2}
+.zone .zname small{opacity:.8;font-weight:600;margin-right:6px}
+.deco{position:absolute;font-size:30px;opacity:.9;transform:translate(-50%,-50%);pointer-events:none;filter:drop-shadow(0 3px 3px #0004)}
+.deco.big{font-size:44px}
+.deco.sway{animation:sway 4s ease-in-out infinite}
+@keyframes sway{50%{transform:translate(-50%,-50%) rotate(6deg) translateY(-4px)}}
+svg.path{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.node{position:absolute;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:#fff;color:var(--ink);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 #0004,0 0 0 5px #ffffff55;z-index:3}
+.node .st{position:absolute;bottom:-17px;font-size:13px;color:#ffd23d;text-shadow:0 1px 2px #000;white-space:nowrap;letter-spacing:-1px}
+.node.locked{background:#3b3b5a;color:#9a9ab8;box-shadow:0 5px 0 #0005}
+.node.challenge{background:radial-gradient(#fff3b0,#ffb21f);width:66px;height:66px}
+.node.mission{background:radial-gradient(#d9fbe3,#4ade80)}
+.node.locked.challenge,.node.locked.mission{background:#4a4a66}
+.node .tag{position:absolute;top:-10px;left:-8px;font-size:18px}
+.node.current{animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 6px 0 #0004,0 0 0 12px #ffffff33}}
+.flag{position:absolute;transform:translate(-50%,-50%);text-align:center;font-weight:900;font-size:18px;z-index:3;text-shadow:0 2px 4px #000}
+.flag b{display:block;font-size:56px;animation:bob 2.4s ease-in-out infinite}
+#avatar{position:absolute;font-size:44px;transform:translate(-50%,-110%);z-index:4;transition:left .45s ease-in-out,top .45s ease-in-out;filter:drop-shadow(0 4px 4px #0006);pointer-events:none}
+#avatar span{display:inline-block;animation:bob 1.6s ease-in-out infinite}
+/* المشهد فوق السؤال */
+.stage{position:relative;height:clamp(170px,30vh,270px);border-radius:26px;overflow:hidden;box-shadow:0 10px 26px #0005;flex-shrink:0}
+.stage .badge{position:absolute;top:10px;right:10px;background:#000a;color:#fff;padding:5px 12px;border-radius:14px;font-weight:800;font-size:14px;z-index:2}
+.stage .badge.num{right:auto;left:10px}
+.stage svg{position:absolute;inset:0;width:100%;height:100%}
+.stage .pic{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:76px;display:flex;gap:6px;animation:float 2.6s ease-in-out infinite;filter:drop-shadow(0 8px 8px #0005);white-space:nowrap}
+.stage .pic.math{font-size:44px;font-weight:900;color:#fff;font-family:"Comic Sans MS","Segoe UI",sans-serif;direction:ltr;text-shadow:0 3px 0 #0003}
+@keyframes float{50%{transform:translate(-50%,-58%)}}
+.stage.happy .pic{animation:happy .6s}
+@keyframes happy{40%{transform:translate(-50%,-75%) scale(1.25) rotate(-8deg)}}
+.stage.sad .pic{animation:sad .5s}
+@keyframes sad{25%{transform:translate(-40%,-50%)}75%{transform:translate(-60%,-50%)}}
+.cloud{animation:drift 18s linear infinite}
+.cloud.c2{animation-duration:26s;animation-delay:-9s}
+@keyframes drift{from{transform:translateX(-140px)}to{transform:translateX(460px)}}
+.twk{animation:tw 2s infinite}
+.spin{transform-origin:center;transform-box:fill-box;animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wave{animation:wave 3s ease-in-out infinite}
+@keyframes wave{50%{transform:translateX(-20px)}}
+.sparks{position:absolute;inset:0;pointer-events:none}
+.sparks i{position:absolute;left:50%;top:50%;font-style:normal;font-size:24px;animation:burst .9s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--x),var(--y)) scale(.4);opacity:0}}
+/* quiz */
+#quiz{padding-bottom:12px}
+.progress{height:12px;background:#0004;border-radius:10px;margin:0 16px;overflow:hidden}
+.progress b{display:block;height:100%;width:0;background:linear-gradient(90deg,#4ade80,#a3e635);border-radius:10px;transition:width .4s}
+.qwrap{flex:1;display:flex;flex-direction:column;padding:12px 16px;gap:12px;overflow-y:auto}
+.cat{align-self:center;background:#ffffff26;padding:6px 16px;border-radius:20px;font-weight:700;font-size:15px}
+.qcard{background:var(--card);color:var(--ink);border-radius:22px;padding:14px 16px;font-size:21px;font-weight:800;text-align:center;line-height:1.55;box-shadow:0 8px 0 #0002,0 12px 24px #0004;min-height:76px;margin-top:-34px;position:relative;z-index:2;margin-inline:8px;display:flex;align-items:center;justify-content:center;animation:pop .35s}
+@keyframes pop{from{transform:scale(.85);opacity:0}}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{background:#fff;color:var(--ink);font-size:18px;font-weight:800;padding:12px 8px;border-radius:18px;box-shadow:0 6px 0 #c9c3ff;min-height:62px;line-height:1.4;transition:transform .1s,background .2s}
+.opt:active{transform:translateY(3px)}
+.opt.ok{background:var(--ok);color:#fff;box-shadow:0 6px 0 #15803d;animation:jump .4s}
+.opt.bad{background:var(--bad);color:#fff;box-shadow:0 6px 0 #991b1b;animation:shake .4s}
+.opt.gone{visibility:hidden}
+@keyframes jump{50%{transform:scale(1.08)}}
+@keyframes shake{25%{transform:translateX(8px)}75%{transform:translateX(-8px)}}
+.helpers{display:flex;gap:10px;justify-content:center}
+.helper{background:#ffffff22;color:#fff;font-weight:800;font-size:15px;padding:10px 14px;border-radius:16px}
+.helper:disabled{opacity:.35}
+.timer{width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--gold) var(--p,100%),#0004 0);display:flex;align-items:center;justify-content:center;font-weight:900}
+.timer span{background:var(--bg2);width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+/* result */
+#result{align-items:center;justify-content:center;text-align:center;gap:16px;padding:20px}
+.bigstars{font-size:64px;display:flex;gap:10px}
+.bigstars span{opacity:.2;transform:scale(.5);transition:all .4s cubic-bezier(.3,1.8,.5,1)}
+.bigstars span.on{opacity:1;transform:scale(1)}
+.rescard{background:#ffffff1c;border-radius:24px;padding:18px 26px;font-size:19px;line-height:2}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+/* modal */
+.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.on{display:flex}
+.box{background:#fff;color:var(--ink);border-radius:28px;padding:24px 20px;max-width:420px;width:100%;text-align:center;animation:pop .3s}
+.box h2{margin:0 0 10px}
+.box p{font-size:18px;line-height:1.7}
+.box .row{margin-top:14px}
+.setrow{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid #eee;font-size:18px;font-weight:700}
+.toggle{width:60px;height:34px;border-radius:20px;background:#ccc;position:relative}
+.toggle.on{background:var(--ok)}
+.toggle::after{content:"";position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.2s}
+.toggle.on::after{right:30px}
+.wa{display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;font-weight:800;padding:12px 18px;border-radius:16px;margin-top:6px}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#000c;padding:10px 18px;border-radius:14px;font-weight:700;z-index:70;display:none}
+
+/* ===== إضافات النسخة 2 ===== */
+#home{justify-content:flex-start;padding-top:max(26px,5vh);overflow-y:auto}
+.hAv{cursor:pointer;animation:bob 2.4s ease-in-out infinite;margin-top:10px;filter:drop-shadow(0 8px 12px #0006)}
+.hello{font-size:30px;font-weight:900;margin:0}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:420px}
+.menu .bigbtn{font-size:17px;padding:13px 8px;border-radius:18px}
+.menu .wide{grid-column:1/-1;font-size:24px;padding:18px}
+.bigbtn.daily{background:linear-gradient(180deg,#fb923c,#ea580c);color:#fff;box-shadow:0 6px 0 #9a3412,0 10px 20px #0005}
+.bigbtn.daily.done{background:linear-gradient(180deg,#86efac,#22c55e);box-shadow:0 6px 0 #15803d}
+.bigbtn small{font-size:14px}
+.credit{position:static;margin-top:auto;padding:14px 0 6px}
+.qcard{white-space:pre-line}
+.opts.two{grid-template-columns:1fr 1fr}.opts.two .opt{font-size:22px;min-height:70px}
+.opts.emo .opt{font-size:44px;min-height:84px}
+.stage .speak{position:absolute;bottom:40px;right:10px;width:42px;height:42px;border-radius:50%;background:#fff;font-size:20px;box-shadow:0 3px 8px #0005;z-index:3}
+.boss{position:absolute;left:12px;bottom:40px;text-align:center;z-index:2}
+.boss .bem{font-size:58px;line-height:1;animation:bossIdle 1.8s ease-in-out infinite;filter:drop-shadow(0 6px 6px #0007)}
+.boss .hp{font-size:13px;background:#0008;border-radius:10px;padding:2px 6px;margin-top:2px}
+@keyframes bossIdle{50%{transform:scale(1.08) rotate(4deg)}}
+.boss.hit .bem{animation:bossHit .5s}
+@keyframes bossHit{30%{transform:translateX(-14px) rotate(-15deg) scale(.85);filter:brightness(3)}}
+.boss.laugh .bem{animation:bossLaugh .6s}
+@keyframes bossLaugh{25%,75%{transform:translateY(-10px) scale(1.15)}50%{transform:translateY(0)}}
+#explain{display:none;background:#fff;color:var(--ink);border-radius:20px;padding:12px 14px;box-shadow:0 8px 20px #0004;animation:pop .3s}
+#explain.on{display:block}
+.exh{font-weight:900;font-size:18px}.exh.good{color:#16a34a}.exh.oops{color:#dc2626}
+.ext{font-size:16px;line-height:1.7;margin-top:4px}
+#explain .helper{background:#ede9fe;color:#5b21b6}
+/* رتّب الحروف */
+.letters{display:flex;flex-direction:column;gap:14px;align-items:center}
+.slots{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.slot{width:52px;height:58px;border-radius:14px;background:#ffffff22;border:3px dashed #ffffff88;color:#fff;font-size:30px;font-weight:900}
+.slot.ok{background:var(--ok);border-color:var(--ok)}.slot.bad{background:var(--bad);border-color:var(--bad)}
+.tiles{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.tile{width:56px;height:60px;border-radius:16px;background:#fff;color:var(--ink);font-size:30px;font-weight:900;box-shadow:0 5px 0 #c9c3ff;transition:transform .15s}
+.tile.used{opacity:.15;transform:scale(.8)}
+.wordok{font-size:34px;font-weight:900;color:#bbf7d0}
+.shake{animation:shake .4s}
+/* اسحب وطابق */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mcol{display:flex;flex-direction:column;gap:10px}
+.chip,.target{border-radius:16px;min-height:60px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;padding:6px}
+.chip{background:#fff;color:var(--ink);box-shadow:0 5px 0 #c9c3ff;touch-action:none;cursor:grab;font-size:32px}
+.chip.sel{outline:4px solid var(--gold)}.chip.lift{opacity:.3}.chip.done{visibility:hidden}
+.target{background:#ffffff1f;border:3px dashed #ffffffaa;color:#fff}
+.target.done{background:var(--ok);border-color:var(--ok)}
+.ghost{position:fixed;transform:translate(-50%,-50%) scale(1.1);z-index:99;pointer-events:none;width:110px}
+/* نوافذ وأدوات */
+.box{max-height:88vh;overflow-y:auto}
+.inp{width:100%;font-family:inherit;font-size:18px;padding:12px 14px;border-radius:14px;border:3px solid #ddd6fe;margin-top:6px;text-align:right;user-select:text}
+.inp.ok{border-color:#86efac}
+.tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+.tabs button{background:#ede9fe;color:#4c1d95;font-weight:800;padding:8px 12px;border-radius:12px;font-size:15px}
+.tabs button.on{background:#7c3aed;color:#fff}
+.items{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.items.small{grid-template-columns:repeat(5,1fr)}
+.item{background:#f5f3ff;border-radius:16px;padding:10px 4px;border:3px solid transparent;color:var(--ink);font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px}
+.item.on{border-color:#22c55e;background:#dcfce7}
+.item .ic{font-size:38px;line-height:1.1;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.items.small .ic{font-size:30px}
+.item .pr{font-size:13px;font-weight:800}
+.item .sw{display:block;width:46px;height:20px;border-radius:10px}
+.item small{font-size:11px;opacity:.75}
+.item.badge.off{opacity:.45}.item.badge b{font-size:13px}
+.mini{display:flex;justify-content:center;margin-top:20px}
+.pinshow{font-size:34px;letter-spacing:10px;margin:6px 0 10px;font-weight:900;color:#7c3aed}
+.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:280px;margin:auto}
+.pinpad button{font-size:26px;font-weight:900;padding:14px;border-radius:16px;background:#ede9fe;color:#4c1d95}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.kpis div{background:#f5f3ff;border-radius:14px;padding:8px 2px}.kpis b{display:block;font-size:24px;color:#7c3aed}.kpis small{font-size:12px}
+.bar{display:grid;grid-template-columns:118px 1fr 44px 44px;align-items:center;gap:6px;font-size:13px;margin:6px 0;text-align:right}
+.bar div{height:14px;background:#eee;border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;border-radius:8px}
+.li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#f8fafc;border-radius:12px;padding:8px 10px;margin:6px 0;text-align:right;font-size:15px}
+.li button{background:#ede9fe;border-radius:10px;padding:8px 10px;font-size:18px}
+.chest{font-size:110px;cursor:pointer;animation:bob 1.6s ease-in-out infinite;margin:6px 0}
+.shakebig{animation:shakebig .9s!important}
+@keyframes shakebig{10%,30%,50%,70%,90%{transform:rotate(-12deg) scale(1.1)}20%,40%,60%,80%{transform:rotate(12deg) scale(1.15)}}
+.badgebig{font-size:96px;animation:pop .5s,bob 2s 1s ease-in-out infinite}
+#rAvatar{font-size:64px}
+
+</style>
+</head>
+<body>
+<div class="sky" id="sky"></div>
+
+<!-- الرئيسية -->
+<section class="screen on" id="home">
+  <div class="hAv" id="hAvatar" onclick="openProfile()"></div>
+  <h1 class="hello" id="hHello">رحلة الأذكياء</h1>
+  <div class="homestats">
+    <div class="pill">⭐ <span id="hStars">0</span>/300</div>
+    <div class="pill">🪙 <span id="hCoins">0</span></div>
+    <div class="pill">🏁 <span id="hLevel">1</span>/100</div>
+  </div>
+  <div class="menu">
+    <button class="bigbtn wide" onclick="openMap(true)">▶ ابدأ الرحلة</button>
+    <button class="bigbtn daily wide" id="hDaily" style="font-size:20px;padding:14px" onclick="startDaily()">📅 تحدي اليوم</button>
+    <button class="bigbtn alt" onclick="openShop()">🛍️ المتجر</button>
+    <button class="bigbtn alt" id="hBadges" onclick="openBadges()">🏅 الأوسمة</button>
+    <button class="bigbtn alt" onclick="openDuel()">🤝 لاعبَين</button>
+    <button class="bigbtn alt" onclick="openSettings()">⚙️ الإعدادات</button>
+  </div>
+  <div class="credit">تطوير أبو عبدالله الشامي</div>
+</section>
+
+<!-- الخريطة -->
+<section class="screen" id="map">
+  <div class="topbar">
+    <button class="iconbtn" onclick="show('home')">🏠</button>
+    <div class="pill">⭐ <span id="mStars">0</span>/300</div>
+    <div class="pill">🪙 <span id="mCoins">0</span></div>
+  </div>
+  <div class="scroll" id="mapScroll"></div>
+</section>
+
+<!-- السؤال -->
+<section class="screen" id="quiz">
+  <div class="topbar">
+    <button class="iconbtn" onclick="confirmQuit()">✖</button>
+    <div class="pill" id="qLevel">المرحلة 1</div>
+    <div id="timerBox" style="display:none" class="timer"><span id="timerTxt">20</span></div>
+    <div class="pill">🪙 <span id="qCoins">0</span></div>
+  </div>
+  <div class="progress"><b id="qBar"></b></div>
+  <div class="qwrap">
+    <div class="stage" id="stage"></div>
+    <div class="qcard" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+    <div id="explain"></div>
+    <div class="helpers" id="helpers">
+      <button class="helper" id="h50" onclick="useFifty()">✂️ حذف إجابتين (20🪙)</button>
+      <button class="helper" id="hSkip" onclick="useSkip()">⏭️ تخطٍّ (50🪙)</button>
+    </div>
+  </div>
+</section>
+
+<!-- النتيجة -->
+<section class="screen" id="result">
+  <div id="rAvatar"></div>
+  <div style="font-size:28px;font-weight:900" id="rTitle"></div>
+  <div class="bigstars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
+  <div class="rescard" id="rInfo"></div>
+  <div class="row">
+    <button class="bigbtn green" id="rNext" onclick="nextLevel()">التالي ◀</button>
+    <button class="bigbtn alt" id="rRetry" onclick="retry()">🔁 إعادة</button>
+    <button class="bigbtn alt" id="rMap" onclick="resultBack()">🗺️ الخريطة</button>
+  </div>
+</section>
+
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+<canvas id="confetti"></canvas>
+<div class="toast" id="toast"></div>
+<script>
+// بنك الأسئلة — الصيغة: "السؤال|الإجابة الصحيحة|خطأ1|خطأ2|خطأ3"
+// مرتبة تقريبًا من الأسهل إلى الأصعب داخل كل قسم
+const BANK = {
+deen: [
+"كم عدد أركان الإسلام؟|5|4|6|3",
+"كم عدد الصلوات المفروضة في اليوم والليلة؟|5|3|4|6",
+"ما أول سورة في المصحف؟|الفاتحة|البقرة|الناس|الإخلاص",
+"في أي شهر يصوم المسلمون؟|رمضان|شعبان|رجب|شوال",
+"كم عدد أركان الإيمان؟|6|5|7|4",
+"من هو خاتم الأنبياء والمرسلين؟|محمد ﷺ|عيسى عليه السلام|موسى عليه السلام|إبراهيم عليه السلام",
+"ما أطول سورة في القرآن الكريم؟|البقرة|آل عمران|النساء|الكهف",
+"كم عدد سور القرآن الكريم؟|114|110|120|99",
+"كم عدد أجزاء القرآن الكريم؟|30|60|40|114",
+"كم عدد ركعات صلاة الفجر؟|2|3|4|1",
+"كم عدد ركعات صلاة المغرب؟|3|2|4|5",
+"كم عدد ركعات صلاة العشاء؟|4|3|2|5",
+"ما اسم والد النبي ﷺ؟|عبد الله|عبد المطلب|أبو طالب|حمزة",
+"ما اسم أم النبي ﷺ؟|آمنة بنت وهب|حليمة السعدية|خديجة بنت خويلد|فاطمة الزهراء",
+"في أي مدينة وُلد النبي ﷺ؟|مكة المكرمة|المدينة المنورة|الطائف|القدس",
+"إلى أي مدينة هاجر النبي ﷺ؟|المدينة المنورة|الطائف|الحبشة|القدس",
+"من النبي الذي بنى السفينة؟|نوح عليه السلام|إبراهيم عليه السلام|هود عليه السلام|صالح عليه السلام",
+"من النبي الذي ابتلعه الحوت؟|يونس عليه السلام|موسى عليه السلام|نوح عليه السلام|عيسى عليه السلام",
+"ما اسم الملَك الذي كان ينزل بالوحي؟|جبريل عليه السلام|ميكائيل عليه السلام|إسرافيل عليه السلام|مالك خازن النار",
+"ما السورة التي تعدل ثلث القرآن؟|الإخلاص|الفاتحة|الكوثر|الناس",
+"ما أقصر سورة في القرآن الكريم؟|الكوثر|الإخلاص|العصر|النصر",
+"من هو أول الخلفاء الراشدين؟|أبو بكر الصديق|عمر بن الخطاب|عثمان بن عفان|علي بن أبي طالب",
+"من الصحابي الملقب بالفاروق؟|عمر بن الخطاب|أبو بكر الصديق|عثمان بن عفان|علي بن أبي طالب",
+"من الصحابي الملقب بذي النورين؟|عثمان بن عفان|علي بن أبي طالب|عمر بن الخطاب|طلحة بن عبيد الله",
+"من أول مؤذن في الإسلام؟|بلال بن رباح|عمار بن ياسر|سلمان الفارسي|زيد بن حارثة",
+"ما أول مسجد بُني في الإسلام؟|مسجد قباء|المسجد النبوي|المسجد الحرام|المسجد الأقصى",
+"ما القبلة الأولى للمسلمين؟|المسجد الأقصى|الكعبة المشرفة|مسجد قباء|المسجد النبوي",
+"ما اسم الغار الذي نزل فيه الوحي أول مرة؟|غار حراء|غار ثور|غار أُحد|غار الصفا",
+"ما أول كلمة نزلت من القرآن الكريم؟|اقرأ|قل|الحمد|يا أيها",
+"ما اسم أول زوجة للنبي ﷺ؟|خديجة بنت خويلد|عائشة بنت أبي بكر|حفصة بنت عمر|سودة بنت زمعة",
+"في أي ليلة نزل القرآن الكريم؟|ليلة القدر|ليلة الإسراء|ليلة النصف من شعبان|ليلة العيد",
+"من النبي الملقب بخليل الله؟|إبراهيم عليه السلام|موسى عليه السلام|نوح عليه السلام|عيسى عليه السلام",
+"من النبي الملقب بكليم الله؟|موسى عليه السلام|إبراهيم عليه السلام|داود عليه السلام|هارون عليه السلام",
+"أي نبي علّمه الله منطق الطير وكلّمته النملة؟|سليمان عليه السلام|داود عليه السلام|يوسف عليه السلام|زكريا عليه السلام",
+"في أي سورة جاءت قصة الفتية الذين ناموا في الكهف؟|الكهف|مريم|يوسف|طه",
+"ما السورة التي لا تبدأ بالبسملة؟|التوبة|الأنفال|النمل|الفاتحة",
+"ما السورة التي ذُكرت فيها البسملة مرتين؟|النمل|التوبة|البقرة|الفاتحة",
+"الحج يكون في شهر؟|ذو الحجة|رمضان|محرم|شوال",
+"ما اسم البئر المباركة في مكة المكرمة؟|زمزم|بدر|رومة|أريس",
+"من النبي الذي خلقه الله من غير أب ولا أم؟|آدم عليه السلام|عيسى عليه السلام|نوح عليه السلام|إدريس عليه السلام",
+"من النبي الذي وُلد من غير أب؟|عيسى عليه السلام|يحيى عليه السلام|آدم عليه السلام|إسحاق عليه السلام",
+"ما السورة التي سُمّيت باسم امرأة؟|مريم|النساء|المجادلة|الممتحنة",
+"في أي غزوة كان أول انتصار كبير للمسلمين في رمضان؟|غزوة بدر|غزوة أحد|غزوة الخندق|غزوة تبوك",
+"ما الغزوة التي حفر فيها المسلمون الخندق؟|غزوة الأحزاب|غزوة بدر|غزوة أحد|غزوة حنين",
+"ما الحشرة التي سُمّيت سورة باسمها وذُكر فيها أن بيتها أوهن البيوت؟|العنكبوت|النمل|النحل|البعوض",
+"كم سنة لبث نوح عليه السلام في قومه يدعوهم؟|950 سنة|500 سنة|1000 سنة|300 سنة",
+"كم سنة تقريبًا استمرت دعوة النبي ﷺ في مكة قبل الهجرة؟|13 سنة|10 سنوات|23 سنة|5 سنوات",
+"ما الصلاة التي ليس فيها ركوع ولا سجود؟|صلاة الجنازة|صلاة العيد|صلاة الوتر|صلاة الضحى",
+"الزكاة ركن من أركان؟|الإسلام|الإيمان|الإحسان|الوضوء",
+"من النبي الذي كان يعمل نجّارًا كما ورد في الحديث؟|زكريا عليه السلام|داود عليه السلام|إدريس عليه السلام|شعيب عليه السلام"
+],
+arabic: [
+"ما ضد كلمة «طويل»؟|قصير|عريض|كبير|سريع",
+"ما ضد كلمة «نهار»؟|ليل|صباح|شمس|ظهر",
+"ما مفرد كلمة «أقلام»؟|قلم|قلمان|أقلم|قلامة",
+"ما جمع كلمة «كتاب»؟|كُتُب|كاتب|كتابان|مكتب",
+"ما مثنى كلمة «ولد»؟|ولدان|أولاد|ولود|مولود",
+"ما مؤنث كلمة «معلّم»؟|معلّمة|معلّمون|تعليم|علم",
+"ما ضد كلمة «شجاع»؟|جبان|قوي|كريم|ذكي",
+"ما مرادف كلمة «سعيد»؟|فرِح|حزين|غاضب|تعبان",
+"كم عدد حروف اللغة العربية؟|28|26|30|24",
+"ما آخر حرف في الحروف العربية (الهجائية)؟|الياء|الواو|الهاء|الألف",
+"صوت الأسد يُسمّى؟|زئير|نباح|صهيل|مواء",
+"صوت الحصان يُسمّى؟|صهيل|خوار|نقيق|عواء",
+"صوت الضفدع يُسمّى؟|نقيق|نعيق|هديل|زقزقة",
+"صوت الحمام يُسمّى؟|هديل|صياح|ثغاء|فحيح",
+"صوت الأفعى يُسمّى؟|فحيح|خوار|صهيل|نباح",
+"بيت الأسد يُسمّى؟|عرين|عش|جحر|إسطبل",
+"بيت الطائر يُسمّى؟|عش|عرين|زريبة|خلية",
+"بيت النحل يُسمّى؟|خلية|عش|جحر|عرين",
+"ابن الأسد يُسمّى؟|شبل|جرو|مُهر|حَمَل",
+"ابن الحصان يُسمّى؟|مُهر|عجل|شبل|جدي",
+"ابن البقرة يُسمّى؟|عجل|حَمَل|مُهر|جرو",
+"الكلمة في اللغة العربية ثلاثة أنواع: اسم وفعل و...؟|حرف|جملة|ضمير|صفة",
+"ما نوع كلمة «يكتبُ»؟|فعل مضارع|فعل ماضٍ|فعل أمر|اسم",
+"ما نوع كلمة «اكتبْ»؟|فعل أمر|فعل ماضٍ|فعل مضارع|حرف",
+"ما نوع كلمة «كتبَ»؟|فعل ماضٍ|فعل مضارع|فعل أمر|حرف",
+"العلامة الأصلية لرفع الاسم المفرد هي؟|الضمة|الفتحة|الكسرة|السكون",
+"العلامة الأصلية لنصب الاسم المفرد هي؟|الفتحة|الضمة|الكسرة|السكون",
+"ما حرف الجر في جملة «ذهبتُ إلى المدرسة»؟|إلى|ذهب|المدرسة|التاء",
+"ما جمع كلمة «مدرسة»؟|مدارس|مدرسون|دروس|درّاس",
+"ما معنى كلمة «الغيث»؟|المطر|الريح|الثلج|البرق",
+"ما معنى كلمة «الوَجَل»؟|الخوف|الفرح|الغضب|الجوع",
+"ما معنى كلمة «اليَمّ»؟|البحر|الجبل|الصحراء|الوادي",
+"ما مرادف كلمة «الحُسام»؟|السيف|الرمح|الدرع|الحصان",
+"ما ضد كلمة «الصدق»؟|الكذب|الأمانة|الوفاء|الحق",
+"ما جمع كلمة «امرأة»؟|نساء|امرآت|مرأات|أمراء",
+"في جملة «أكلَ الولدُ التفاحةَ» ما الفاعل؟|الولد|أكل|التفاحة|لا يوجد فاعل",
+"في جملة «قرأ أحمدُ القصةَ» ما المفعول به؟|القصة|أحمد|قرأ|لا يوجد مفعول به",
+"الجملة التي تبدأ باسم تُسمّى؟|جملة اسمية|جملة فعلية|شبه جملة|جملة شرطية",
+"«إنّ» تنصب المبتدأ وترفع؟|الخبر|الفاعل|المفعول به|الحال",
+"اللام في كلمة «الشمس» هي لام؟|شمسية|قمرية|ساكنة تُلفظ|مكسورة",
+"ما الحرف الذي يُكتب ولا يُلفظ في اسم «عمرو»؟|الواو|الميم|الراء|العين",
+"أيّ الكلمات التالية مكتوبة بشكل صحيح؟|مسؤول|مسئوول|مسؤوول|مسوول",
+"أكمل المثل: «مَن جدّ ...»|وجد|نجح|فاز|سعد",
+"أكمل المثل: «الصديق وقت ...»|الضيق|الفرح|الحاجة|السفر",
+"أكمل: «العلم في الصغر كالنقش على ...»|الحجر|الماء|الرمل|الخشب",
+"أكمل: «الوقت كالسيف إن لم تقطعه ...»|قطعك|ذهب|ضاع|سبقك",
+"من الملقّب بأمير الشعراء؟|أحمد شوقي|المتنبي|حافظ إبراهيم|نزار قباني",
+"من هو الملقّب بشاعر النيل؟|حافظ إبراهيم|أحمد شوقي|المتنبي|محمود سامي البارودي",
+"من قائل البيت: «الخيلُ والليلُ والبيداءُ تعرفني»؟|المتنبي|أحمد شوقي|عنترة بن شداد|امرؤ القيس",
+"ما جمع كلمة «بيت» (المسكن)؟|بيوت|بيتان|بائت|مبيت"
+],
+general: [
+"كم عدد قارات العالم؟|7|5|6|8",
+"كم ساعة في اليوم؟|24|12|20|48",
+"كم دقيقة في الساعة؟|60|100|30|24",
+"ما أسرع حيوان بري؟|الفهد|الأسد|الحصان|الغزال",
+"أي حيوان يُسمّى سفينة الصحراء؟|الجمل|الحصان|الفيل|الحمار",
+"كم عدد أرجل العنكبوت؟|8|6|10|4",
+"كم عدد أرجل الحشرة؟|6|8|4|10",
+"ما الغاز الذي نتنفسه لنعيش؟|الأكسجين|ثاني أكسيد الكربون|النيتروجين|الهيليوم",
+"ما أكبر حيوان في العالم؟|الحوت الأزرق|الفيل|القرش|الزرافة",
+"ما أطول حيوان في العالم؟|الزرافة|الفيل|الجمل|النعامة",
+"ما الكوكب الذي يُلقّب بالكوكب الأحمر؟|المريخ|زحل|نبتون|عطارد",
+"ما أكبر كوكب في المجموعة الشمسية؟|المشتري|زحل|الأرض|المريخ",
+"ما أقرب كوكب إلى الشمس؟|عطارد|الزهرة|المريخ|الأرض",
+"ما الكوكب المشهور بحلقاته الجميلة؟|زحل|المريخ|عطارد|الأرض",
+"عند كم درجة مئوية يغلي الماء؟|100|50|0|200",
+"عند كم درجة مئوية يتجمد الماء؟|0|10|100|50",
+"كم عدد ألوان قوس قزح؟|7|5|6|9",
+"العضو الذي يضخ الدم في الجسم هو؟|القلب|الرئة|الكبد|الكلية",
+"العضو المسؤول عن التنفس هو؟|الرئتان|المعدة|القلب|الكبد",
+"كم يومًا في السنة الميلادية العادية؟|365|360|366|354",
+"كم يومًا تقريبًا في السنة الهجرية؟|354|365|300|380",
+"كم لاعبًا لكل فريق كرة قدم داخل الملعب؟|11|10|9|12",
+"دودة القز تصنع؟|الحرير|العسل|القطن|الصوف",
+"ما الحيوان الذي يغيّر لونه ليختبئ؟|الحرباء|السلحفاة|الضفدع|الأرنب",
+"أين يعيش الدب القطبي؟|القطب الشمالي|القطب الجنوبي|الصحراء|الغابات الاستوائية",
+"أين يعيش البطريق غالبًا؟|القطب الجنوبي|القطب الشمالي|الصحراء الكبرى|غابات الأمازون",
+"ما أكبر طائر في العالم ولا يطير؟|النعامة|البطريق|النسر|الطاووس",
+"ما الحيوان الثديي الوحيد القادر على الطيران الحقيقي؟|الخفاش|الدلفين|البطريق|النعامة",
+"أيّ هذه الحيوانات ليس من الثدييات؟|التمساح|الحوت|الخفاش|الدلفين",
+"ما الغاز الذي تمتصه النباتات من الهواء لتصنع غذاءها؟|ثاني أكسيد الكربون|الأكسجين|الهيدروجين|الهيليوم",
+"الماء يتكوّن من الهيدروجين و...؟|الأكسجين|الكربون|النيتروجين|الحديد",
+"ما أصلب مادة طبيعية؟|الألماس|الحديد|الذهب|الزجاج",
+"ما المادة التي يُصنع منها قلب قلم الرصاص؟|الغرافيت|الرصاص|الحديد|الفضة",
+"ما اسم أقرب نجم إلى الأرض؟|الشمس|القمر|سهيل|الشعرى",
+"كم تستغرق الأرض لتدور حول الشمس دورة كاملة؟|سنة|شهر|يوم|أسبوع",
+"دوران الأرض حول نفسها يسبّب؟|الليل والنهار|الفصول الأربعة|المد والجزر|الزلازل",
+"كم عدد حجرات قلب الإنسان؟|4|2|3|6",
+"ما أكبر عضو في جسم الإنسان؟|الجلد|الكبد|القلب|الرئة",
+"كم عظمة في جسم الإنسان البالغ؟|206|300|150|412",
+"كم سنًّا لدى الإنسان البالغ عادةً؟|32|28|20|36",
+"أيّ فيتامين يصنعه الجسم عند التعرّض لأشعة الشمس؟|فيتامين د|فيتامين ج|فيتامين أ|فيتامين ب",
+"ما اللون الذي يمتص الحرارة أكثر من غيره؟|الأسود|الأبيض|الأصفر|الأزرق الفاتح",
+"ما الجهاز الذي يقيس درجة الحرارة؟|ميزان الحرارة|البارومتر|البوصلة|المسطرة",
+"إبرة البوصلة تشير دائمًا إلى جهة؟|الشمال|الجنوب|الشرق|الغرب",
+"من هو العالم المسلم صاحب كتاب «القانون في الطب»؟|ابن سينا|الخوارزمي|ابن الهيثم|ابن خلدون",
+"إلى أيّ عالم مسلم يُنسب علم الجبر؟|الخوارزمي|ابن سينا|البيروني|ابن خلدون",
+"أيّ عالم مسلم اشتهر بعلم البصريات والضوء؟|ابن الهيثم|الفارابي|ابن رشد|ابن خلدون",
+"من مخترع الهاتف المشهور؟|غراهام بل|توماس إديسون|نيوتن|أينشتاين",
+"من صاحب أشهر اختراع للمصباح الكهربائي العملي؟|توماس إديسون|غراهام بل|نيوتن|غاليليو",
+"من العالِم الذي اشتهر بقوانين الجاذبية بعد سقوط التفاحة؟|إسحاق نيوتن|أينشتاين|إديسون|غراهام بل"
+],
+history: [
+"مدينة تدمر الأثرية تقع في أي دولة؟|سوريا|العراق|الأردن|لبنان",
+"ما عاصمة الدولة الأموية؟|دمشق|بغداد|القاهرة|قرطبة",
+"ما عاصمة الدولة العباسية الأشهر؟|بغداد|دمشق|القاهرة|المدينة المنورة",
+"من القائد الملقّب بسيف الله المسلول؟|خالد بن الوليد|حمزة بن عبد المطلب|علي بن أبي طالب|سعد بن أبي وقاص",
+"الحضارة التي بنت الأهرامات هي؟|المصرية القديمة|الرومانية|الإغريقية|الفينيقية",
+"في أي عام ميلادي كانت الهجرة النبوية؟|622|570|610|632",
+"في أي عام ميلادي تقريبًا وُلد النبي ﷺ (عام الفيل)؟|570|622|600|500",
+"من القائد الذي حرّر القدس من الصليبيين؟|صلاح الدين الأيوبي|قطز|خالد بن الوليد|محمد الفاتح",
+"ما المعركة التي انتصر فيها صلاح الدين قبل تحرير القدس؟|حطين|عين جالوت|اليرموك|القادسية",
+"أين وقعت معركة حطين؟|فلسطين|مصر|العراق|الأندلس",
+"معركة عين جالوت كانت ضد؟|المغول|الروم|الفرس|الصليبيين",
+"من قائد المسلمين في معركة عين جالوت؟|سيف الدين قطز|صلاح الدين|خالد بن الوليد|عمرو بن العاص",
+"من فتح القسطنطينية؟|محمد الفاتح|سليمان القانوني|عثمان الأول|صلاح الدين",
+"في أي عام فُتحت القسطنطينية؟|1453|1258|1187|1517",
+"من القائد الذي عبر البحر وفتح الأندلس؟|طارق بن زياد|صلاح الدين|خالد بن الوليد|عقبة بن نافع",
+"معركة اليرموك كانت بين المسلمين و...؟|الروم|الفرس|المغول|الصليبيين",
+"معركة القادسية كانت بين المسلمين و...؟|الفرس|الروم|المغول|القوط",
+"من قائد المسلمين في معركة القادسية؟|سعد بن أبي وقاص|طارق بن زياد|صلاح الدين|عقبة بن نافع",
+"من قاد جيش المسلمين في معركة اليرموك؟|خالد بن الوليد|طارق بن زياد|صلاح الدين|قطز",
+"من الصحابي الذي فتح مصر؟|عمرو بن العاص|خالد بن الوليد|عقبة بن نافع|طارق بن زياد",
+"من مؤسس مدينة القيروان؟|عقبة بن نافع|طارق بن زياد|عمرو بن العاص|صلاح الدين",
+"من الخليفة الذي بنى مدينة بغداد؟|أبو جعفر المنصور|هارون الرشيد|المأمون|معاوية",
+"من مؤسس الدولة الأموية؟|معاوية بن أبي سفيان|عبد الملك بن مروان|عمر بن عبد العزيز|هارون الرشيد",
+"أيّ خليفة يُلقّب بخامس الخلفاء الراشدين لعدله؟|عمر بن عبد العزيز|هارون الرشيد|معاوية بن أبي سفيان|المأمون",
+"من الخليفة الذي بنى الجامع الأموي في دمشق؟|الوليد بن عبد الملك|معاوية بن أبي سفيان|عمر بن عبد العزيز|هارون الرشيد",
+"من هي ملكة تدمر الشهيرة؟|زنوبيا|كليوباترا|بلقيس|نفرتيتي",
+"أقدم أبجدية معروفة في العالم اكتُشفت في؟|أوغاريت (سوريا)|روما|أثينا|باريس",
+"ما المدينة التي يُقال إنها أقدم عاصمة مأهولة في التاريخ؟|دمشق|روما|أثينا|لندن",
+"ما المدينة الملقّبة بمدينة الألف مئذنة؟|القاهرة|باريس|لندن|موسكو",
+"من الملك البابلي صاحب أشهر قانون مكتوب قديم؟|حمورابي|نبوخذ نصر|رمسيس|الإسكندر",
+"الحضارة التي اخترعت الكتابة المسمارية؟|السومرية|المصرية القديمة|الرومانية|الصينية",
+"الكتابة الهيروغليفية تعود لأيّ حضارة؟|المصرية القديمة|السومرية|اليونانية|الفارسية",
+"الدولة التي حكمت بلاد الشام نحو 400 عام حتى الحرب العالمية الأولى؟|الدولة العثمانية|الدولة الأموية|الدولة الفاطمية|الدولة الأيوبية",
+"معركة مرج دابق (1516م) كانت بين العثمانيين و...؟|المماليك|الصفويين|الصليبيين|المغول",
+"من قائد معركة ميسلون في سوريا عام 1920م؟|يوسف العظمة|سلطان باشا الأطرش|عمر المختار|الأمير عبد القادر",
+"من قائد الثورة السورية الكبرى عام 1925م؟|سلطان باشا الأطرش|يوسف العظمة|عمر المختار|الأمير عبد القادر",
+"في أي عام كان جلاء الفرنسيين عن سوريا؟|1946|1920|1958|1936",
+"المجاهد عمر المختار من أيّ بلد؟|ليبيا|الجزائر|المغرب|مصر",
+"الأمير عبد القادر قاد المقاومة ضد الفرنسيين في؟|الجزائر|تونس|المغرب|ليبيا",
+"أيّ دولة عربية تُلقّب ببلد المليون ونصف المليون شهيد؟|الجزائر|ليبيا|مصر|المغرب",
+"من مؤلف كتاب «المقدمة» ومؤسس علم الاجتماع؟|ابن خلدون|ابن بطوطة|الطبري|ابن كثير",
+"من الرحّالة المغربي الذي طاف العالم القديم؟|ابن بطوطة|ابن خلدون|ابن ماجد|الخوارزمي",
+"البحّار العربي الملقّب بأسد البحار؟|أحمد بن ماجد|ابن بطوطة|ابن خلدون|كولومبوس",
+"من أشهر من وصل إلى قارة أمريكا عام 1492م؟|كريستوفر كولومبوس|ماجلان|فاسكو دا غاما|جيمس كوك",
+"من أول إنسان صعد إلى الفضاء؟|يوري غاغارين|نيل أرمسترونغ|باز ألدرين|جون غلين",
+"من أول إنسان مشى على سطح القمر؟|نيل أرمسترونغ|يوري غاغارين|باز ألدرين|غاليليو",
+"في أي عام هبط الإنسان على القمر لأول مرة؟|1969|1950|1989|2001",
+"في أي عام بدأت الحرب العالمية الأولى؟|1914|1939|1900|1945",
+"في أي عام انتهت الحرب العالمية الثانية؟|1945|1918|1939|1950",
+"سور الصين العظيم بُني لحماية الصين من؟|غارات القبائل من الشمال|الفيضانات|الحيوانات المفترسة|الزلازل"
+],
+geo: [
+"ما عاصمة سوريا؟|دمشق|حلب|حمص|اللاذقية",
+"ما عاصمة مصر؟|القاهرة|الإسكندرية|أسوان|الجيزة",
+"ما عاصمة السعودية؟|الرياض|جدة|مكة المكرمة|الدمام",
+"ما عاصمة العراق؟|بغداد|البصرة|الموصل|أربيل",
+"ما عاصمة الأردن؟|عمّان|إربد|الزرقاء|العقبة",
+"ما عاصمة لبنان؟|بيروت|طرابلس|صيدا|صور",
+"ما عاصمة فلسطين؟|القدس|غزة|نابلس|الخليل",
+"البحر الذي يطل عليه الساحل السوري هو؟|البحر المتوسط|البحر الأحمر|بحر قزوين|البحر الأسود",
+"ما العملة الرسمية في سوريا؟|الليرة السورية|الدينار|الريال|الجنيه",
+"ما أكبر قارة في العالم؟|آسيا|أفريقيا|أوروبا|أمريكا الشمالية",
+"ما أطول نهر في العالم؟|النيل|الأمازون|الفرات|المسيسيبي",
+"ما أكبر محيط في العالم؟|المحيط الهادئ|المحيط الأطلسي|المحيط الهندي|المحيط المتجمد الشمالي",
+"ما أعلى جبل في العالم؟|إيفرست|كليمنجارو|مون بلان|جبل الشيخ",
+"ما عاصمة تركيا؟|أنقرة|إسطنبول|إزمير|بورصة",
+"ما عاصمة المغرب؟|الرباط|الدار البيضاء|مراكش|فاس",
+"ما عاصمة الإمارات؟|أبوظبي|دبي|الشارقة|عجمان",
+"ما عاصمة تونس؟|تونس|صفاقس|سوسة|القيروان",
+"ما عاصمة فرنسا؟|باريس|ليون|مرسيليا|نيس",
+"ما عاصمة اليابان؟|طوكيو|أوساكا|كيوتو|بكين",
+"أيّ نهر كبير يجري في سوريا والعراق؟|الفرات|النيل|الأمازون|الدانوب",
+"نهر العاصي يمر في أيّ مدينة سورية تشتهر بالنواعير؟|حماة|دمشق|درعا|دير الزور",
+"جبل قاسيون يطل على مدينة؟|دمشق|حلب|حمص|طرطوس",
+"ما المدينة السورية الملقّبة بالشهباء؟|حلب|دمشق|حماة|اللاذقية",
+"ما أعلى جبل في سوريا؟|جبل الشيخ|جبل قاسيون|جبل العرب|جبل الأربعين",
+"جزيرة أرواد السورية تقع قبالة مدينة؟|طرطوس|اللاذقية|جبلة|بانياس",
+"كم عدد المحافظات السورية؟|14|10|12|16",
+"ما عملة السعودية؟|الريال|الدينار|الدرهم|الليرة",
+"ما عملة مصر؟|الجنيه|الليرة|الدينار|الريال",
+"ما أصغر قارة في العالم؟|أستراليا|أوروبا|أنتاركتيكا|أمريكا الجنوبية",
+"ما أكبر صحراء حارة في العالم؟|الصحراء الكبرى|الربع الخالي|صحراء غوبي|صحراء أتاكاما",
+"ما أكبر دولة في العالم من حيث المساحة؟|روسيا|كندا|الصين|الولايات المتحدة",
+"ما أكبر دولة عربية من حيث المساحة؟|الجزائر|السعودية|السودان|مصر",
+"البحر الميت يُعدّ؟|أخفض بقعة على اليابسة|أكبر بحر في العالم|أعمق بحر|أبرد بحر",
+"قناة السويس تقع في؟|مصر|السودان|الأردن|السعودية",
+"أيّ بحر يفصل بين أفريقيا وشبه الجزيرة العربية؟|البحر الأحمر|البحر الأسود|بحر قزوين|بحر الشمال",
+"مضيق جبل طارق يصل البحر المتوسط بـ؟|المحيط الأطلسي|المحيط الهندي|البحر الأحمر|البحر الأسود",
+"نهر النيل يصب في؟|البحر المتوسط|البحر الأحمر|المحيط الأطلسي|الخليج العربي",
+"في أيّ قارة يجري نهر الأمازون؟|أمريكا الجنوبية|أفريقيا|آسيا|أوروبا",
+"أين تقع جبال الألب؟|أوروبا|آسيا|أفريقيا|أمريكا الجنوبية",
+"خط الاستواء يقسم الأرض إلى نصفين؟|شمالي وجنوبي|شرقي وغربي|أعلى وأسفل|لا يقسمها",
+"ما أكثر دول العالم سكانًا اليوم؟|الهند|الصين|الولايات المتحدة|روسيا",
+"كم عدد الدول الأعضاء في جامعة الدول العربية؟|22|20|18|25",
+"ما أكبر جزيرة في العالم؟|غرينلاند|مدغشقر|قبرص|صقلية",
+"ما أطول نهر في أوروبا؟|الفولغا|الدانوب|الراين|السين",
+"ما عاصمة الكويت؟|مدينة الكويت|الجهراء|الأحمدي|حولي",
+"ما عاصمة اليمن؟|صنعاء|عدن|تعز|الحديدة",
+"ما عاصمة السودان؟|الخرطوم|أم درمان|بورتسودان|كسلا",
+"ما عاصمة ليبيا؟|طرابلس|بنغازي|مصراتة|سبها",
+"في أيّ قارة تقع مصر؟|أفريقيا|آسيا|أوروبا|أستراليا",
+"ما عاصمة ماليزيا؟|كوالالمبور|جاكرتا|بانكوك|سنغافورة"
+],
+iq: [
+"ما الشيء الذي كلما أخذتَ منه كَبُر؟|الحفرة|البالون|الكعكة|الماء",
+"له أسنان ولا يعضّ، فما هو؟|المشط|الفم|القطة|الملعقة",
+"له عين ولا يرى، فما هو؟|الإبرة|الكاميرا|النظارة|الباب",
+"ما الشيء الذي يكتب ولا يقرأ؟|القلم|الكتاب|الدفتر|اللوح",
+"بيت بلا أبواب ولا نوافذ، فما هو؟|البيضة|الصندوق|الخيمة|الكهف",
+"الكلمة المختلفة: تفاح، موز، جزر، برتقال؟|جزر|تفاح|موز|برتقال",
+"الكلمة المختلفة: أسد، نمر، حمامة، فهد؟|حمامة|أسد|نمر|فهد",
+"الكلمة المختلفة: أحمر، أزرق، كرسي، أخضر؟|كرسي|أحمر|أزرق|أخضر",
+"الكلمة المختلفة: مثلث، مربع، دائرة، قلم؟|قلم|مثلث|مربع|دائرة",
+"له رقبة وليس له رأس، فما هو؟|الزجاجة|الطاولة|الزرافة|المصباح",
+"ما الشيء الذي له أربع أرجل ولا يمشي؟|الطاولة|القطة|الحصان|الكلب",
+"كلما زاد نقص، فما هو؟|العمر|المال|الماء|الطعام",
+"يمشي بلا أرجل ويبكي بلا عيون، فما هو؟|السحاب|النهر|الريح|الساعة",
+"ما الشيء الذي يتكلم جميع اللغات؟|الصدى|المترجم|الكتاب|الهاتف",
+"ما الذي يُكسَر دون أن يُلمَس؟|الوعد|الزجاج|الصحن|القلم",
+"ما الشيء الذي لا يبتلّ حتى لو دخل الماء؟|الظل|السمكة|الحجر|الإسفنجة",
+"ما الشيء الذي تملكه ويستخدمه الآخرون أكثر منك؟|اسمك|قلمك|بيتك|هاتفك",
+"ما الشيء الذي إن لم تقطعه قطعك؟|الوقت|الحبل|الشجرة|الطريق",
+"ما الذي يملأ الغرفة ولا يشغل أي مكان؟|الضوء|الأثاث|الماء|الصندوق",
+"ما الذي يمكنك أن تمسكه دون أن تلمسه؟|أنفاسك|الماء|الكرة|القلم",
+"إذا كان اليوم الإثنين، فما اليوم بعد 3 أيام؟|الخميس|الأربعاء|الجمعة|الثلاثاء",
+"إذا كان أمس الجمعة، فما اليوم بعد غد؟|الإثنين|الأحد|السبت|الثلاثاء",
+"في سباق جري تجاوزتَ صاحب المركز الثاني، فأين أصبحت؟|الثاني|الأول|الثالث|الأخير",
+"أيهما أثقل: كيلو حديد أم كيلو قطن؟|متساويان|الحديد|القطن|لا يمكن المعرفة",
+"أخو خالك، ما صلته بك؟|خالك|عمك|جدك|ابن خالك",
+"أمّ أبيك، ما صلتها بك؟|جدتك|خالتك|عمتك|أمك",
+"ثلاث تفاحات أخذتَ منها اثنتين، فكم تفاحة معك؟|2|1|3|0",
+"كم مرة يمكنك أن تطرح 5 من 25؟|مرة واحدة|5 مرات|4 مرات|10 مرات",
+"أيّ شهر فيه 28 يومًا؟|كل الشهور|شباط فقط|كانون الثاني فقط|لا يوجد",
+"ما العدد الذي إذا ضربته في أي عدد كان الناتج صفرًا؟|0|1|10|100",
+"ما العدد الذي إذا ضربتَ فيه أي عدد بقي العدد كما هو؟|1|0|10|2",
+"الرقم المختلف: 2، 4، 7، 8؟|7|2|4|8",
+"الرقم المختلف: 9، 15، 21، 16؟|16|9|15|21",
+"الكلمة المختلفة: الشمس، المريخ، زحل، عطارد؟|الشمس|المريخ|زحل|عطارد",
+"إذا قلبتَ الرقم 6 رأسًا على عقب يصبح؟|9|6|8|0",
+"كم وجهًا للمكعب؟|6|4|8|12",
+"كم ضلعًا للشكل السداسي؟|6|5|8|7",
+"مزارع لديه 17 خروفًا، هربت كلها إلا 9، فكم بقي معه؟|9|8|17|0",
+"أبٌ له 5 بنات، ولكل بنت أخ واحد، فكم عدد أولاده جميعًا؟|6|10|5|11",
+"إذا كان عمرك 10 سنوات وعمر أخيك 5، فكم يكون عمره عندما يصبح عمرك 20؟|15|10|20|5",
+"حبل طوله 10 أمتار، كم قصّة تحتاج لتقسيمه إلى 5 قطع؟|4|5|10|2",
+"معك 3 حبات دواء، تأخذ حبة كل نصف ساعة بدءًا من الآن، متى تنتهي؟|بعد ساعة|بعد ساعة ونصف|بعد نصف ساعة|بعد ساعتين",
+"الساعة 3:00 تمامًا، كم الزاوية بين العقربين؟|90 درجة|180 درجة|45 درجة|30 درجة",
+"الساعة 6:00 تمامًا، كم الزاوية بين العقربين؟|180 درجة|90 درجة|60 درجة|360 درجة",
+"كم إصبعًا في 10 أيادٍ؟|50|100|10|20",
+"يمشي على أربع صباحًا، وعلى اثنتين ظهرًا، وعلى ثلاث مساءً (لغز قديم)؟|الإنسان|القطة|الكرسي|العصفور",
+"إذا رتّبتَ الأعداد 7، 3، 9، 1 من الأصغر إلى الأكبر، فما العدد الثالث؟|7|3|9|1",
+"شيء يرفع الأثقال الضخمة لكنه لا يستطيع رفع مسمار صغير؟|البحر|الرافعة|الفيل|الشاحنة",
+"أحمد أطول من سامي، وسامي أطول من علي، فمن الأقصر؟|علي|أحمد|سامي|لا يمكن المعرفة",
+"إذا كان 3 قطط تصطاد 3 فئران في 3 دقائق، فكم دقيقة تحتاج 100 قطة لاصطياد 100 فأر؟|3|100|33|300"
+]
+};
+
+// مهمات حقيقية (تظهر بعد كل 5 مراحل) — يحصل الطفل على مكافأة عند إنجازها
+const MISSIONS = [
+"🕌 اقرأ سورة الملك مع أحد والديك",
+"🍽️ ساعد في ترتيب مائدة الطعام اليوم",
+"🛏️ رتّب سريرك وغرفتك بنفسك",
+"📖 احفظ آية جديدة وسمّعها لأحد أفراد أسرتك",
+"💧 اشرب 5 أكواب ماء اليوم",
+"❤️ قل لأمك وأبيك كلمة شكر جميلة",
+"📚 اقرأ 5 صفحات من كتاب مفيد",
+"🏃 مارس الرياضة 10 دقائق (قفز أو جري)",
+"✍️ اكتب 3 نِعَم تحمد الله عليها اليوم",
+"🤲 تصدّق ولو بشيء بسيط أو ساعد محتاجًا",
+"🌅 قل أذكار الصباح أو أذكار المساء",
+"📞 اتصل بجدك أو جدتك واسأل عن حالهما",
+"👫 ساعد أخاك أو أختك في الدراسة",
+"🎨 ارسم لوحة جميلة عن الطبيعة",
+"🔤 تعلّم كلمة إنجليزية جديدة واستخدمها في جملة",
+"🌟 احفظ حديثًا نبويًا قصيرًا",
+"🎒 نظّف حقيبتك المدرسية ورتّبها",
+"😊 ابتسم وسلّم على 3 أشخاص اليوم",
+"📝 اكتب قصة قصيرة من 5 أسطر",
+"📵 اقضِ ساعة كاملة بلا شاشات"
+];
+
+// صورة (رموز تعبيرية) لكل سؤال — بنفس ترتيب الأسئلة
+const PICS = {
+deen:"🕋✋|🕌🕐|📖✨|🌙🍽️|💚🤲|🌟🕌|📖🐄|📖🔢|📚🔢|🌅🕌|🌇🕌|🌃🕌|🏜️🌴|🏜️🌸|🌙✨|🐪🌴|🚢🌊|🐋🌊|✨📜|📖☝️|📖💧|🌟🤝|⚖️🌟|💡💡|📢🕌|🕌🧱|🕌🧭|⛰️🌙|📖✨|🌸🏡|🌙⭐|🔥🌿|⛰️🌊|🐜🐦|⛰️🐕|📖❓|📖✌️|🕋🐪|💧🕋|🌍🌳|🌴⭐|🌴🌸|⚔️🌙|⛏️🛡️|📖🐾|⏳🚢|🗓️🕋|🤲🕊️|💰🤲|🪵🔨",
+arabic:"🦒↕️|☀️🌙|✏️✏️|📚📖|👦👦|👩‍🏫📝|🦁🛡️|😄🎈|🔤🔢|🔤🏁|🦁🔊|🐴🔊|🐸🔊|🕊️🔊|🐍🔊|🦁🏠|🐦🌳|🐝🍯|🦁🍼|🐴🍼|🐄🍼|🔤📝|✍️⏳|✍️❗|✍️⌛|📝🔵|📝🟢|➡️🏫|🏫🏫|🌧️☔|😨💭|🌊⛵|⚔️✨|🤥❌|👩👩|👦🍎|📖👀|📝🧩|📝⚖️|☀️🔤|🔤🤫|✍️✅|💪🏆|🤝❤️|🪨✍️|⏰⚔️|👑📜|🌊📜|🐎🌙|🏠🏘️",
+general:"🌍🗺️|🕛⏰|⏱️🔢|💨🏁|🏜️🚢|🕷️🦵|🐞🦵|🫁💨|🌊📏|📏🌳|🔭🪐|🔭🪐|☀️🔭|🪐💍|🫖🔥|🧊❄️|🌈☁️|❤️🩸|🌬️💨|📅☀️|📅🌙|⚽🥅|🐛🧵|🎨🙈|❄️🐾|❄️🐾|🐦🥚|🌙🪽|🐾❓|🌱☁️|💧⚗️|💪✨|✏️⚫|⭐🌍|🌍☀️|🌗🌍|❤️🔢|🖐️🧍|🦴🦴|🦷😁|☀️💊|🌡️🎨|🔥❄️|🧭⬆️|📜⚕️|🔢📐|👁️💡|☎️📞|💡⚡|🍎🌳",
+history:"🏛️🏜️|🕌🏰|🏰📚|⚔️🐎|🔺🐫|🐪🌙|🐘🕋|🏰🐎|⚔️🏔️|🗺️📍|🐎🏹|🛡️⚔️|🏰⛵|📅🏰|⛵🌊|⚔️🏞️|🐘⚔️|🏹🐎|⚔️🐎|🔺🌴|🕌🏜️|🏙️🌙|👑🕌|⚖️🌟|🕌✨|👑🏛️|🔤🏺|🏙️🕰️|🕌🕌|📜⚖️|🏺✍️|🔺📜|🏰🌙|⚔️🏇|⚔️🏔️|🐎🏔️|🎉📅|🐎🏜️|🐎⚔️|⭐🌙|📚✍️|🧳🌍|⛵🧭|⛵🌎|🚀🌍|👨‍🚀🌕|🌕🚀|📅⚔️|📅🕊️|🧱🏯",
+geo:"🏙️🌹|🔺🏙️|🏙️🌴|🏙️🌊|🏙️⛰️|🏙️🌲|🕌✨|🌊🏖️|💵🪙|🌏🗺️|🌊🐊|🌊🌏|🏔️❄️|🏙️🌷|🏙️🌊|🏙️🏜️|🏙️🌊|🗼🥐|🗻🌸|🏞️🌊|🎡🌊|⛰️🌃|🏰🌙|🏔️❄️|🏝️⛵|🗺️🔢|💵🌴|💵🔺|🦘🌏|🏜️☀️|🗺️❄️|🗺️🏜️|🌊🧂|🚢🌊|🌊🐠|🌊⛰️|🌊➡️|🌳🦜|🏔️🎿|🌍➖|👥🌏|🗺️🤝|🏝️🧊|🏞️❄️|🏙️🌊|🏘️⛰️|🏙️🌊|🏙️🌊|🌍🦁|🏙️🌴",
+iq:"🕳️⛏️|🤔💭|🤔👁️|🤔✍️|🥚❓|🧩🔍|🧩🔍|🧩🔍|🧩🔍|🤔💭|🤔🦵|⏳🎂|🤔💭|🗣️🌍|🤔💔|🌊🤔|🤔🏷️|⏰⚔️|💡🏠|🤔✋|📅➡️|📅🤔|🏃🏁|⚖️🤔|👨‍👩‍👦🤔|👵🤔|🍎🍎|➖🔢|📅🤔|✖️0️⃣|✖️1️⃣|🔢🔍|🔢🔍|🧩🪐|🔄🔢|🎲🔢|🔷🔢|🐑🤔|👨‍👧‍👧🤔|🎂⏳|✂️🧵|💊⏰|🕒📐|🕕📐|🖐️🖐️|🤔🌅|🔢⬆️|🤔🏋️|📏🧍|🐱🐭"
+};
+
+// 💡 شرح قصير لكل سؤال — بنفس ترتيب الأسئلة في BANK
+const INFO = {
+deen:[
+"أركان الإسلام: الشهادتان، الصلاة، الزكاة، صوم رمضان، حج البيت لمن استطاع.",
+"الصلوات الخمس: الفجر والظهر والعصر والمغرب والعشاء.",
+"الفاتحة تُسمّى «أمّ الكتاب»، ونقرؤها في كل ركعة.",
+"رمضان هو الشهر التاسع في التقويم الهجري، وفيه نزل القرآن.",
+"أركان الإيمان: الإيمان بالله وملائكته وكتبه ورسله واليوم الآخر والقدر خيره وشره.",
+"محمد ﷺ آخر الأنبياء، فلا نبيّ بعده.",
+"سورة البقرة أطول سورة، وعدد آياتها 286 آية.",
+"القرآن 114 سورة، أولها الفاتحة وآخرها الناس.",
+"القرآن 30 جزءًا، وكل جزء حزبان.",
+"الفجر ركعتان، ويُستحب قبلها ركعتا السنّة.",
+"المغرب ثلاث ركعات، وهي الصلاة المفروضة الوحيدة بثلاث ركعات.",
+"العشاء أربع ركعات، مثل الظهر والعصر.",
+"والد النبي ﷺ عبد الله بن عبد المطلب، توفي قبل ولادته.",
+"أمّه آمنة بنت وهب، وتوفيت وعمره ست سنوات.",
+"وُلد النبي ﷺ في مكة المكرمة في عام الفيل.",
+"هاجر النبي ﷺ إلى المدينة المنورة، وكانت تُسمّى يثرب.",
+"أمر الله نوحًا ببناء السفينة لينجو المؤمنون من الطوفان.",
+"دعا يونس في بطن الحوت: «لا إله إلا أنت سبحانك إني كنت من الظالمين».",
+"جبريل عليه السلام هو الروح الأمين الذي نزل بالقرآن.",
+"قال النبي ﷺ عن «قل هو الله أحد»: إنها تعدل ثلث القرآن.",
+"سورة الكوثر ثلاث آيات فقط، والكوثر نهر في الجنة.",
+"أبو بكر الصديق أول من آمن من الرجال، وصاحب النبي ﷺ في الهجرة.",
+"لُقّب عمر بالفاروق لأن الله فرّق به بين الحق والباطل.",
+"لُقّب عثمان بذي النورين لأنه تزوّج ابنتين من بنات النبي ﷺ.",
+"كان صوت بلال جميلًا قويًا، فاختاره النبي ﷺ مؤذنًا.",
+"بنى النبي ﷺ مسجد قباء عند وصوله إلى المدينة في الهجرة.",
+"صلّى المسلمون نحو المسجد الأقصى نحو 16 شهرًا، ثم تحوّلت القبلة إلى الكعبة.",
+"غار حراء في جبل النور بمكة، وكان النبي ﷺ يتعبّد فيه.",
+"أول ما نزل: «اقرأ باسم ربك الذي خلق» من سورة العلق.",
+"خديجة رضي الله عنها أول من آمن بالنبي ﷺ ونصرته بمالها.",
+"ليلة القدر خير من ألف شهر، وهي في العشر الأواخر من رمضان.",
+"قال الله للنار: «يا نار كوني بردًا وسلامًا على إبراهيم».",
+"كلّم الله موسى عليه السلام عند جبل الطور.",
+"سمع سليمان النملة تحذّر قومها، فتبسّم ضاحكًا من قولها.",
+"أصحاب الكهف فتية آمنوا بربهم، فناموا في الكهف 309 سنين.",
+"سورة التوبة تُسمّى أيضًا «براءة»، ولم تُكتب في أولها البسملة.",
+"في سورة النمل جاءت البسملة في رسالة سليمان: «إنه من سليمان وإنه بسم الله الرحمن الرحيم».",
+"الحج في شهر ذي الحجة، ويوم عرفة هو التاسع منه.",
+"زمزم بئر مباركة تفجّرت لإسماعيل عليه السلام وأمه هاجر.",
+"خلق الله آدم من طين، وهو أبو البشر.",
+"وُلد عيسى عليه السلام من مريم بلا أب، بقدرة الله.",
+"سورة مريم سُمّيت باسم مريم ابنة عمران أم عيسى عليه السلام.",
+"وقعت غزوة بدر في 17 رمضان من السنة الثانية للهجرة.",
+"أشار سلمان الفارسي بحفر الخندق حول المدينة.",
+"قال تعالى: «وإنّ أوهنَ البيوت لبيتُ العنكبوت».",
+"قال تعالى: «فلبث فيهم ألف سنة إلا خمسين عامًا».",
+"دعا النبي ﷺ في مكة 13 سنة، ثم في المدينة 10 سنوات.",
+"صلاة الجنازة أربع تكبيرات بلا ركوع ولا سجود.",
+"الزكاة الركن الثالث من أركان الإسلام، وتُعطى للفقراء والمحتاجين.",
+"قال النبي ﷺ: «كان زكريا نجّارًا» رواه مسلم."
+],
+arabic:[
+"الطويل ضده القصير: الزرافة طويلة والنملة قصيرة.",
+"الليل ضد النهار.",
+"«أقلام» جمع تكسير، ومفرده «قلم».",
+"«كُتُب» جمع تكسير لكلمة «كتاب».",
+"المثنى نضيف له «ان» أو «ين»: ولدان، ولدَين.",
+"نؤنّث الاسم غالبًا بالتاء المربوطة: معلّم ← معلّمة.",
+"الجبان ضد الشجاع.",
+"«فرِح» و«مسرور» من مرادفات «سعيد».",
+"الحروف العربية 28 حرفًا من الألف إلى الياء.",
+"الحروف الهجائية تبدأ بالألف وتنتهي بالياء.",
+"الأسد يزأر، وصوته «زئير» يُسمع من بعيد.",
+"الحصان يصهل، والصهيل صوته.",
+"الضفدع ينقّ، وصوته «نقيق».",
+"الحمام يهدل، وصوته «هديل».",
+"الأفعى تفحّ، وصوتها «فحيح».",
+"العرين هو بيت الأسد.",
+"الطيور تبني أعشاشها على الأشجار.",
+"النحل يعيش في الخلية ويصنع فيها العسل.",
+"ابن الأسد «شبل»، وأنثى الأسد «لبؤة».",
+"ابن الحصان «مُهر»، وابن الحمار «جحش».",
+"ابن البقرة «عجل»، وابن الخروف «حَمَل».",
+"الكلمة: اسم مثل «قلم»، وفعل مثل «كتب»، وحرف مثل «في».",
+"الفعل المضارع يدل على الحاضر، ويبدأ بأحد حروف «أنيت».",
+"فعل الأمر نطلب به شيئًا: اكتبْ، اقرأْ.",
+"الفعل الماضي يدل على حدث انتهى.",
+"الاسم المفرد يُرفع بالضمة: جاءَ الولدُ.",
+"الاسم المفرد يُنصب بالفتحة: رأيتُ الولدَ.",
+"من حروف الجر: من، إلى، عن، على، في.",
+"«مدارس» جمع تكسير لكلمة «مدرسة».",
+"الغيث هو المطر الذي يأتي بالخير بعد الجفاف.",
+"الوَجَل هو الخوف، قال تعالى: «وجِلت قلوبهم».",
+"اليمّ هو البحر، وقد أُلقي موسى رضيعًا في اليمّ.",
+"من أسماء السيف: الحُسام والمهنّد والصارم.",
+"الصدق يهدي إلى البرّ، والكذب ضده.",
+"«نساء» جمع «امرأة» من غير لفظها.",
+"الفاعل هو من قام بالفعل، وهو مرفوع: أكلَ الولدُ.",
+"المفعول به هو ما وقع عليه الفعل، وهو منصوب: قرأ أحمدُ القصةَ.",
+"الجملة الاسمية تبدأ باسم: «العلمُ نورٌ».",
+"«إنّ» تنصب المبتدأ وترفع الخبر: إنّ اللهَ غفورٌ.",
+"اللام الشمسية لا تُلفظ، ويُشدّد الحرف بعدها: الشّمس.",
+"الواو في «عمرو» تُكتب للتفريق بينه وبين «عُمَر».",
+"تُكتب الهمزة على واو هنا لأنها مضمومة: مسؤول.",
+"«من جدّ وجد، ومن زرع حصد».",
+"الصديق الحقيقي يقف معك في الشدّة.",
+"ما نتعلّمه صغارًا يبقى ثابتًا كالنقش على الحجر.",
+"الوقت ثمين، فإن لم تستفد منه ضاع عليك.",
+"أحمد شوقي شاعر مصري، بايعه الشعراء أميرًا لهم سنة 1927م.",
+"حافظ إبراهيم شاعر مصري لُقّب بشاعر النيل.",
+"المتنبي من أشهر شعراء العرب، عاش في القرن الرابع الهجري.",
+"«بيوت» جمع بيت بمعنى المسكن، و«أبيات» جمع بيت الشعر."
+],
+general:[
+"القارات: آسيا، أفريقيا، أوروبا، أمريكا الشمالية، أمريكا الجنوبية، أستراليا، أنتاركتيكا.",
+"في اليوم 24 ساعة، تدور فيها الأرض حول نفسها دورة كاملة.",
+"الساعة 60 دقيقة، والدقيقة 60 ثانية.",
+"قد تصل سرعة الفهد إلى نحو 110 كم في الساعة!",
+"الجمل يتحمّل العطش أيامًا طويلة ويمشي في الرمال بسهولة.",
+"العنكبوت له 8 أرجل، لذلك ليس حشرة.",
+"كل حشرة لها 6 أرجل وجسم من 3 أجزاء.",
+"نتنفس الأكسجين ونُخرج ثاني أكسيد الكربون.",
+"قد يزيد طول الحوت الأزرق على 30 مترًا، وهو أكبر حيوان عاش على الأرض.",
+"يصل طول الزرافة إلى نحو 5 أمتار، فتأكل من أعالي الأشجار.",
+"يبدو المريخ أحمر بسبب صدأ الحديد في تربته.",
+"المشتري أكبر الكواكب، ويمكن أن تتّسع داخله أكثر من 1000 أرض!",
+"عطارد أقرب الكواكب إلى الشمس وأصغرها.",
+"حلقات زحل مكوّنة من قطع جليد وصخور.",
+"يغلي الماء عند 100 درجة مئوية عند مستوى سطح البحر.",
+"يتجمّد الماء عند الصفر المئوي فيصبح جليدًا.",
+"ألوان قوس قزح: أحمر، برتقالي، أصفر، أخضر، أزرق، نيلي، بنفسجي.",
+"القلب عضلة تضخّ الدم في الجسم كله دون توقف.",
+"الرئتان تأخذان الأكسجين من الهواء إلى الدم.",
+"السنة 365 يومًا، والسنة الكبيسة 366 يومًا.",
+"السنة الهجرية قمرية، وهي أقصر من الميلادية بنحو 11 يومًا.",
+"لكل فريق 11 لاعبًا، منهم حارس المرمى.",
+"دودة القز تصنع شرنقتها من خيوط الحرير.",
+"الحرباء تغيّر لونها لتختبئ من أعدائها.",
+"الدب القطبي يعيش في المناطق الجليدية حول القطب الشمالي.",
+"معظم البطاريق تعيش في نصف الأرض الجنوبي قرب القطب الجنوبي.",
+"النعامة لا تطير، لكنها سريعة جدًا في الجري.",
+"الخفاش ثديي يطير، ويستخدم الصدى ليعرف طريقه في الظلام.",
+"التمساح من الزواحف ويبيض، أما الثدييات فترضع صغارها.",
+"تصنع النباتات غذاءها من ضوء الشمس والماء وثاني أكسيد الكربون.",
+"جزيء الماء: ذرّتا هيدروجين وذرة أكسجين (H₂O).",
+"الألماس أصلب مادة طبيعية، ويتكوّن من الكربون.",
+"قلم الرصاص لا يحتوي رصاصًا، بل غرافيت ممزوجًا بالطين.",
+"الشمس نجم، أما القمر فليس نجمًا بل يدور حول الأرض.",
+"تدور الأرض حول الشمس دورة كاملة في نحو 365 يومًا.",
+"الجهة المقابلة للشمس يكون فيها نهار، والجهة الأخرى ليل.",
+"للقلب أربع حجرات: أُذينان وبُطينان.",
+"الجلد أكبر أعضاء الجسم، ويحمينا من الجراثيم.",
+"يولد الطفل بنحو 300 عظمة، يلتحم بعضها فتصبح 206 عند الكبر.",
+"للإنسان البالغ 32 سنًّا، منها أضراس العقل.",
+"الشمس تساعد الجلد على صنع فيتامين د المهم للعظام.",
+"اللون الأسود يمتص الضوء والحرارة، والأبيض يعكسهما.",
+"ميزان الحرارة (الترمومتر) يقيس درجة الحرارة.",
+"إبرة البوصلة مغناطيس صغير يتّجه نحو الشمال.",
+"ابن سينا طبيب مسلم، ودُرّس كتابه «القانون» في أوروبا قرونًا.",
+"كلمة «الجبر» جاءت من كتاب الخوارزمي في الحساب.",
+"ابن الهيثم شرح كيف نرى الأشياء بالضوء في كتابه «المناظر».",
+"حصل غراهام بل على براءة اختراع الهاتف سنة 1876م.",
+"صنع إديسون مصباحًا كهربائيًا عمليًا يدوم طويلًا سنة 1879م.",
+"قانون الجاذبية لنيوتن يفسّر سقوط الأشياء ودوران الكواكب."
+],
+history:[
+"تدمر مدينة أثرية في بادية الشام بسوريا، وتُسمّى «عروس الصحراء».",
+"كانت دمشق عاصمة الدولة الأموية نحو 90 عامًا.",
+"بنى العباسيون بغداد وجعلوها عاصمة للعلم والحضارة.",
+"لقّبه النبي ﷺ بسيف الله المسلول، واشتهر بأنه لم يُهزم في معركة قادها.",
+"بنى المصريون القدماء الأهرامات قبل أكثر من 4500 سنة.",
+"هاجر النبي ﷺ سنة 622م، ومن الهجرة يبدأ التقويم الهجري.",
+"وُلد النبي ﷺ في عام الفيل نحو سنة 570م.",
+"حرّر صلاح الدين القدس سنة 1187م.",
+"انتصر صلاح الدين في حطين، ثم توجّه إلى القدس فحرّرها.",
+"حطين قرب بحيرة طبريا في فلسطين.",
+"أوقف المسلمون زحف المغول في عين جالوت سنة 1260م.",
+"قاد قطز جيش المماليك ومعه الظاهر بيبرس في عين جالوت.",
+"فتح محمد الفاتح القسطنطينية وعمره نحو 21 سنة، وصارت تُسمّى إسطنبول.",
+"فُتحت القسطنطينية سنة 1453م.",
+"عبر طارق بن زياد البحر سنة 711م، ومن اسمه جاء اسم «جبل طارق».",
+"اليرموك نهر في جنوب سوريا، ووقعت المعركة قربه سنة 636م.",
+"القادسية في العراق، وانتصر فيها المسلمون على الفرس.",
+"سعد بن أبي وقاص من العشرة المبشّرين بالجنة.",
+"قاد خالد بن الوليد الجيش في اليرموك فانتصر على الروم.",
+"فتح عمرو بن العاص مصر في عهد عمر بن الخطاب.",
+"بنى عقبة بن نافع مدينة القيروان في تونس نحو سنة 670م.",
+"بنى أبو جعفر المنصور بغداد وسمّاها «مدينة السلام».",
+"أسّس معاوية بن أبي سفيان الدولة الأموية وجعل دمشق عاصمتها.",
+"حكم عمر بن عبد العزيز سنتين ونصفًا فقط، فانتشر فيها العدل.",
+"الجامع الأموي في دمشق من أقدم وأجمل مساجد العالم.",
+"زنوبيا ملكة تدمر، حكمت مملكة واسعة في القرن الثالث الميلادي.",
+"أبجدية أوغاريت قرب اللاذقية من أقدم الأبجديات المكتشفة.",
+"دمشق مأهولة بالسكان منذ آلاف السنين.",
+"القاهرة مليئة بالمساجد والمآذن الأثرية الجميلة.",
+"قانون حمورابي نُقش على مسلّة حجرية في بابل.",
+"الكتابة المسمارية علامات تشبه المسامير نُقشت على ألواح الطين.",
+"الهيروغليفية كتابة بالصور نُقشت على المعابد المصرية.",
+"حكم العثمانيون الشام من سنة 1516م حتى 1918م تقريبًا.",
+"انتصر العثمانيون في مرج دابق قرب حلب على المماليك.",
+"استُشهد يوسف العظمة في ميسلون دفاعًا عن دمشق.",
+"بدأت الثورة السورية الكبرى من جبل العرب سنة 1925م.",
+"يُحتفل بعيد الجلاء في سوريا يوم 17 نيسان.",
+"عمر المختار «شيخ الشهداء» قاوم الاحتلال الإيطالي في ليبيا.",
+"قاد الأمير عبد القادر المقاومة في الجزائر نحو 15 عامًا.",
+"قدّم الشعب الجزائري تضحيات كبيرة حتى نال استقلاله سنة 1962م.",
+"ابن خلدون مؤرّخ وُلد في تونس، وكتابه «المقدمة» من أشهر كتب التاريخ.",
+"قطع ابن بطوطة أكثر من 100 ألف كيلومتر في رحلاته.",
+"أحمد بن ماجد ملّاح عربي ألّف كتبًا في علم البحار.",
+"وصل كولومبوس إلى جزر أمريكا سنة 1492م.",
+"صعد يوري غاغارين إلى الفضاء سنة 1961م.",
+"قال أرمسترونغ: «خطوة صغيرة لإنسان، قفزة عملاقة للبشرية».",
+"هبطت مركبة «أبولو 11» على القمر في تموز 1969م.",
+"استمرّت الحرب العالمية الأولى من 1914 إلى 1918م.",
+"استمرّت الحرب العالمية الثانية من 1939 إلى 1945م.",
+"يمتد سور الصين آلاف الكيلومترات، وبُني على مدى قرون طويلة."
+],
+geo:[
+"دمشق عاصمة سوريا، ويجري فيها نهر بردى.",
+"القاهرة أكبر مدن مصر، ويمرّ بها نهر النيل.",
+"الرياض عاصمة المملكة العربية السعودية.",
+"بغداد يمرّ بها نهر دجلة.",
+"عمّان عاصمة الأردن، وبُنيت على عدة جبال.",
+"بيروت عاصمة لبنان وتطلّ على البحر المتوسط.",
+"في القدس المسجد الأقصى، أولى القبلتين.",
+"يمتد الساحل السوري على البحر المتوسط من اللاذقية إلى طرطوس.",
+"عملة سوريا هي الليرة السورية.",
+"آسيا أكبر القارات مساحةً وسكانًا.",
+"يبلغ طول نهر النيل نحو 6650 كم.",
+"المحيط الهادئ أكبر وأعمق محيطات العالم.",
+"يرتفع إيفرست نحو 8849 مترًا عن سطح البحر.",
+"أنقرة عاصمة تركيا، أما إسطنبول فهي أكبر مدنها.",
+"الرباط عاصمة المغرب، والدار البيضاء أكبر مدنه.",
+"أبوظبي عاصمة الإمارات، ودبي أشهر مدنها التجارية.",
+"عاصمة تونس تحمل اسم الدولة نفسها.",
+"باريس عاصمة فرنسا، وفيها برج إيفل.",
+"طوكيو عاصمة اليابان، ومن أكبر مدن العالم سكانًا.",
+"ينبع الفرات من تركيا ويمرّ بسوريا والعراق.",
+"النواعير عجلات خشبية ضخمة ترفع ماء نهر العاصي في حماة.",
+"من قمة قاسيون ترى دمشق كلها مضيئة في الليل.",
+"حلب تُلقّب بالشهباء، وفيها قلعة حلب الشهيرة.",
+"جبل الشيخ يكسوه الثلج معظم أيام السنة.",
+"أرواد هي الجزيرة المأهولة الوحيدة في سوريا.",
+"لسوريا 14 محافظة، منها دمشق وريف دمشق.",
+"عملة السعودية هي الريال السعودي.",
+"عملة مصر هي الجنيه المصري.",
+"أستراليا قارة ودولة في الوقت نفسه.",
+"الصحراء الكبرى في شمال أفريقيا، وتمتد على عدة دول.",
+"روسيا أكبر دولة في العالم، وتمتد في أوروبا وآسيا.",
+"الجزائر أكبر دولة عربية وأفريقية مساحةً.",
+"البحر الميت شديد الملوحة، فيطفو الإنسان فوقه بسهولة.",
+"قناة السويس تصل البحر المتوسط بالبحر الأحمر.",
+"البحر الأحمر يفصل بين أفريقيا وشبه الجزيرة العربية.",
+"مضيق جبل طارق يفصل بين أوروبا وأفريقيا.",
+"يجري النيل نحو الشمال ويصبّ في البحر المتوسط عند دلتا مصر.",
+"الأمازون أغزر أنهار العالم ماءً، ويمر بأكبر غابة مطيرة.",
+"جبال الألب في وسط أوروبا، وأعلى قممها «مون بلان».",
+"خط الاستواء خط وهمي يقسم الأرض إلى نصف شمالي ونصف جنوبي.",
+"تجاوزت الهند الصين في عدد السكان سنة 2023م.",
+"تأسّست جامعة الدول العربية سنة 1945م، وتضم اليوم 22 دولة.",
+"غرينلاند أكبر جزيرة في العالم، ويغطي الجليد معظمها.",
+"نهر الفولغا يجري في روسيا ويصبّ في بحر قزوين.",
+"مدينة الكويت هي عاصمة دولة الكويت.",
+"صنعاء من أقدم المدن، ومبانيها القديمة مزيّنة بزخارف بيضاء.",
+"في الخرطوم يلتقي النيل الأبيض والنيل الأزرق.",
+"طرابلس عاصمة ليبيا وتطل على البحر المتوسط.",
+"مصر في شمال شرق أفريقيا، وشبه جزيرة سيناء منها تقع في آسيا.",
+"كوالالمبور عاصمة ماليزيا، وفيها البرجان التوأمان."
+],
+iq:[
+"كلما أخذت ترابًا من الحفرة كبرت أكثر!",
+"للمشط أسنان يرتّب بها الشعر لكنه لا يعضّ.",
+"للإبرة ثقب يسمّى «عين الإبرة» يدخل منه الخيط.",
+"القلم يكتب، لكن الذي يقرأ هو الإنسان.",
+"البيضة مغلقة تمامًا، وبداخلها الفرخ الصغير.",
+"الجزر من الخضار، أما التفاح والموز والبرتقال ففواكه.",
+"الحمامة طائر، والباقي حيوانات مفترسة.",
+"الكرسي ليس لونًا!",
+"القلم ليس شكلًا هندسيًا.",
+"للزجاجة عنق (رقبة) لكن ليس لها رأس.",
+"للطاولة أربع أرجل لكنها لا تمشي.",
+"كلما زاد عمرك سنة، نقص ما بقي منه.",
+"السحاب يتحرّك بلا أرجل، ويمطر بلا عيون.",
+"الصدى يردّد أي كلام تقوله بأي لغة!",
+"الوعد يُكسر إذا لم نفِ به، والمؤمن يفي بوعده.",
+"الظل يدخل الماء ولا يبتلّ أبدًا.",
+"الناس ينادونك باسمك أكثر مما تقوله أنت.",
+"الوقت إن لم تستغلّه فيما ينفع ضاع منك.",
+"الضوء يملأ الغرفة ولا يحتاج مكانًا.",
+"تمسك أنفاسك بحبس النفس دون أن تلمسها.",
+"بعد الإثنين: الثلاثاء (1)، الأربعاء (2)، الخميس (3).",
+"إذا كان أمس الجمعة فاليوم السبت، وبعد غد الإثنين.",
+"أخذت مكان الثاني، فأنت الآن الثاني وليس الأول!",
+"الكيلو كيلو! الوزن نفسه، لكن القطن يأخذ حجمًا أكبر.",
+"أخو خالك هو خالك أيضًا.",
+"أمّ أبيك هي جدّتك.",
+"أنت أخذت اثنتين، فمعك اثنتان!",
+"بعد أول طرح يصبح العدد 20، فلم تعد تطرح من 25.",
+"كل الشهور فيها 28 يومًا على الأقل.",
+"أي عدد × 0 = 0",
+"أي عدد × 1 = العدد نفسه",
+"7 عدد فردي، والباقي أعداد زوجية.",
+"9 و15 و21 من مضاعفات 3، أما 16 فليس كذلك.",
+"الشمس نجم، والباقي كواكب.",
+"الرقم 6 إذا قلبته يصبح 9.",
+"للمكعب 6 أوجه مربعة، مثل حجر الزهر.",
+"«سداسي» يعني ستة أضلاع، مثل خلية النحل.",
+"«هربت كلها إلا 9» يعني بقي معه 9.",
+"الأخ الواحد أخٌ لكل البنات: 5 بنات + ولد واحد = 6.",
+"الفرق بينكما 5 سنوات دائمًا: 20 − 5 = 15.",
+"عدد القصّات أقل من عدد القطع بواحد: 5 − 1 = 4.",
+"الحبة الأولى الآن، والثانية بعد نصف ساعة، والثالثة بعد ساعة.",
+"عقرب الساعات على 3 والدقائق على 12: ربع دائرة = 90 درجة.",
+"الساعة 6: العقربان على خط مستقيم = 180 درجة.",
+"في اليد 5 أصابع: 10 × 5 = 50.",
+"الإنسان يحبو طفلًا، ويمشي شابًا، ويستعين بعصا عند الكبر.",
+"الترتيب: 1، 3، 7، 9 فالثالث هو 7.",
+"البحر يحمل السفن الضخمة، لكن المسمار يغرق فيه!",
+"أحمد أطول من سامي، وسامي أطول من علي، إذن علي الأقصر.",
+"كل قطة تصطاد فأرًا في 3 دقائق، فـ100 قطة تصطاد 100 فأر في 3 دقائق أيضًا."
+]
+};
+
+// 🔤 رتّب الحروف — "رمز|الكلمة" (مرتبة من الأقصر للأطول)
+const WORDS = "🦁|أسد,🐘|فيل,🌙|قمر,☀️|شمس,🏠|بيت,🐪|جمل,🔥|نار,💧|ماء,🌊|بحر,⛰️|جبل,🍯|عسل,🍞|خبز,⚽|كرة,✏️|قلم,🌧️|مطر,❄️|ثلج,🐟|سمكة,🌹|وردة,⭐|نجمة,🐱|قطة,🌳|شجرة,🐝|نحلة,🕌|مسجد,🍌|موز,🥛|حليب,🕰️|ساعة,🌍|أرض,📚|كتاب,🐎|حصان,🍎|تفاحة,🦋|فراشة,🚗|سيارة,✈️|طائرة,🏫|مدرسة,🐦|عصفور,🚢|سفينة,🎒|حقيبة,🦒|زرافة,🐢|سلحفاة,🐧|بطريق".split(",").map(s=>s.split("|"));
+
+// 🧩 أي صورة مختلفة؟ — "الصور|المختلفة|السبب"
+const ODD = [
+"🍎 🍌 🍇 🥕|🥕|الجزر من الخضار، والباقي فواكه.",
+"🐶 🐱 🐰 🐟|🐟|السمكة تعيش في الماء، والباقي على اليابسة.",
+"🚗 🚌 🚲 ✈️|✈️|الطائرة تطير في الجو، والباقي يسير على الأرض.",
+"⚽ 🏀 🎾 📚|📚|الكتاب ليس كرة.",
+"☀️ ⭐ 🌙 🌳|🌳|الشجرة على الأرض، والباقي في السماء.",
+"🦅 🐦 🦉 🐧|🐧|البطريق طائر لا يطير.",
+"✏️ 🖊️ 🖍️ 🍕|🍕|البيتزا طعام، والباقي أدوات كتابة.",
+"🐄 🐑 🐐 🦁|🦁|الأسد حيوان مفترس، والباقي حيوانات تعطينا الحليب.",
+"❄️ ⛄ 🧊 🔥|🔥|النار حارّة، والباقي بارد.",
+"🍞 🧀 🥛 🧦|🧦|الجوارب ليست طعامًا.",
+"🔨 🪚 🔧 🍉|🍉|البطيخ فاكهة، والباقي أدوات.",
+"🐝 🦋 🐞 🐍|🐍|الأفعى ليست حشرة.",
+"🐬 🐋 🐳 🦈|🦈|القرش سمكة، والباقي ثدييات ترضع صغارها.",
+"👟 👞 👢 🧤|🧤|القفاز يُلبس في اليد، والباقي في القدم.",
+"🍦 🍧 🍨 🍲|🍲|الحساء ساخن، والباقي مثلّجات.",
+"🚒 🚑 🚓 🚜|🚜|الجرّار للزراعة، والباقي سيارات طوارئ.",
+"🌍 🌕 🪐 ☀️|☀️|الشمس نجم، والباقي كواكب وأقمار.",
+"🍓 🍒 🍎 🍌|🍌|الموز أصفر، والباقي أحمر.",
+"🦆 🐔 🦃 🐈|🐈|القطة ليست طائرًا.",
+"🕐 ⏰ ⌚ 📏|📏|المسطرة تقيس الطول، والباقي يقيس الوقت.",
+"2️⃣ 4️⃣ 6️⃣ 7️⃣|7️⃣|7 عدد فردي، والباقي زوجية.",
+"1️⃣ 3️⃣ 5️⃣ 8️⃣|8️⃣|8 عدد زوجي، والباقي فردية.",
+"🐜 🕷️ 🐞 🐝|🕷️|العنكبوت ليس حشرة، فله 8 أرجل.",
+"🦒 🐘 🦓 🐻‍❄️|🐻‍❄️|الدب القطبي يعيش في الثلج، والباقي في أفريقيا.",
+"🥕 🥔 🧅 🍇|🍇|العنب فاكهة، والباقي خضار.",
+"⛵ 🚤 🚢 🚂|🚂|القطار يسير على السكة، والباقي في الماء.",
+"🏀 ⚽ 🏐 🧸|🧸|الدبدوب ليس كرة.",
+"💧 🌊 🌧️ 🏜️|🏜️|الصحراء جافة، والباقي ماء.",
+"👁️ 👂 👃 🧢|🧢|القبعة ليست من أعضاء الجسم.",
+"🌲 🌳 🌴 🍄|🍄|الفطر ليس شجرة.",
+"☕ 🍵 🥛 🍔|🍔|البرغر طعام، والباقي مشروبات.",
+"🔦 💡 🕯️ 🧊|🧊|الثلج لا يعطي ضوءًا.",
+"🐓 🐄 🐑 🐺|🐺|الذئب حيوان بري مفترس، والباقي حيوانات مزرعة.",
+"✂️ 📏 📐 🍪|🍪|البسكويت طعام، والباقي أدوات مدرسية.",
+"🍬 🍫 🍭 🥦|🥦|البروكلي خضار صحي، والباقي حلويات.",
+"🏠 🏢 🏰 🚗|🚗|السيارة ليست بناءً.",
+"🌧️ ⛈️ 🌨️ ☀️|☀️|الشمس تعني صحوًا، والباقي غيوم ممطرة.",
+"🦊 🐺 🐶 🐔|🐔|الدجاجة طائر، والباقي من فصيلة الكلاب."
+].map(s=>{const p=s.split("|");return{opts:p[0].split(" "),a:p[1],info:p[2]}});
+
+// 🎯 اسحب كل صورة إلى مكانها — "العنوان|يسار=يمين,..."
+const MATCH = [
+"اسحب كل حيوان إلى اسم صغيره|🦁=شبل,🐴=مُهر,🐄=عجل",
+"اسحب كل حيوان إلى اسم صغيره|🐑=حَمَل,🐶=جرو,🐐=جدي",
+"اسحب كل حيوان إلى بيته|🦁=عرين,🐦=عش,🐝=خلية",
+"اسحب كل حيوان إلى صوته|🦁=زئير,🐴=صهيل,🐸=نقيق",
+"اسحب كل حيوان إلى صوته|🐍=فحيح,🕊️=هديل,🐶=نباح",
+"اسحب كل صورة إلى اسمها|🍎=تفاحة,🍌=موز,🍇=عنب",
+"اسحب كل صورة إلى اسمها|🚗=سيارة,✈️=طائرة,🚢=سفينة",
+"اسحب كل صورة إلى اسمها|☀️=شمس,🌙=قمر,⭐=نجمة",
+"اسحب كل صورة إلى اسمها|🐘=فيل,🦒=زرافة,🐪=جمل",
+"اسحب كل صورة إلى اسمها|🏫=مدرسة,🕌=مسجد,🏥=مستشفى",
+"اسحب كل أداة إلى صاحب المهنة|🩺=طبيب,🌾=مزارع,🎨=رسّام",
+"اسحب كل عضو إلى عمله|👁️=نرى,👂=نسمع,👃=نشمّ",
+"اسحب كل صورة إلى اسمها|🌧️=مطر,❄️=ثلج,⚡=برق",
+"اسحب كل كلمة إلى ضدّها|طويل=قصير,كبير=صغير,حارّ=بارد",
+"اسحب كل كلمة إلى ضدّها|ليل=نهار,سريع=بطيء,سعيد=حزين",
+"اسحب كل دولة إلى عاصمتها|سوريا=دمشق,مصر=القاهرة,العراق=بغداد",
+"اسحب كل دولة إلى عاصمتها|الأردن=عمّان,لبنان=بيروت,السعودية=الرياض",
+"اسحب كل عملية إلى ناتجها|3×4=12,5×5=25,6×7=42",
+"اسحب كل عملية إلى ناتجها|9×8=72,7×7=49,8×6=48",
+"اسحب كل مفرد إلى جمعه|كتاب=كُتُب,قلم=أقلام,مدرسة=مدارس"
+].map(s=>{const [t,p]=s.split("|");return{title:t,pairs:p.split(",").map(x=>x.split("="))}});
+
+// 👾 وحش نهاية كل عالم
+const BOSSES=[["🦀","السلطعون العملاق"],["🦍","الغوريلا الحارسة"],["🦂","العقرب الذهبي"],["🦑","الحبّار العملاق"],["🦅","النسر الجبلي"],["🐉","تنّين القلعة"],["🦖","ديناصور البركان"],["🐻‍❄️","دبّ الجليد"],["👾","الفضائي الغامض"],["🐲","تنّين التاج"]];
+
+// ====== العوالم والثوابت ======
+const WORLDS=[
+ ["🏝️","جزيرة البداية"],["🌳","غابة المعرفة"],["🏜️","صحراء الألغاز"],["🌊","بحر الأسرار"],["🏔️","جبال التحدي"],
+ ["🏰","قلعة الحكمة"],["🌋","بركان الذكاء"],["❄️","قطب العباقرة"],["🌌","فضاء النجوم"],["👑","تاج الأبطال"]];
+const CATS=["deen","arabic","general","history","geo","iq"];
+const CATNAME={deen:"🕌 ديني",arabic:"📝 لغة عربية",general:"🌍 ثقافة عامة",history:"🏛️ تاريخ",geo:"🗺️ جغرافيا",iq:"🧠 ذكاء وألغاز",
+ math:"➗ حساب",seq:"🔢 أكمل المتتالية",tf:"✅ صح أم خطأ",letters:"🔤 رتّب الحروف",odd:"🧐 الصورة المختلفة",match:"✋ اسحب وطابق",custom:"👨‍👩‍👧 سؤال من الأهل"};
+const QPER=6,TIME_CH=20,BOSS_HP=4;
+
+// ====== الحفظ ======
+const KEY="rihla_azkiya_v1";
+const DEF=()=>({stars:{},coins:100,sound:true,voice:true,missions:{},firstBonus:{},pos:1,
+ name:"",char:"🦉",photo:"",hat:"",road:"gold",owned:{"🦉":1,"gold":1,"hat:":1},
+ chests:{},bosses:{},daily:{last:"",streak:0,best:0},badges:{},cs:{},earned:0,
+ custom:[],customM:[],pin:"",rec:{},duels:0,profileDone:false,buys:0});
+let S=DEF();
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)S=Object.assign(DEF(),s)}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast("⚠️ الذاكرة ممتلئة")}}
+const totalStars=()=>Object.values(S.stars).reduce((a,b)=>a+b,0);
+const maxUnlocked=()=>{let n=1;while(n<100&&(S.stars[n]||0)>=1)n++;return n};
+const levelsDone=()=>Object.values(S.stars).filter(x=>x>0).length;
+function addCoins(n){S.coins+=n;if(n>0)S.earned+=n}
+
+// ====== أدوات ======
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const ri=(r,a,b)=>a+Math.floor(r()*(b-a+1));
+function shuffle(a,r){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function numWrong(ans,r,spread){const s=new Set([ans]);let guard=0;while(s.size<4&&guard++<200){let d=ri(r,1,spread)*(r()<.5?-1:1);let v=ans+d;if(v>=0)s.add(v)}let k=1;while(s.size<4)s.add(ans+spread+k++);return[...s].slice(1).map(String)}
+const todayStr=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const L="⁦",R="⁩";
+
+// ====== مولّد الحساب (مع الشرح) ======
+function mathQ(n,r){
+ const t=Math.ceil(n/20);let q,a,sp=10,info;
+ if(t===1){ if(r()<.5){const x=ri(r,12,60+n*4),y=ri(r,8,40+n*3);q=`${L}${x} + ${y} = ?${R}`;a=x+y;info=`${L}${x} + ${y} = ${a}${R}`}
+            else{const x=ri(r,40,90+n*5),y=ri(r,8,x-5);q=`${L}${x} − ${y} = ?${R}`;a=x-y;info=`${L}${x} − ${y} = ${a}${R}، وللتأكد: ${L}${a} + ${y} = ${x}${R}`} }
+ else if(t===2){const x=ri(r,3,12),y=ri(r,3,12);q=`${L}${x} × ${y} = ?${R}`;a=x*y;sp=8;info=`${L}${x} × ${y}${R} يعني ${x} مكررة ${y} مرات = ${a}`}
+ else if(t===3){ if(r()<.5){const y=ri(r,3,12),a0=ri(r,3,15);q=`${L}${a0*y} ÷ ${y} = ?${R}`;a=a0;sp=5;info=`لأن ${L}${a0} × ${y} = ${a0*y}${R}`}
+            else{const x=ri(r,3,12),y=ri(r,3,9),c=ri(r,5,40);q=`${L}${x} × ${y} + ${c} = ?${R}`;a=x*y+c;info=`نضرب أولًا: ${L}${x} × ${y} = ${x*y}${R}، ثم نجمع: ${L}${x*y} + ${c} = ${a}${R}`} }
+ else if(t===4){ const k=r();
+   if(k<.4){const x=ri(r,2,20),y=ri(r,2,9),z=ri(r,2,9);q=`${L}${x} + ${y} × ${z} = ?${R}`;a=x+y*z;info=`الضرب قبل الجمع: ${L}${y} × ${z} = ${y*z}${R}، ثم ${L}${x} + ${y*z} = ${a}${R}`}
+   else if(k<.75){const p=[10,20,25,50][ri(r,0,3)];const base=ri(r,2,12)*(p===25?4:p===50?2:10);q=`كم يساوي ${p}٪ من ${base}؟`;a=base*p/100;info=`${p}٪ تعني ${p} من كل 100: ${L}${base} × ${p} ÷ 100 = ${a}${R}`}
+   else{const x=ri(r,11,25),y=ri(r,3,9);q=`${L}${x} × ${y} = ?${R}`;a=x*y;sp=12;info=`${L}${x} × ${y} = (${Math.floor(x/10)*10} × ${y}) + (${x%10} × ${y}) = ${a}${R}`} }
+ else { const k=r();
+   if(k<.25){const x=ri(r,6,15);q=`كم يساوي ${L}${x} × ${x}${R} ؟`;a=x*x;sp=15;info=`مربّع العدد ${x} هو ${a}`}
+   else if(k<.5){const w=ri(r,4,15),h=ri(r,3,12);q=`مستطيل طوله ${w} سم وعرضه ${h} سم، كم مساحته (سم²)؟`;a=w*h;sp=12;info=`مساحة المستطيل = الطول × العرض = ${L}${w} × ${h} = ${a}${R}`}
+   else if(k<.75){const d=[3,4,5][ri(r,0,2)],nu=ri(r,1,d-1),m=ri(r,3,12)*d;q=`كم يساوي ${L}${nu}/${d}${R} من ${m}؟`;a=m*nu/d;sp=6;info=`نقسم على ${d}: ${L}${m} ÷ ${d} = ${m/d}${R}، ثم نضرب في ${nu}: ${a}`}
+   else{const price=ri(r,3,15)*5,cnt=ri(r,2,6),pay=Math.ceil(price*cnt/100)*100;q=`اشترى سامي ${cnt} دفاتر، ثمن الدفتر ${price} ليرة، ودفع ${pay} ليرة. كم الباقي؟`;a=pay-price*cnt;sp=20;info=`الثمن: ${L}${cnt} × ${price} = ${price*cnt}${R}، الباقي: ${L}${pay} − ${price*cnt} = ${a}${R}`;
+     if(a===0){q=`اشترى سامي ${cnt} دفاتر، ثمن الدفتر ${price} ليرة. كم دفع؟`;a=price*cnt;info=`${L}${cnt} × ${price} = ${a}${R}`}} }
+ return{type:"mcq",cat:"math",q,a:String(a),w:numWrong(a,r,sp),pic:["🧮✏️","📐✏️","🔢🧠","➕✖️"][ri(r,0,3)],info}
+}
+// ====== مولّد المتتاليات ======
+function seqQ(n,r){
+ const t=Math.ceil(n/20);let arr=[],kind=ri(r,1,t),info;
+ if(kind===1){const s=ri(r,1,20),d=ri(r,2,4+n%7);for(let i=0;i<5;i++)arr.push(s+i*d);info=`نضيف ${d} كل مرة.`}
+ else if(kind===2){const s=ri(r,1,4),m=ri(r,2,3);for(let i=0;i<5;i++)arr.push(s*m**i);info=`نضرب في ${m} كل مرة.`}
+ else if(kind===3){let v=ri(r,10,30);const a=ri(r,3,8),b=ri(r,1,a-1);for(let i=0;i<5;i++){arr.push(v);v+=i%2?-b:a}info=`نضيف ${a} ثم نطرح ${b} بالتناوب.`}
+ else if(kind===4){const s=ri(r,1,5);for(let i=0;i<5;i++)arr.push((s+i)**2);info=`هذه مربّعات الأعداد: ${s}×${s}، ${s+1}×${s+1}… والتالي ${s+4}×${s+4}.`}
+ else{let a=ri(r,1,3),b=ri(r,2,5);arr=[a,b];for(let i=2;i<5;i++)arr.push(arr[i-1]+arr[i-2]);info=`كل عدد = مجموع العددين قبله: ${arr[2]}+${arr[3]}=${arr[4]}.`}
+ const ans=arr.pop();
+ return{type:"mcq",cat:"seq",q:`أكمل: ${arr.join("، ")}، ؟`,a:String(ans),w:numWrong(ans,r,kind===2?ans>20?Math.round(ans/3):6:6),pic:"🔢🧩",info}
+}
+// ====== أنواع الأسئلة ======
+function bankQ(c,idx){const it=BANK[c][idx].split("|");return{type:"mcq",cat:c,q:it[0],a:it[1],w:it.slice(2),pic:PICS[c].split("|")[idx]||"❓",info:INFO[c][idx]}}
+function tfQ(c,idx,r){const b=bankQ(c,idx),truth=r()<.5,shown=truth?b.a:b.w[ri(r,0,2)];
+ return{type:"mcq",cat:c,label:"tf",q:`${b.q}\n👈 ${shown}`,a:truth?"صح ✅":"خطأ ❌",w:[truth?"خطأ ❌":"صح ✅"],fixed:["صح ✅","خطأ ❌"],pic:b.pic,info:(truth?"صحيح! ":`الإجابة الصحيحة: ${b.a}. `)+b.info}}
+function lettersQ(n,r){const max=n<=33?3:n<=66?4:9,pool=WORDS.filter(w=>[...w[1]].length<=max),w=pool[(n*7+ri(r,0,3))%pool.length];
+ let tiles=[...w[1]];if(n>50){const extra="بتثجحدرسعفقلمنهوي"[ri(r,0,16)];tiles.push(extra)}
+ return{type:"letters",cat:"letters",q:"رتّب الحروف لتكتب اسم الصورة",a:w[1],tiles:shuffle(tiles,r),pic:w[0],info:`الكلمة هي «${w[1]}» ${w[0]}`}}
+function oddQ(n,r){const o=ODD[(n*5+ri(r,0,2))%ODD.length];return{type:"mcq",cat:"odd",q:"أيّ صورة مختلفة عن غيرها؟",a:o.a,w:o.opts.filter(x=>x!==o.a),pic:"🧐🔍",info:o.info,emoji:true}}
+function matchQ(n,r){const m=MATCH[(n*3+ri(r,0,2))%MATCH.length];return{type:"match",cat:"match",q:m.title,pairs:m.pairs,pic:"✋🎯",info:m.pairs.map(p=>`${p[0]} ← ${p[1]}`).join("   ")}}
+function customQ(i){const c=S.custom[i%S.custom.length];return{type:"mcq",cat:"custom",q:c.q,a:c.a,w:c.w,pic:c.pic||"👨‍👩‍👧💬",info:c.info||"سؤال أضافه أهلك خصيصًا لك ❤️"}}
+function special(n,r,kinds){const k=kinds[ri(r,0,kinds.length-1)];
+ if(k==="tf")return tfQ(CATS[ri(r,0,5)],ri(r,0,49),r);if(k==="letters")return lettersQ(n,r);if(k==="odd")return oddQ(n,r);if(k==="match")return matchQ(n,r);
+ if(k==="custom"&&S.custom.length)return customQ(ri(r,0,999));return oddQ(n,r)}
+const finalize=(qs,r)=>qs.map(x=>x.type==="mcq"?{...x,opts:x.fixed||shuffle([x.a,...x.w],r)}:x);
+
+// ====== بناء المرحلة ======
+function buildLevel(n){
+ const r=rng(n*7919+13),qs=[];
+ for(let s=0;s<3;s++){const slot=(n-1)*3+s,c=CATS[slot%6];qs.push(bankQ(c,Math.floor(slot/6)%50))}
+ qs.push(mathQ(n,r));qs.push(seqQ(n,r));
+ const kind=["tf","letters","odd","match"][n%4];
+ qs.push(S.custom.length&&n%3===0?customQ(n):special(n,r,[kind]));
+ return finalize(shuffle(qs,r),r);
+}
+function buildRandom(seed,count,kinds){
+ const r=rng(seed),qs=[],n=ri(r,10,90);
+ for(let i=0;i<count;i++){const k=i%4;
+  if(k===0||k===2)qs.push(bankQ(CATS[ri(r,0,5)],ri(r,0,49)));
+  else if(k===1)qs.push(r()<.5?mathQ(ri(r,10,90),r):seqQ(ri(r,10,90),r));
+  else qs.push(special(n,r,kinds))}
+ return finalize(shuffle(qs,r),r);
+}
+
+// ====== الأصوات ======
+let AC;function beep(f,d,type="sine",v=.15,delay=0){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(AC.destination);const t=AC.currentTime+delay;o.start(t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.stop(t+d)}catch(e){}}
+const sfx={ok(){beep(660,.15,"triangle");beep(880,.25,"triangle",.15,.12)},bad(){beep(200,.35,"sawtooth",.08)},click(){beep(500,.06,"square",.05)},
+ win(){[523,659,784,1047].forEach((f,i)=>beep(f,.3,"triangle",.15,i*.13))},lose(){[400,300,220].forEach((f,i)=>beep(f,.3,"sine",.12,i*.15))},
+ hit(){beep(140,.2,"square",.12);beep(90,.3,"sawtooth",.08,.08)}};
+
+// ====== الصوت الناطق ======
+const hasAndroid=()=>window.Android&&typeof Android.speak==="function";
+function say(text,force){
+ if(!S.voice&&!force)return;text=String(text).replace(/[⁦-⁩]/g,"").replace(/[×]/g," ضرب ").replace(/÷/g," تقسيم ").replace(/−/g," ناقص ").replace(/\+/g," زائد ").replace(/=/g," يساوي ").replace(/\?|؟/g,"؟").replace(/👈/g,"،");
+ try{if(hasAndroid()){Android.speak(text);return}
+  if(window.speechSynthesis){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="ar-SA";u.rate=.95;
+   const v=speechSynthesis.getVoices().find(v=>/^ar/i.test(v.lang));if(v)u.voice=v;speechSynthesis.speak(u)}}catch(e){}}
+function stopSay(){try{if(hasAndroid())Android.stopSpeak();else if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}}
+const PHRASES={
+ ok:["أحسنت!","ممتاز!","رائع!","إجابة صحيحة!","أنت بطل!","عبقري!","برافو!","ما شاء الله!"],
+ bad:["خطأ، لا بأس!","للأسف خطأ، ركّز أكثر","إجابة خاطئة، ستنجح في المرة القادمة"],
+ win:["ممتاز يا بطل! أنهيت المرحلة","مبروك! أحسنت","رائع جدًا! استمر"],
+ lose:["لا بأس، حاول مرة أخرى","لم تنجح هذه المرة، جرّب من جديد"]};
+let lastAudio;
+function praise(kind){
+ if(!S.voice)return;
+ if(S.rec&&S.rec[kind]){try{lastAudio&&lastAudio.pause();lastAudio=new Audio(S.rec[kind]);lastAudio.play();return}catch(e){}}
+ const list=PHRASES[kind];let p=list[Math.floor(Math.random()*list.length)];
+ if(S.name&&(kind==="ok"||kind==="win")&&Math.random()<.4)p=p.replace(/!$/,"")+` يا ${S.name}!`;
+ say(p);
+}
+
+// ====== الشخصية ======
+const ROADS={gold:"#ffd23d",blue:"#38bdf8",pink:"#f472b6",green:"#4ade80",rainbow:"url(#rainbow)"};
+const roadColor=()=>ROADS[S.road]||ROADS.gold;
+function avatarHTML(size){
+ const body=S.char==="photo"&&S.photo?`<img src="${S.photo}" style="width:${size}px;height:${size}px;border-radius:50%;border:3px solid #fff;object-fit:cover;display:block;box-shadow:0 4px 10px #0006">`
+  :`<span style="font-size:${size}px;line-height:1;display:block">${S.char==="photo"?"🦉":S.char}</span>`;
+ return`<span style="position:relative;display:inline-block">${S.hat?`<span style="position:absolute;top:${-size*.42}px;left:50%;transform:translateX(-50%) rotate(-8deg);font-size:${size*.55}px;line-height:1">${S.hat}</span>`:""}${body}</span>`;
+}
+
+// ====== المشاهد المرسومة لكل نوع سؤال ======
+const CLOUD=(x,y,s,c="#fff",cls="")=>`<g class="cloud ${cls}"><g transform="translate(${x},${y}) scale(${s})" fill="${c}"><ellipse cx="0" cy="0" rx="30" ry="14"/><circle cx="-12" cy="-8" r="13"/><circle cx="10" cy="-12" r="16"/></g></g>`;
+const STARS=n=>{let h="";for(let i=0;i<n;i++)h+=`<circle class="twk" style="animation-delay:${(i*0.37)%2}s" cx="${(i*67)%400}" cy="${(i*37)%110}" r="${1+i%2}" fill="#fff"/>`;return h};
+const PALM=(x,y,s,c)=>`<g transform="translate(${x},${y}) scale(${s})" fill="${c}"><path d="M-3,0 Q0,-40 4,-70 L8,-70 Q4,-40 3,0Z"/><path d="M6,-70 q-30,-10 -45,8 q20,-14 45,-4z M6,-70 q30,-12 46,6 q-22,-12 -46,-2z M6,-70 q-12,-24 -34,-26 q20,8 32,28z M6,-70 q14,-24 34,-24 q-20,6 -32,26z"/></g>`;
+const TREE=(x,y,s)=>`<g transform="translate(${x},${y}) scale(${s})"><rect x="-4" y="-20" width="8" height="22" fill="#8b5a2b"/><circle cx="0" cy="-34" r="20" fill="#16a34a"/><circle cx="-12" cy="-24" r="12" fill="#22c55e"/><circle cx="12" cy="-26" r="13" fill="#15803d"/></g>`;
+const GEAR=(x,y,r,c,d)=>{let t="";for(let i=0;i<8;i++)t+=`<rect x="${-r*0.18}" y="${-r*1.25}" width="${r*0.36}" height="${r*0.5}" transform="rotate(${i*45})"/>`;return`<g transform="translate(${x},${y})"><g class="spin" style="animation-duration:${d}s" fill="${c}">${t}<circle r="${r}"/><circle r="${r*0.4}" fill="#2e1065"/></g></g>`};
+function sceneSVG(cat){
+ const W='viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice"';
+ const g=(id,a,b)=>`<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="400" height="200" fill="url(#${id})"/>`;
+ switch(cat){
+ case "deen":return`<svg ${W}>${g("gd","#0b1a4a","#4c2f8a")}${STARS(26)}
+  <circle cx="330" cy="40" r="22" fill="#ffe9a0"/><circle cx="340" cy="34" r="20" fill="#13235a"/>
+  <path d="M0,170 Q100,140 200,165 T400,155 V200 H0Z" fill="#c9a26b"/><path d="M0,185 Q120,160 260,182 T400,178 V200 H0Z" fill="#b08550"/>
+  <g fill="#1c1446"><rect x="40" y="105" width="12" height="70"/><path d="M38,105 L46,85 L54,105Z"/><rect x="70" y="125" width="80" height="50"/><path d="M78,126 Q110,70 142,126Z"/><rect x="168" y="105" width="12" height="70"/><path d="M166,105 L174,85 L182,105Z"/><rect x="108" y="66" width="3" height="10"/></g>
+  <g fill="#ffd56b" class="twk"><path d="M100,175 v-18 a10,10 0 0 1 20,0 v18z"/><rect x="80" y="140" width="8" height="12" rx="4"/><rect x="132" y="140" width="8" height="12" rx="4"/></g></svg>`;
+ case "arabic":return`<svg ${W}>${g("ga","#fff1c9","#ffc76b")}
+  <g font-size="34" font-weight="900" fill="#c2410c" opacity=".35"><text x="40" y="60" class="twk">أ</text><text x="320" y="70" class="twk" style="animation-delay:.6s">ب</text><text x="90" y="120" class="twk" style="animation-delay:1.1s">ت</text><text x="300" y="130" class="twk" style="animation-delay:1.5s">ج</text><text x="190" y="40" class="twk" style="animation-delay:.3s">ض</text></g>
+  <path d="M60,200 L80,150 Q140,135 200,155 Q260,135 320,150 L340,200Z" fill="#7c2d12"/>
+  <path d="M85,152 Q140,138 198,158 L198,196 Q140,180 75,196Z" fill="#fff"/><path d="M202,158 Q260,138 315,152 L325,196 Q260,180 202,196Z" fill="#fffaf0"/>
+  <g stroke="#cbd5e1" stroke-width="2"><path d="M95,165 Q140,154 188,170"/><path d="M92,177 Q140,166 188,182"/><path d="M212,170 Q260,154 305,165"/><path d="M212,182 Q260,166 308,177"/></g>
+  <g transform="translate(360,40)"><rect x="-3" y="0" width="6" height="40" fill="#92400e"/><path d="M-16,0 h32 l-8,-20 h-16z" fill="#f59e0b"/><circle r="40" fill="#fde68a" opacity=".25" class="twk"/></g></svg>`;
+ case "general":return`<svg ${W}>${g("gg","#60c5fa","#dff6ff")}
+  <g transform="translate(60,45)"><g class="spin" style="animation-duration:14s">${[0,45,90,135,180,225,270,315].map(a=>`<rect x="-3" y="-42" width="6" height="14" rx="3" fill="#fbbf24" transform="rotate(${a})"/>`).join("")}</g><circle r="24" fill="#fcd34d"/></g>
+  ${CLOUD(150,40,1)}${CLOUD(300,60,.8,"#fff","c2")}
+  <path d="M0,160 Q90,110 200,150 T400,140 V200 H0Z" fill="#4ade80"/><path d="M0,185 Q130,150 260,180 T400,175 V200 H0Z" fill="#22c55e"/>
+  ${TREE(40,170,1)}${TREE(340,160,.9)}${TREE(370,175,.7)}
+  <g transform="translate(300,185)"><circle r="6" fill="#f472b6"/><circle cx="14" cy="4" r="5" fill="#facc15"/></g></svg>`;
+ case "history":return`<svg ${W}>${g("gh","#ffb86b","#8b2e6e")}
+  <circle cx="200" cy="140" r="50" fill="#ffe08a" opacity=".9"/>
+  <path d="M0,160 Q200,140 400,160 V200 H0Z" fill="#7a3b1c"/>
+  <g fill="#3b1530"><rect x="250" y="95" width="130" height="70"/>${[0,1,2,3,4,5,6,7].map(i=>`<rect x="${250+i*17}" y="86" width="10" height="10"/>`).join("")}<rect x="236" y="70" width="28" height="95"/><rect x="366" y="70" width="28" height="95"/><path d="M232,70 L250,46 L268,70Z"/><path d="M362,70 L380,46 L398,70Z"/></g>
+  <path d="M302,165 v-30 a13,13 0 0 1 26,0 v30z" fill="#1a0a16"/>
+  ${PALM(60,170,1,"#3b1530")}${PALM(110,175,.8,"#3b1530")}
+  <g fill="#3b1530"><path d="M150,165 l10,-14 l6,6 l4,-10 l8,18z"/></g></svg>`;
+ case "geo":return`<svg ${W}>${g("ge","#93e0ff","#e8fbff")}
+  <path d="M0,120 L60,60 L110,105 L170,40 L240,115Z" fill="#7c9cbf"/><path d="M150,58 L170,40 L190,62 L178,58 L170,66Z" fill="#fff"/>
+  ${CLOUD(260,40,.9)}${CLOUD(80,30,.6,"#fff","c2")}
+  <rect y="118" width="400" height="82" fill="#0ea5e9"/>
+  <g class="wave" fill="none" stroke="#bae6fd" stroke-width="3"><path d="M-20,140 q15,-8 30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0"/><path d="M0,170 q15,-8 30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0"/></g>
+  <ellipse cx="320" cy="132" rx="55" ry="14" fill="#fcd34d"/>${PALM(320,130,.8,"#166534")}
+  <g class="cloud c2" style="animation-duration:30s"><g transform="translate(60,150)"><path d="M-25,0 h50 l-10,12 h-30z" fill="#92400e"/><path d="M0,-2 v-40 l26,34z" fill="#fff"/><path d="M-2,-2 v-30 l-18,26z" fill="#fde68a"/></g></g></svg>`;
+ case "iq":return`<svg ${W}>${g("gi","#7c3aed","#1e1b4b")}${STARS(14)}
+  ${GEAR(60,60,26,"#a78bfa",7)}${GEAR(98,96,18,"#c4b5fd",5)}${GEAR(340,140,32,"#8b5cf6",9)}${GEAR(300,60,16,"#ddd6fe",4)}
+  <g font-size="40" font-weight="900" fill="#fde047" opacity=".7"><text x="20" y="180" class="twk">؟</text><text x="370" y="50" class="twk" style="animation-delay:.8s">؟</text><text x="250" y="190" class="twk" style="animation-delay:1.4s">؟</text></g></svg>`;
+ case "math":return`<svg ${W}><rect width="400" height="200" fill="#8b5a2b"/><rect x="10" y="10" width="380" height="180" rx="8" fill="#1f5135"/>
+  <g fill="#ffffff" opacity=".28" font-size="30" font-weight="900" font-family="Comic Sans MS,sans-serif"><text x="30" y="55">2+3</text><text x="300" y="60">7×8</text><text x="40" y="170">÷</text><text x="320" y="170">=</text><text x="190" y="45" class="twk">π</text></g>
+  <rect x="150" y="182" width="40" height="7" rx="3" fill="#f5f5f4"/><rect x="200" y="182" width="24" height="7" rx="3" fill="#fde68a"/></svg>`;
+ default:return`<svg ${W}>${g("gs","#fdf4ff","#f0abfc")}
+  ${["#f87171","#fb923c","#facc15","#4ade80","#38bdf8","#a78bfa"].map((c,i)=>`<rect x="${20+i*62}" y="${170-i*22}" width="52" height="${30+i*22}" rx="8" fill="${c}"/><text x="${46+i*62}" y="${192-i*22}" font-size="18" font-weight="900" fill="#fff" text-anchor="middle">${i+1}</text>`).join("")}</svg>`;
+ }
+}
+function sparks(){const s=document.createElement("div");s.className="sparks";const em=["⭐","✨","🌟","💫"];
+ for(let i=0;i<10;i++){const a=i/10*6.28;s.innerHTML+=`<i style="--x:${Math.cos(a)*120}px;--y:${Math.sin(a)*80}px">${em[i%4]}</i>`}
+ $("stage").appendChild(s);setTimeout(()=>s.remove(),1000)}
+
+const DECO=[["🌴","🐚","🦀","⛱️","🐢"],["🌳","🌲","🍄","🦌","🐿️"],["🌵","🐪","🦂","🏺","☀️"],["🐠","🐙","🐬","🪸","🐚"],["🏔️","🦅","⛰️","🐐","🌲"],["🏰","🛡️","⚔️","🚩","🗝️"],["🌋","🔥","🪨","🦖","💎"],["❄️","☃️","🐧","🐻‍❄️","🧊"],["🪐","🌠","🚀","🛸","🌙"],["👑","💎","🏆","✨","🎁"]];
+const ZONEBG=["#38bdf8,#0369a1","#4ade80,#166534","#fbbf24,#b45309","#22d3ee,#155e75","#94a3b8,#334155","#c084fc,#5b21b6","#f87171,#7f1d1d","#bae6fd,#4f46e5","#312e81,#0b0b2b","#fde047,#a16207"];
+const STEP=96,TOP=240,BOT=170;
+const mapH=()=>TOP+99*STEP+BOT;
+function nodePos(n){return{x:50+30*Math.sin((n-1)*0.62),y:mapH()-BOT-(n-1)*STEP}}
+function openMap(scrollToCurrent){
+ const mu=maxUnlocked(),H=mapH(),r=rng(77);
+ let h=`<div class="road" style="height:${H}px">`;
+ // مناطق العوالم (من الأسفل للأعلى)
+ for(let w=0;w<10;w++){
+  const yTop=w===9?0:nodePos(w*10+10).y-STEP/2, yBot=w===0?H:nodePos(w*10+1).y+STEP/2;
+  let st=0;for(let i=1;i<=10;i++)st+=S.stars[w*10+i]||0;
+  h+=`<div class="zone" style="top:${yTop}px;height:${yBot-yTop}px;background:linear-gradient(0deg,${ZONEBG[w]})"><div class="zname">${WORLDS[w][0]} ${WORLDS[w][1]}<small>⭐${st}/30</small></div></div>`;
+  for(let k=0;k<7;k++){const n=w*10+1+Math.floor(r()*10),p=nodePos(n);let x=p.x>50?ri(r,6,22):ri(r,78,94);
+   const y=p.y+ri(r,-40,40);h+=`<div class="deco ${k%3===0?"big":""} ${k%2?"sway":""}" style="left:${x}%;top:${y}px;animation-delay:-${k}s">${DECO[w][k%5]}</div>`}
+ }
+ // الطريق
+ let d="";for(let n=1;n<=100;n++){const p=nodePos(n);if(n===1){const s=nodePos(1);d=`M${s.x},${s.y+110} L${p.x},${p.y}`}else{const q=nodePos(n-1);const my=(p.y+q.y)/2;d+=` C${q.x},${my} ${p.x},${my} ${p.x},${p.y}`}}
+ const e=nodePos(100);d+=` L${e.x},${e.y-110}`;
+ // الجزء المقطوع من الطريق
+ let dd="";{const s=nodePos(1);dd=`M${s.x},${s.y+110} L${s.x},${s.y}`;for(let n=2;n<=mu;n++){const p=nodePos(n),q=nodePos(n-1),my=(p.y+q.y)/2;dd+=` C${q.x},${my} ${p.x},${my} ${p.x},${p.y}`}}
+ h+=`<svg class="path" viewBox="0 0 100 ${H}" preserveAspectRatio="none"><defs><linearGradient id="rainbow" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="700" spreadMethod="repeat"><stop offset="0" stop-color="#f43f5e"/><stop offset=".2" stop-color="#f59e0b"/><stop offset=".4" stop-color="#facc15"/><stop offset=".6" stop-color="#22c55e"/><stop offset=".8" stop-color="#3b82f6"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+  <path d="${d}" fill="none" stroke="#0005" stroke-width="34" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+  <path d="${d}" fill="none" stroke="#f3e2b8" stroke-width="26" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+  <path d="${dd}" fill="none" stroke="${roadColor()}" stroke-width="26" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+  <path d="${d}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="10 12" vector-effect="non-scaling-stroke"/></svg>`;
+ // البداية والنهاية
+ const s1=nodePos(1);h+=`<div class="flag" style="left:${s1.x}%;top:${s1.y+115}px"><b>🚩</b>البداية</div>`;
+ h+=`<div class="flag" style="left:${e.x}%;top:${e.y-105}px" onclick="if(S.stars[100])showCertificate()"><b>🏆</b>النهاية</div>`;
+ for(let w=1;w<=10;w++){const p=nodePos(w*10);h+=`<div class="deco big" style="left:${p.x>50?p.x-22:p.x+22}%;top:${p.y-6}px;font-size:34px">${S.chests&&S.chests[w*10]?"📦":"🎁"}</div>`}
+ // النقاط
+ for(let n=1;n<=100;n++){const p=nodePos(n),locked=n>mu,s=S.stars[n]||0,ch=n%10===0,mi=n%5===0&&!ch;
+  h+=`<button class="node ${locked?"locked":""} ${ch?"challenge":""} ${mi?"mission":""} ${n===mu&&!s?"current":""}" style="left:${p.x}%;top:${p.y}px" id="lv${n}" onclick="levelInfo(${n})">
+  ${ch?`<span class="tag">${BOSSES[n/10-1][0]}</span>`:""}${mi?'<span class="tag">🎯</span>':""}${locked?"🔒":n}${locked?"":`<span class="st">${"★".repeat(s)}${"☆".repeat(3-s)}</span>`}</button>`}
+ const from=Math.min(S.pos||1,mu),fp=nodePos(from);
+ h+=`<div id="avatar" style="left:${fp.x}%;top:${fp.y-18}px"><span>${avatarHTML(46)}</span></div></div>`;
+ $("mapScroll").innerHTML=h;$("mStars").textContent=totalStars();$("mCoins").textContent=S.coins;
+ show("map");
+ const sc=$("mapScroll"),center=y=>{sc.scrollTop=y-sc.clientHeight/2};
+ center(fp.y);
+ if(mu>from){ // تحريك البومة إلى المرحلة الجديدة
+  let k=from;const step=()=>{k++;const p=nodePos(k);$("avatar").style.left=p.x+"%";$("avatar").style.top=(p.y-18)+"px";sc.scrollTo({top:p.y-sc.clientHeight/2,behavior:"smooth"});beep(600+k%5*80,.08,"triangle",.06);
+   if(k<mu)setTimeout(step,480);else{S.pos=mu;save()}};setTimeout(step,500);
+ }else{S.pos=mu;save()}
+}
+function levelInfo(n){
+ if(n>maxUnlocked()){sfx.bad();toast("🔒 أكمل المراحل السابقة أولًا");return}
+ sfx.click();const w=WORLDS[Math.floor((n-1)/10)],s=S.stars[n]||0,ch=n%10===0;
+ modal(`<div style="font-size:50px">${w[0]}</div><h2>المرحلة ${n}</h2><p style="margin:4px 0">${w[1]}</p>
+ <div style="font-size:34px;color:#f5a400;letter-spacing:4px">${"★".repeat(s)}${"☆".repeat(3-s)}</div>
+ <p style="font-size:16px">${ch?`${BOSSES[n/10-1][0]} مواجهة ${BOSSES[n/10-1][1]}!<br>⏱️ 20 ثانية لكل سؤال، اهزمه بـ4 إجابات صحيحة<br>🎁 وبعده صندوق كنز`:"6 أسئلة منوّعة مع صور ومشاهد"}${n%5===0&&!ch?"<br>🎯 بعدها مهمة حقيقية بمكافأة":""}</p>
+ <div class="row"><button class="bigbtn green" onclick="closeModal();startLevel(${n})">▶ العب</button><button class="bigbtn alt" onclick="closeModal()">رجوع</button></div>`)}
+
+// ====== محرك اللعب (مراحل / تحدي اليوم / لاعبَين) ======
+let cur=null,timerId=null;
+function startLevel(n){
+ sfx.click();const ch=n%10===0;
+ cur={mode:"level",n,qs:buildLevel(n),i:0,right:0,earned:0,locked:false,ch,timed:ch,boss:ch?{hp:BOSS_HP,em:BOSSES[n/10-1][0],name:BOSSES[n/10-1][1]}:null};
+ $("qLevel").textContent=(ch?BOSSES[n/10-1][0]+" الوحش ":"المرحلة ")+n;
+ startPlay();
+}
+function startDaily(){
+ const d=todayStr();if(S.daily.last===d){toast("✅ أنهيت تحدي اليوم، عُد غدًا!");return}
+ sfx.click();const seed=+d.replace(/-/g,"");
+ cur={mode:"daily",n:0,qs:buildRandom(seed,QPER,["tf","letters","odd","match","custom"]),i:0,right:0,earned:0,locked:false,timed:true};
+ $("qLevel").textContent="📅 تحدي اليوم";startPlay();
+}
+function startDuel(p1,p2){
+ sfx.click();
+ cur={mode:"duel",n:0,qs:buildRandom(Date.now()%1e9,10,["tf","odd","custom"]),i:0,right:0,earned:0,locked:false,timed:false,players:[{name:p1,score:0},{name:p2,score:0}]};
+ startPlay();
+}
+function startPlay(){$("timerBox").style.display=cur.timed?"flex":"none";show("quiz");renderQ()}
+const QN=()=>cur.qs.length;
+
+function renderQ(){
+ const q=cur.qs[cur.i];cur.locked=false;cur.mist=0;stopSay();
+ $("qBar").style.width=(cur.i/QN()*100)+"%";
+ if(cur.mode==="duel"){const p=cur.players[cur.i%2];$("qLevel").innerHTML=`<span style="color:${cur.i%2?"#f9a8d4":"#93c5fd"}">🎮 دور: ${esc(p.name)}</span>`}
+ const st=$("stage");st.className="stage";
+ let boss="";if(cur.boss)boss=`<div class="boss" id="boss"><div class="bem">${cur.boss.hp>0?cur.boss.em:"😵"}</div><div class="hp">${"❤️".repeat(cur.boss.hp)}${"🖤".repeat(BOSS_HP-cur.boss.hp)}</div></div>`;
+ st.innerHTML=sceneSVG(({letters:"arabic",odd:"iq",match:"general",custom:"general"})[q.cat]||q.cat)+`<div class="badge">${CATNAME[q.label||q.cat]}</div><div class="badge num">${cur.i+1}/${QN()}</div>${boss}<div class="pic">${[...q.pic.matchAll(/\p{Extended_Pictographic}(‍\p{Extended_Pictographic}|️|⃣)*|\S/gu)].map(m=>`<span>${m[0]}</span>`).join("")}</div><button class="speak" onclick="readQ()">🔊</button>`;
+ $("qText").textContent=q.q;$("qText").style.animation="none";$("qText").offsetHeight;$("qText").style.animation="";
+ $("explain").classList.remove("on");
+ const box=$("qOpts");box.className="opts";
+ if(q.type==="mcq"){box.classList.toggle("two",q.opts.length===2);box.classList.toggle("emo",!!q.emoji);
+  box.innerHTML=q.opts.map((o,k)=>`<button class="opt" onclick="answer(${k})">${esc(o)}</button>`).join("")}
+ else if(q.type==="letters")renderLetters(q);
+ else if(q.type==="match")renderMatch(q);
+ $("qCoins").textContent=S.coins;updHelpers();
+ if(cur.timed)startTimer();
+}
+function readQ(){const q=cur.qs[cur.i];let t=q.q;if(q.type==="mcq"&&!q.emoji)t+="، "+q.opts.join("، أم ");say(t,true)}
+function updHelpers(){const q=cur.qs[cur.i],duel=cur.mode==="duel";
+ $("h50").disabled=duel||q.type!=="mcq"||q.opts.length<4||S.coins<20||cur.locked||cur.used50===cur.i;
+ $("hSkip").disabled=duel||S.coins<50||cur.locked;
+ $("helpers").style.display=duel?"none":"flex"}
+function startTimer(){clearInterval(timerId);let t=TIME_CH+(cur.qs[cur.i].type==="mcq"?0:15);const T=t;const tick=()=>{$("timerTxt").textContent=t;$("timerBox").style.setProperty("--p",(t/T*100)+"%");
+ if(t<=5&&t>0)beep(900,.05,"square",.04);if(t<=0){clearInterval(timerId);if(!cur.locked){toast("⏰ انتهى الوقت!");markMcq(-1);resolve(false)}}t--};tick();timerId=setInterval(tick,1000)}
+
+// اختيار من متعدد
+function markMcq(k){const q=cur.qs[cur.i];if(q.type!=="mcq")return;const btns=[...document.querySelectorAll("#qOpts .opt")],ci=q.opts.indexOf(q.a);
+ btns[ci]&&btns[ci].classList.add("ok");if(k>=0&&k!==ci)btns[k].classList.add("bad")}
+function answer(k){if(cur.locked)return;const q=cur.qs[cur.i];markMcq(k);resolve(q.opts[k]===q.a)}
+
+// رتّب الحروف
+function renderLetters(q){
+ cur.slots=Array([...q.a].length).fill(null);
+ $("qOpts").className="letters";
+ $("qOpts").innerHTML=`<div class="slots" id="slots">${cur.slots.map((_,i)=>`<button class="slot" onclick="unplace(${i})"></button>`).join("")}</div>
+ <div class="tiles">${q.tiles.map((t,i)=>`<button class="tile" id="tile${i}" onclick="place(${i})">${t}</button>`).join("")}</div>`;
+}
+function place(i){if(cur.locked)return;const q=cur.qs[cur.i],k=cur.slots.indexOf(null);if(k<0)return;
+ cur.slots[k]=i;$("tile"+i).classList.add("used");$("tile"+i).disabled=true;sfx.click();drawSlots();
+ if(!cur.slots.includes(null)){const word=cur.slots.map(j=>q.tiles[j]).join("");
+  if(word===q.a){document.querySelectorAll(".slot").forEach(s=>s.classList.add("ok"));$("slots").insertAdjacentHTML("afterend",`<div class="wordok">${q.a}</div>`);resolve(cur.mist===0)}
+  else{cur.mist++;sfx.bad();$("slots").classList.add("shake");setTimeout(()=>{$("slots").classList.remove("shake");cur.slots.forEach((j,s)=>{if(j!==null&&q.tiles[j]!==[...q.a][s]){unplace(s,true)}})},450);
+   if(cur.mist>=3){cur.locked=true;setTimeout(()=>{cur.slots=[...q.a].map(ch=>null);$("slots").innerHTML=[...q.a].map(c=>`<button class="slot bad">${c}</button>`).join("");cur.locked=false;resolve(false)},500)}}}}
+function unplace(s,silent){if(cur.locked)return;const j=cur.slots[s];if(j===null)return;cur.slots[s]=null;$("tile"+j).classList.remove("used");$("tile"+j).disabled=false;if(!silent)sfx.click();drawSlots()}
+function drawSlots(){const q=cur.qs[cur.i];document.querySelectorAll(".slot").forEach((b,i)=>b.textContent=cur.slots[i]===null?"":q.tiles[cur.slots[i]])}
+
+// اسحب وطابق
+function renderMatch(q){
+ const r=rng(cur.i*97+(cur.n||7)),L=shuffle(q.pairs.map((p,i)=>({t:p[0],k:i})),r),Rt=shuffle(q.pairs.map((p,i)=>({t:p[1],k:i})),r);cur.left=q.pairs.length;cur.sel=null;
+ $("qOpts").className="match";
+ $("qOpts").innerHTML=`<div class="mcol">${L.map(x=>`<div class="chip" data-k="${x.k}">${esc(x.t)}</div>`).join("")}</div><div class="mcol">${Rt.map(x=>`<div class="target" data-k="${x.k}">${esc(x.t)}</div>`).join("")}</div>`;
+ document.querySelectorAll(".chip").forEach(c=>{
+  c.addEventListener("pointerdown",e=>{if(cur.locked||c.classList.contains("done"))return;e.preventDefault();
+   const g=c.cloneNode(true);g.classList.add("ghost");document.body.appendChild(g);const mv=ev=>{g.style.left=ev.clientX+"px";g.style.top=ev.clientY+"px"};mv(e);
+   c.classList.add("lift");let moved=false;const sx=e.clientX,sy=e.clientY;
+   const onMove=ev=>{if(Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy)>8)moved=true;mv(ev)};
+   const onUp=ev=>{removeEventListener("pointermove",onMove);removeEventListener("pointerup",onUp);g.remove();c.classList.remove("lift");
+    if(!moved){selectChip(c);return}
+    const t=document.elementFromPoint(ev.clientX,ev.clientY);const tg=t&&t.closest(".target");if(tg)dropOn(c,tg)};
+   addEventListener("pointermove",onMove);addEventListener("pointerup",onUp)})});
+ document.querySelectorAll(".target").forEach(t=>t.addEventListener("click",()=>{if(cur.sel)dropOn(cur.sel,t)}));
+}
+function selectChip(c){document.querySelectorAll(".chip").forEach(x=>x.classList.remove("sel"));cur.sel=c;c.classList.add("sel");sfx.click()}
+function dropOn(c,t){if(cur.locked||t.classList.contains("done"))return;
+ if(c.dataset.k===t.dataset.k){t.classList.add("done");t.innerHTML=`${c.innerHTML} ← ${t.innerHTML}`;c.classList.add("done");c.classList.remove("sel");cur.sel=null;beep(700,.12,"triangle");
+  if(--cur.left===0)resolve(cur.mist===0)}
+ else{cur.mist++;sfx.bad();t.classList.add("shake");setTimeout(()=>t.classList.remove("shake"),400)}}
+
+// ====== بعد كل إجابة ======
+function resolve(ok){
+ if(cur.locked&&cur.resolved===cur.i)return;cur.locked=true;cur.resolved=cur.i;clearInterval(timerId);
+ const q=cur.qs[cur.i];
+ if(cur.mode!=="duel"){const c=q.label||q.cat;S.cs[c]=S.cs[c]||[0,0];S.cs[c][1]++;if(ok)S.cs[c][0]++}
+ $("stage").classList.add(ok?"happy":"sad");
+ if(ok){cur.right++;sfx.ok();sparks();praise("ok");
+  if(cur.mode==="duel")cur.players[cur.i%2].score++;else{cur.earned+=10;addCoins(10)}
+  if(cur.boss&&cur.boss.hp>0){cur.boss.hp--;sfx.hit();const b=$("boss");b.classList.add("hit");b.querySelector(".hp").innerHTML="❤️".repeat(cur.boss.hp)+"🖤".repeat(BOSS_HP-cur.boss.hp);
+   if(cur.boss.hp===0){b.querySelector(".bem").textContent="😵";toast(`💥 هزمت ${cur.boss.name}!`)}}}
+ else{sfx.bad();praise("bad");if(cur.boss){const b=$("boss");b&&b.classList.add("laugh")}}
+ save();$("qCoins").textContent=S.coins;updHelpers();
+ const ex=$("explain");ex.innerHTML=`<div class="exh ${ok?"good":"oops"}">${ok?"✅ إجابة صحيحة!":"❌ "+(q.type==="mcq"?`الإجابة: ${esc(q.a)}`:"حاول المرة القادمة")}</div><div class="ext">💡 ${esc(q.info||"")}</div>
+ <div class="row" style="margin-top:8px"><button class="bigbtn green" style="font-size:19px;padding:10px 26px" onclick="nextQ()">${cur.i+1<QN()?"التالي ◀":"النتيجة 🏁"}</button><button class="helper" onclick="say(cur.qs[cur.i].info,true)">🔊</button></div>`;
+ setTimeout(()=>{ex.classList.add("on");ex.scrollIntoView({block:"nearest",behavior:"smooth"})},ok?500:700);
+}
+function nextQ(){stopSay();cur.i++;if(cur.i>=QN())finish();else renderQ();$("quiz").querySelector(".qwrap").scrollTop=0}
+function useFifty(){const q=cur.qs[cur.i];if(cur.locked||S.coins<20||cur.used50===cur.i||q.type!=="mcq"||q.opts.length<4)return;S.coins-=20;cur.used50=cur.i;save();sfx.click();
+ let removed=0;document.querySelectorAll("#qOpts .opt").forEach((b,k)=>{if(removed<2&&q.opts[k]!==q.a){b.classList.add("gone");removed++}});$("qCoins").textContent=S.coins;updHelpers()}
+function useSkip(){if(cur.locked||S.coins<50)return;S.coins-=50;save();const q=cur.qs[cur.i];markMcq(-1);
+ if(q.type==="letters")$("slots").innerHTML=[...q.a].map(c=>`<button class="slot ok">${c}</button>`).join("");
+ if(q.type==="match")document.querySelectorAll(".target:not(.done)").forEach(t=>t.classList.add("done"));
+ cur.mist=0;resolve(true)}
+function confirmQuit(){modal(`<h2>🚪 الخروج؟</h2><p>ستفقد تقدّمك في هذه الجولة.</p><div class="row"><button class="bigbtn alt" onclick="closeModal()">أكمل اللعب</button><button class="bigbtn" onclick="modalQ=[];closeModal();clearInterval(timerId);stopSay();cur.mode==='level'?openMap():show('home')">خروج</button></div>`)}
+
+// ====== النتيجة ======
+function starsFor(r){const t=QN();return r>=t?3:r===t-1?2:r>=Math.ceil(t/2)?1:0}
+function finish(){
+ $("qBar").style.width="100%";clearInterval(timerId);
+ if(cur.mode==="duel")return finishDuel();
+ if(cur.mode==="daily")return finishDaily();
+ const r=cur.right,n=cur.n,old=S.stars[n]||0;let stars=starsFor(r);
+ const bossWon=cur.boss&&cur.boss.hp===0;if(cur.boss&&!bossWon)stars=0;
+ if(stars>old)S.stars[n]=stars;
+ let bonus=0;if(stars===3&&!S.firstBonus[n]){S.firstBonus[n]=1;bonus=20;addCoins(20)}
+ if(bossWon)S.bosses[n]=1;
+ save();
+ const msgs=["حاول مرة أخرى 💪","أحسنت! 👏","رائع جدًا! 🌟","ممتاز يا بطل! 🏆"];
+ let title=msgs[stars];if(cur.boss)title=bossWon?`💥 هزمت ${cur.boss.name}!`:`${cur.boss.em} ${cur.boss.name} ما زال قويًا!`;
+ if(n===100&&stars)title="🎉 وصلت إلى النهاية! أنت بطل الأذكياء 👑";
+ $("rTitle").textContent=title;
+ $("rAvatar").innerHTML=avatarHTML(70);
+ $("rInfo").innerHTML=`✅ الإجابات الصحيحة: <b>${r} من ${QN()}</b><br>🪙 العملات: <b>+${cur.earned+bonus}</b>${bonus?" (منها 20 مكافأة)":""}<br>${stars?"":cur.boss?"تحتاج 4 إجابات صحيحة لتهزم الوحش":"تحتاج 3 إجابات صحيحة على الأقل للعبور"}`;
+ $("rNext").style.display=stars&&n<100?"":"none";
+ $("rRetry").style.display="";$("rMap").textContent="🗺️ الخريطة";
+ showResultStars(stars);
+ if(stars){sfx.win();praise("win");if(stars===3)confetti()}else{sfx.lose();praise("lose")}
+ if(stars&&n===100)pushModal(showCertificate);
+ if(bossWon&&!S.chests[n])pushModal(()=>openChest(n));
+ if(stars&&n%5===0&&!S.missions[n])pushModal(()=>showMission(n));
+ setTimeout(()=>{checkBadges();runQueue()},1600);
+}
+function showResultStars(stars){show("result");const sp=document.querySelectorAll(".bigstars span");sp.forEach(s=>s.classList.remove("on"));
+ document.querySelector(".bigstars").style.display=stars<0?"none":"flex";
+ sp.forEach((s,i)=>{if(i<stars)setTimeout(()=>{s.classList.add("on");beep(700+i*200,.2,"triangle")},400+i*350)})}
+function nextLevel(){if(cur.n<100)startLevel(cur.n+1)}
+function retry(){if(cur.mode==="level")startLevel(cur.n);else if(cur.mode==="duel")openDuel();else show("home")}
+function resultBack(){cur.mode==="level"?openMap():show("home")}
+
+// ====== الوحش يضحك/يتألم (CSS) + صندوق الكنز ======
+function openChest(n){
+ const r=rng(n*31),coins=ri(r,8,15)*10;const hats=SHOP.hats.filter(h=>h[0]&&!S.owned["hat:"+h[0]]);const hat=r()<.5&&hats.length?hats[ri(r,0,hats.length-1)]:null;
+ modal(`<h2>🎁 صندوق الكنز!</h2><p>هزمت الوحش، والكنز لك! اضغط على الصندوق لفتحه</p><div class="chest" id="chest" onclick="crackChest(${n},${coins},'${hat?hat[0]:""}')">🎁</div><div id="loot"></div>`,true);
+}
+function crackChest(n,coins,hat){const c=$("chest");if(c.dataset.open)return;c.dataset.open=1;c.classList.add("shakebig");beep(300,.1,"square",.08);
+ setTimeout(()=>{c.textContent="✨";c.classList.remove("shakebig");sfx.win();confetti();S.chests[n]=1;addCoins(coins);if(hat)S.owned["hat:"+hat]=1;save();
+  $("loot").innerHTML=`<p style="font-size:24px;font-weight:900">🪙 +${coins} عملة${hat?`<br>${hat} قبعة جديدة مجانًا!`:""}</p><div class="row"><button class="bigbtn green" onclick="closeModal()">رائع!</button></div>`;say(`رائع! ربحت ${coins} عملة`)},900)}
+
+// ====== المتجر ======
+const SHOP={
+ chars:[["🦉",0],["🐱",80],["🐸",80],["🦁",100],["🦅",100],["🐧",100],["🐼",120],["🦊",120],["🐯",150],["🦄",200],["🐲",250]],
+ hats:[["",0],["🌸",60],["🧢",80],["🎩",100],["🎓",120],["👑",150]],
+ roads:[["gold",0,"ذهبي"],["blue",100,"أزرق"],["pink",100,"وردي"],["green",100,"أخضر"],["rainbow",200,"قوس قزح"]]};
+let shopTab="chars";
+function openShop(tab){shopTab=tab||shopTab;sfx.click();
+ const it=SHOP[shopTab],key=x=>shopTab==="hats"?"hat:"+x:x,isOn=x=>shopTab==="chars"?S.char===x:shopTab==="hats"?S.hat===x:S.road===x;
+ const cell=x=>{const own=S.owned[key(x[0])]||x[1]===0,on=isOn(x[0]);
+  const face=shopTab==="roads"?`<span class="sw" style="background:${x[0]==="rainbow"?"linear-gradient(90deg,#f43f5e,#f59e0b,#facc15,#22c55e,#3b82f6,#a855f7)":ROADS[x[0]]}"></span><small>${x[2]}</small>`:(x[0]||"🚫");
+  return`<button class="item ${on?"on":""}" onclick="buyItem('${shopTab}','${x[0]}',${x[1]})"><div class="ic">${face}</div><div class="pr">${on?"✔ مُختار":own?"اختر":"🪙 "+x[1]}</div></button>`};
+ modal(`<h2>🛍️ المتجر</h2><div class="mini">${avatarHTML(56)}</div><p style="margin:6px 0">🪙 عملاتك: <b>${S.coins}</b></p>
+ <div class="tabs">${[["chars","🐾 الشخصيات"],["hats","🎩 القبعات"],["roads","🛣️ الطريق"]].map(t=>`<button class="${shopTab===t[0]?"on":""}" onclick="openShop('${t[0]}')">${t[1]}</button>`).join("")}</div>
+ <div class="items">${shopTab==="chars"&&S.photo?`<button class="item ${S.char==="photo"?"on":""}" onclick="S.char='photo';save();openShop()"><div class="ic"><img src="${S.photo}" style="width:44px;height:44px;border-radius:50%;object-fit:cover"></div><div class="pr">${S.char==="photo"?"✔ مُختار":"صورتي"}</div></button>`:""}${it.map(cell).join("")}</div>
+ <div class="row"><button class="bigbtn" onclick="closeModal()">إغلاق</button></div>`)}
+function buyItem(tab,x,price){const key=tab==="hats"?"hat:"+x:x,own=S.owned[key]||price===0;
+ if(!own){if(S.coins<price){sfx.bad();toast("🪙 عملاتك لا تكفي، العب أكثر!");return}S.coins-=price;S.owned[key]=1;S.buys++;sfx.win();confetti();toast("🎉 اشتريتها!")}
+ if(tab==="chars")S.char=x;else if(tab==="hats")S.hat=x;else S.road=x;save();openShop(tab);checkBadges()}
+
+// ====== الملف الشخصي ======
+function openProfile(first){
+ modal(`<h2>${first?"👋 أهلًا بك في رحلة الأذكياء!":"👤 ملفي"}</h2>
+ <p style="margin:4px 0">ما اسمك يا بطل؟</p><input class="inp" id="pName" maxlength="20" placeholder="اكتب اسمك" value="${esc(S.name)}">
+ <p style="margin:12px 0 4px">اختر شخصيتك</p>
+ <div class="items small">${SHOP.chars.filter(c=>c[1]===0||S.owned[c[0]]).map(c=>`<button class="item ${S.char===c[0]?"on":""}" onclick="S.char='${c[0]}';document.querySelectorAll('.items.small .item').forEach(b=>b.classList.remove('on'));this.classList.add('on')"><div class="ic">${c[0]}</div></button>`).join("")}
+ ${S.photo?`<button class="item ${S.char==="photo"?"on":""}" onclick="S.char='photo';document.querySelectorAll('.items.small .item').forEach(b=>b.classList.remove('on'));this.classList.add('on')"><div class="ic"><img src="${S.photo}" style="width:40px;height:40px;border-radius:50%;object-fit:cover"></div></button>`:""}</div>
+ <label class="bigbtn alt" style="display:inline-block;font-size:17px;padding:10px 18px;margin-top:10px">📷 ضع صورتك<input type="file" accept="image/*" style="display:none" onchange="loadPhoto(this)"></label>
+ <p style="font-size:13px;opacity:.6">شخصيات أكثر في 🛍️ المتجر</p>
+ <div class="row"><button class="bigbtn green" onclick="saveProfile()">✔ حفظ</button></div>`,first)}
+function loadPhoto(inp){const f=inp.files&&inp.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{
+  const c=document.createElement("canvas"),z=160;c.width=c.height=z;const x=c.getContext("2d"),m=Math.min(im.width,im.height);
+  x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,z,z);S.photo=c.toDataURL("image/jpeg",.8);S.char="photo";const n=$("pName").value;save();openProfile(!S.profileDone);$("pName").value=n};im.src=rd.result};rd.readAsDataURL(f)}
+function saveProfile(){const n=$("pName").value.trim();if(!n){toast("✏️ اكتب اسمك أولًا");return}S.name=n;S.profileDone=true;save();modalLock=false;closeModal();refreshHome();say(`أهلًا يا ${n}! هيا نبدأ الرحلة`)}
+
+// ====== تحدي اليوم ======
+function finishDaily(){
+ const d=todayStr(),y=todayStr(new Date(Date.now()-864e5));
+ S.daily.streak=S.daily.last===y?S.daily.streak+1:1;S.daily.last=d;S.daily.best=Math.max(S.daily.best,S.daily.streak);
+ const bonus=30+10*Math.min(S.daily.streak,7)+cur.right*5;addCoins(bonus);save();
+ $("rTitle").textContent=`🔥 ${S.daily.streak} ${S.daily.streak>1?"أيام متتالية":"يوم"}!`;$("rAvatar").innerHTML=avatarHTML(70);
+ $("rInfo").innerHTML=`✅ الإجابات الصحيحة: <b>${cur.right} من ${QN()}</b><br>🪙 مكافأة تحدي اليوم: <b>+${bonus}</b><br>عُد غدًا لتزيد سلسلتك 🔥`;
+ $("rNext").style.display="none";$("rRetry").style.display="none";$("rMap").textContent="🏠 الرئيسية";
+ showResultStars(starsFor(cur.right));sfx.win();praise("win");confetti();setTimeout(()=>{checkBadges();runQueue()},1600);
+}
+
+// ====== لاعبَين ======
+function openDuel(){
+ modal(`<h2>🤝 تحدٍّ بين لاعبَين</h2><p>10 أسئلة، كل لاعب يجيب بدوره على نفس الجوال</p>
+ <input class="inp" id="d1" style="border-color:#93c5fd" placeholder="اللاعب الأول" value="${esc(S.name||"")}">
+ <input class="inp" id="d2" style="border-color:#f9a8d4;margin-top:8px" placeholder="اللاعب الثاني" value="">
+ <div class="row"><button class="bigbtn green" onclick="const a=$('d1').value.trim()||'اللاعب 1',b=$('d2').value.trim()||'اللاعب 2';closeModal();startDuel(a,b)">▶ ابدأ</button><button class="bigbtn alt" onclick="closeModal()">رجوع</button></div>`)}
+function finishDuel(){
+ const [a,b]=cur.players;S.duels++;save();
+ const win=a.score===b.score?null:a.score>b.score?a:b;
+ $("rTitle").textContent=win?`🏆 الفائز: ${win.name}`:"🤝 تعادل!";$("rAvatar").innerHTML="⚔️";
+ $("rInfo").innerHTML=`<span style="color:#93c5fd">${esc(a.name)}: <b>${a.score}</b></span> &nbsp;—&nbsp; <span style="color:#f9a8d4">${esc(b.name)}: <b>${b.score}</b></span>`;
+ $("rNext").style.display="none";$("rRetry").style.display="";$("rMap").textContent="🏠 الرئيسية";
+ showResultStars(-1);sfx.win();confetti();say(win?`مبروك يا ${win.name}! أنت الفائز`:"تعادل! كلاكما بطل");setTimeout(()=>{checkBadges();runQueue()},1200);
+}
+
+// ====== الأوسمة ======
+const BADGES=[
+ ["first","🥇","البداية","أنهِ أول مرحلة",()=>levelsDone()>=1],
+ ["lv10","🏝️","المستكشف","أنهِ 10 مراحل",()=>levelsDone()>=10],
+ ["lv50","🧭","الرحّالة","أنهِ 50 مرحلة",()=>levelsDone()>=50],
+ ["lv100","👑","بطل الأذكياء","أنهِ المراحل المئة",()=>levelsDone()>=100],
+ ["s3x10","⭐","النجم اللامع","10 مراحل بثلاث نجوم",()=>Object.values(S.stars).filter(x=>x===3).length>=10],
+ ["s150","🌟","جامع النجوم","اجمع 150 نجمة",()=>totalStars()>=150],
+ ["boss1","⚔️","صائد الوحوش","اهزم أول وحش",()=>Object.keys(S.bosses).length>=1],
+ ["boss5","🐉","قاهر التنانين","اهزم 5 وحوش",()=>Object.keys(S.bosses).length>=5],
+ ["chest3","🎁","صائد الكنوز","افتح 3 صناديق كنز",()=>Object.keys(S.chests).length>=3],
+ ["miss5","🎯","بطل المهمات","أنجز 5 مهمات حقيقية",()=>Object.keys(S.missions).length>=5],
+ ["miss20","🏅","بطل الحياة","أنجز 20 مهمة حقيقية",()=>Object.keys(S.missions).length>=20],
+ ["st3","🔥","المثابر","تحدي اليوم 3 أيام متتالية",()=>S.daily.best>=3],
+ ["st7","☄️","لا يتوقف","تحدي اليوم 7 أيام متتالية",()=>S.daily.best>=7],
+ ["rich","💰","الثري","اربح 1000 عملة",()=>S.earned>=1000],
+ ["shop","🛍️","المتسوّق","اشترِ أول شيء من المتجر",()=>S.buys>=1],
+ ["duel","🤝","المنافس","العب تحدي لاعبَين",()=>S.duels>=1]];
+function checkBadges(){let got=[];BADGES.forEach(b=>{if(!S.badges[b[0]]&&b[4]()){S.badges[b[0]]=todayStr();addCoins(20);got.push(b)}});
+ if(got.length){save();got.forEach(b=>pushModal(()=>{modal(`<div class="badgebig">${b[1]}</div><h2>وسام جديد!</h2><p style="font-size:22px;font-weight:900;margin:0">${b[2]}</p><p>${b[3]}<br>🪙 +20 عملة</p><div class="row"><button class="bigbtn green" onclick="closeModal()">رائع!</button></div>`);sfx.win();confetti();say("مبروك! حصلت على وسام "+b[2])}))}}
+function openBadges(){sfx.click();const n=Object.keys(S.badges).length;
+ modal(`<h2>🏅 أوسمتي (${n}/${BADGES.length})</h2><div class="items">${BADGES.map(b=>`<div class="item badge ${S.badges[b[0]]?"on":"off"}"><div class="ic">${S.badges[b[0]]?b[1]:"🔒"}</div><b>${b[2]}</b><small>${b[3]}</small></div>`).join("")}</div>
+ ${S.stars[100]?`<div class="row"><button class="bigbtn green" onclick="showCertificate()">🎓 شهادتي</button></div>`:""}
+ <div class="row"><button class="bigbtn" onclick="closeModal()">إغلاق</button></div>`)}
+
+// ====== المهمات ======
+const allMissions=()=>MISSIONS.concat(S.customM.map(m=>"👨‍👩‍👧 "+m));
+function showMission(n){const M=allMissions(),m=M[(n/5-1)%M.length];sfx.win();say("مهمة حقيقية! "+m.replace(/^\S+\s/,""));
+ modal(`<div style="font-size:54px">🎯</div><h2>مهمة حقيقية!</h2><p style="font-size:21px;font-weight:800">${esc(m)}</p><p style="font-size:15px;opacity:.7">نفّذ المهمة ثم اضغط «أنجزتها» لتحصل على 50🪙</p>
+ <div class="row"><button class="bigbtn green" onclick="doneMission(${n})">✅ أنجزتها</button><button class="bigbtn alt" onclick="closeModal()">لاحقًا</button></div>`)}
+function doneMission(n){S.missions[n]=todayStr();addCoins(50);save();closeModal();confetti();sfx.win();praise("ok");toast("🎉 أحسنت! +50 عملة");checkBadges();runQueue()}
+
+// ====== الإعدادات ======
+function openSettings(){sfx.click();const pending=Object.keys(S.stars).filter(n=>n%5===0&&S.stars[n]&&!S.missions[n]);
+ modal(`<h2>⚙️ الإعدادات</h2>
+ <div class="setrow">🔔 المؤثرات الصوتية <div class="toggle ${S.sound?"on":""}" onclick="S.sound=!S.sound;save();this.classList.toggle('on')"></div></div>
+ <div class="setrow">🗣️ الصوت الناطق (أحسنت، خطأ…) <div class="toggle ${S.voice?"on":""}" onclick="S.voice=!S.voice;save();this.classList.toggle('on');if(S.voice)praise('ok')"></div></div>
+ <div class="setrow">⭐ النجوم <span>${totalStars()} / 300</span></div>
+ <div class="setrow">🎯 المهمات المنجزة <span>${Object.keys(S.missions).length}</span></div>
+ ${pending.length?`<div class="row"><button class="bigbtn green" style="font-size:17px" onclick="showMission(${pending[0]})">🎯 مهمة بانتظارك</button></div>`:""}
+ <div class="row"><button class="bigbtn alt" style="font-size:17px;padding:12px 18px" onclick="openProfile()">👤 تعديل ملفي</button><button class="bigbtn alt" style="font-size:17px;padding:12px 18px" onclick="openParent()">👨‍👩‍👧 لوحة الأهل</button></div>
+ <p style="margin-bottom:0">تطوير <b>أبو عبدالله الشامي</b></p>
+ <a class="wa" href="https://wa.me/963968744241">💬 تواصل مع المطور</a>
+ <div class="row"><button class="bigbtn" onclick="closeModal()">إغلاق</button></div>`)}
+
+// ====== لوحة الأهل ======
+let pinBuf="";
+function openParent(){sfx.click();pinBuf="";const setup=!S.pin;
+ modal(`<h2>👨‍👩‍👧 لوحة الأهل</h2><p>${setup?"أنشئ رمزًا سريًا من 4 أرقام (للأهل فقط)":"أدخل الرمز السري"}</p><div class="pinshow" id="pinshow">○○○○</div>
+ <div class="pinpad">${[1,2,3,4,5,6,7,8,9,"⌫",0,"✖"].map(k=>`<button onclick="pinKey('${k}')">${k}</button>`).join("")}</div>`)}
+function pinKey(k){if(k==="✖")return closeModal();if(k==="⌫")pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<4)pinBuf+=k;sfx.click();
+ $("pinshow").textContent="●".repeat(pinBuf.length)+"○".repeat(4-pinBuf.length);
+ if(pinBuf.length===4){if(!S.pin){S.pin=pinBuf;save();toast("✔ تم حفظ الرمز");parentPanel()}else if(pinBuf===S.pin)parentPanel();else{sfx.bad();pinBuf="";$("pinshow").textContent="✖ رمز خاطئ";}}}
+let ptab="stats";
+function parentPanel(tab){ptab=tab||ptab;let body="";
+ if(ptab==="stats"){const rows=Object.keys(CATNAME).filter(c=>S.cs[c]&&S.cs[c][1]).map(c=>{const [r,t]=S.cs[c],p=Math.round(r/t*100);return{c,r,t,p}}).sort((a,b)=>b.p-a.p);
+  body=`<div class="kpis"><div><b>${levelsDone()}</b><small>مرحلة</small></div><div><b>${totalStars()}</b><small>نجمة</small></div><div><b>${Object.keys(S.missions).length}</b><small>مهمة</small></div><div><b>${S.daily.best}</b><small>أطول سلسلة</small></div></div>
+  ${rows.length?rows.map(x=>`<div class="bar"><span>${CATNAME[x.c]}</span><div><i style="width:${x.p}%;background:${x.p>=75?"#22c55e":x.p>=50?"#f59e0b":"#ef4444"}"></i></div><b>${x.p}٪</b><small>${x.r}/${x.t}</small></div>`).join("")+
+  `<p style="font-size:15px">💪 الأقوى: <b>${CATNAME[rows[0].c]}</b>${rows.length>1?`<br>📌 يحتاج تدريبًا: <b>${CATNAME[rows[rows.length-1].c]}</b>`:""}</p>`:"<p>لم يلعب بعد.</p>"}
+  ${Object.keys(S.missions).length?`<p style="font-size:14px;text-align:right">🎯 المهمات المنجزة:<br>${Object.keys(S.missions).map(n=>`• ${esc(allMissions()[(n/5-1)%allMissions().length])} <small>(${S.missions[n]===1?"":S.missions[n]})</small>`).join("<br>")}</p>`:""}`}
+ else if(ptab==="q"){body=`<p style="font-size:15px">أضف أسئلتك الخاصة، وستظهر لطفلك داخل المراحل وتحدي اليوم</p>
+  <input class="inp" id="cq" placeholder="السؤال"><input class="inp ok" id="ca" placeholder="✅ الإجابة الصحيحة"><input class="inp" id="w1" placeholder="❌ إجابة خاطئة 1"><input class="inp" id="w2" placeholder="❌ إجابة خاطئة 2"><input class="inp" id="w3" placeholder="❌ إجابة خاطئة 3"><input class="inp" id="ci" placeholder="💡 معلومة تظهر بعد الإجابة (اختياري)">
+  <div class="row"><button class="bigbtn green" style="font-size:18px" onclick="addCustom()">➕ إضافة السؤال</button></div>
+  ${S.custom.map((c,i)=>`<div class="li"><span>${esc(c.q)} <small>(${esc(c.a)})</small></span><button onclick="S.custom.splice(${i},1);save();parentPanel()">🗑️</button></div>`).join("")}`}
+ else if(ptab==="m"){body=`<p style="font-size:15px">أضف مهمات من عندك، تظهر بعد كل 5 مراحل</p><input class="inp" id="cm" placeholder="مثال: ساعد بابا في غسل السيارة"><div class="row"><button class="bigbtn green" style="font-size:18px" onclick="const v=$('cm').value.trim();if(v){S.customM.push(v);save();parentPanel()}">➕ إضافة المهمة</button></div>
+  ${S.customM.map((m,i)=>`<div class="li"><span>${esc(m)}</span><button onclick="S.customM.splice(${i},1);save();parentPanel()">🗑️</button></div>`).join("")}`}
+ else if(ptab==="v"){const R=[["ok","✅ عند الإجابة الصحيحة","أحسنت يا بطل!"],["bad","❌ عند الخطأ","لا بأس، حاول مرة أخرى"],["win","🏆 عند الفوز بالمرحلة","ممتاز! أنا فخور بك"]];
+  body=`<p style="font-size:15px">سجّل صوتك ليسمعه طفلك بدل الصوت الآلي ❤️<br><small>اضغط 🎙️ وتكلّم (3 ثوانٍ)</small></p>${R.map(x=>`<div class="li"><span>${x[1]}<br><small>مثال: «${x[2]}»</small></span><span style="display:flex;gap:6px"><button id="rb_${x[0]}" onclick="recordClip('${x[0]}')">🎙️</button>${S.rec[x[0]]?`<button onclick="new Audio(S.rec['${x[0]}']).play()">▶️</button><button onclick="delete S.rec['${x[0]}'];save();parentPanel()">🗑️</button>`:""}</span></div>`).join("")}`}
+ else{body=`<div class="row"><button class="bigbtn alt" style="font-size:17px" onclick="showCertificate(true)">🎓 معاينة الشهادة</button></div>
+  <div class="row"><button class="bigbtn alt" style="font-size:17px" onclick="S.pin='';save();openParent()">🔑 تغيير الرمز</button></div>
+  <div class="row"><button class="bigbtn" style="background:#ef4444;color:#fff;box-shadow:0 6px 0 #991b1b;font-size:17px" onclick="askReset()">🗑️ مسح كل التقدّم</button></div>`}
+ modal(`<h2>👨‍👩‍👧 لوحة الأهل</h2><div class="tabs">${[["stats","📊 التقدّم"],["q","➕ أسئلة"],["m","🎯 مهمات"],["v","🎙️ صوتي"],["s","⚙️"]].map(t=>`<button class="${ptab===t[0]?"on":""}" onclick="parentPanel('${t[0]}')">${t[1]}</button>`).join("")}</div>${body}
+ <div class="row"><button class="bigbtn" onclick="closeModal()">إغلاق</button></div>`)}
+function addCustom(){const g=id=>$(id).value.trim(),q=g("cq"),a=g("ca"),w=[g("w1"),g("w2"),g("w3")];
+ if(!q||!a||w.some(x=>!x)){toast("✏️ اكتب السؤال والإجابات الأربع");return}if(new Set([a,...w]).size<4){toast("⚠️ الإجابات يجب أن تكون مختلفة");return}
+ S.custom.push({q,a,w,info:g("ci")});save();toast("✔ أُضيف السؤال");parentPanel()}
+function recordClip(kind){
+ const btn=$("rb_"+kind);if(!navigator.mediaDevices||!window.MediaRecorder){toast("⚠️ التسجيل غير مدعوم على هذا الجهاز");return}
+ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{const rec=new MediaRecorder(stream),ch=[];rec.ondataavailable=e=>ch.push(e.data);
+  rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());const fr=new FileReader();fr.onload=()=>{S.rec[kind]=fr.result;save();toast("✔ تم حفظ صوتك");parentPanel()};fr.readAsDataURL(new Blob(ch,{type:rec.mimeType}))};
+  rec.start();btn.textContent="🔴";let t=3;const iv=setInterval(()=>{t--;btn.textContent="🔴"+t;if(t<=0){clearInterval(iv);rec.stop()}},1000)})
+ .catch(()=>toast("⚠️ اسمح للتطبيق باستخدام الميكروفون"))}
+function askReset(){modal(`<h2>⚠️ متأكد؟</h2><p>سيتم حذف كل النجوم والعملات والأوسمة والبدء من جديد.</p><div class="row"><button class="bigbtn alt" onclick="parentPanel()">إلغاء</button><button class="bigbtn" style="background:#ef4444;color:#fff;box-shadow:0 6px 0 #991b1b" onclick="const k={name:S.name,photo:S.photo,pin:S.pin,custom:S.custom,customM:S.customM,rec:S.rec,profileDone:S.profileDone};S=Object.assign(DEF(),k);save();closeModal();refreshHome()">نعم، امسح</button></div>`)}
+
+// ====== الشهادة ======
+function drawCertificate(){
+ const c=document.createElement("canvas"),W=1400,H=1000;c.width=W;c.height=H;const x=c.getContext("2d");
+ const g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,"#fff8e1");g.addColorStop(1,"#ffe9b0");x.fillStyle=g;x.fillRect(0,0,W,H);
+ x.strokeStyle="#b7791f";x.lineWidth=18;x.strokeRect(30,30,W-60,H-60);x.strokeStyle="#7c5cff";x.lineWidth=5;x.strokeRect(60,60,W-120,H-120);
+ x.textAlign="center";x.direction="rtl";const F='"Noto Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif';
+ x.font=`110px ${F}`;x.fillText("🏆",W/2,200);
+ x.fillStyle="#5b21b6";x.font=`900 84px ${F}`;x.fillText("شهادة بطل الأذكياء",W/2,310);
+ x.fillStyle="#334155";x.font=`40px ${F}`;x.fillText("تشهد «رحلة الأذكياء» بأن البطل",W/2,400);
+ x.fillStyle="#b45309";x.font=`900 96px ${F}`;x.fillText(S.name||"البطل",W/2,520);
+ x.fillStyle="#334155";x.font=`40px ${F}`;x.fillText(`أتمّ المراحل المئة بنجاح، وجمع ${totalStars()} نجمة و${Object.keys(S.badges).length} وسامًا`,W/2,610);
+ x.fillText("فبارك الله فيه ونفع به 🌟",W/2,670);
+ x.font=`34px ${F}`;x.fillStyle="#64748b";x.fillText("التاريخ: "+todayStr(),W/2,770);
+ x.font=`bold 32px ${F}`;x.fillStyle="#7c3aed";x.fillText("تطوير أبو عبدالله الشامي",W/2,900);
+ x.font=`90px ${F}`;x.fillText("🦉",200,880);x.fillText("⭐",W-200,880);
+ return c.toDataURL("image/png");
+}
+function showCertificate(preview){const url=drawCertificate();if(!preview){confetti();say(`مبروك يا ${S.name||"بطل"}! هذه شهادتك`)}
+ modal(`<h2>🎓 الشهادة</h2>${preview&&!S.stars[100]?"<p style='font-size:14px'>(معاينة — تُمنح عند الوصول إلى النهاية)</p>":""}<img src="${url}" style="width:100%;border-radius:12px;box-shadow:0 6px 16px #0003">
+ <div class="row">${!preview||S.stars[100]?`<button class="bigbtn green" onclick="saveCert()">💾 حفظ الصورة</button>`:""}<button class="bigbtn" onclick="closeModal()">إغلاق</button></div>`)}
+function saveCert(){const url=drawCertificate();
+ if(window.Android&&Android.saveImage){Android.saveImage(url.split(",")[1],"شهادة_"+(S.name||"البطل")+".png")}
+ else{const a=document.createElement("a");a.href=url;a.download="شهادة_رحلة_الأذكياء.png";document.body.appendChild(a);a.click();a.remove()}}
+
+// ====== النوافذ والتنقل ======
+let modalQ=[],modalLock=false;
+function modal(html,lock){$("modalBox").innerHTML=html;$("modal").classList.add("on");modalLock=!!lock;$("modalBox").scrollTop=0}
+function closeModal(){if(modalLock)return;$("modal").classList.remove("on");stopRec();if(document.querySelector(".screen.on").id==="home")refreshHome();setTimeout(runQueue,250)}
+function stopRec(){}
+function pushModal(fn){modalQ.push(fn)}
+function runQueue(){if($("modal").classList.contains("on")||!modalQ.length)return;modalQ.shift()()}
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));if(id==="home")refreshHome()}
+function refreshHome(){$("hStars").textContent=totalStars();$("hCoins").textContent=S.coins;$("hLevel").textContent=maxUnlocked();
+ $("hAvatar").innerHTML=avatarHTML(84);$("hHello").textContent=S.name?`أهلًا يا ${S.name} 👋`:"رحلة الأذكياء";
+ const done=S.daily.last===todayStr(),y=todayStr(new Date(Date.now()-864e5)),st=S.daily.last===y||done?S.daily.streak:0;
+ $("hDaily").innerHTML=done?`✅ أنجزت تحدي اليوم <small>🔥${st}</small>`:`📅 تحدي اليوم ${st?`<small>🔥${st}</small>`:""}`;$("hDaily").classList.toggle("done",done);
+ $("hBadges").textContent=`🏅 الأوسمة ${Object.keys(S.badges).length}/${BADGES.length}`}
+window.appBack=function(){if($("modal").classList.contains("on")){if(!modalLock)closeModal();return true}
+ const c=document.querySelector(".screen.on").id;if(c==="home")return false;
+ if(c==="quiz"){confirmQuit();return true}if(c==="result"){resultBack();return true}show("home");return true};
+function toast(t){const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(()=>e.style.display="none",2000)}
+function confetti(){const c=$("confetti"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
+ const P=Array.from({length:120},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*4,vy:2+Math.random()*4,s:5+Math.random()*7,c:`hsl(${Math.random()*360},90%,60%)`,r:Math.random()*6}));
+ let f=0;(function loop(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});
+ if(f++<160)requestAnimationFrame(loop);else x.clearRect(0,0,c.width,c.height)})()}
+
+// ====== البدء ======
+(function(){let h="";for(let i=0;i<50;i++)h+=`<i style="top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s"></i>`;$("sky").innerHTML=h})();
+if(window.speechSynthesis)try{speechSynthesis.getVoices()}catch(e){}
+refreshHome();
+if(!S.profileDone)setTimeout(()=>openProfile(true),400);
+
+</script>
+</body>
+</html>
