@@ -8,7 +8,7 @@
         <intent><action android:name="android.intent.action.GET_CONTENT"/><data android:mimeType="image/*"/></intent>
     </queries>
     <application
-        android:label="رحلة الأذكياء"
+        android:label="لعبة أطفال دار الوحي"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.NoActionBar">

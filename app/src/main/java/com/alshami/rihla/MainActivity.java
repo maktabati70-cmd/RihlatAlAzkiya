@@ -124,7 +124,7 @@ public class MainActivity extends Activity {
                 cv.put(MediaStore.Images.Media.DISPLAY_NAME, name);
                 cv.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
                 if (Build.VERSION.SDK_INT >= 29)
-                    cv.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/رحلة الأذكياء");
+                    cv.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/أطفال دار الوحي");
                 Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
                 try (OutputStream os = getContentResolver().openOutputStream(uri)) { os.write(data); }
                 runOnUiThread(() -> Toast.makeText(MainActivity.this, "✔ حُفظت الشهادة في الصور", Toast.LENGTH_LONG).show());
