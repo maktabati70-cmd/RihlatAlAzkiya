@@ -240,9 +240,7 @@ public class MainActivity extends Activity {
 
         setContentView(web);
         web.loadUrl(startUrl());
-        // فحص تلقائي للتحديثات كل 3 ساعات
-        if (System.currentTimeMillis() - prefs.getLong("lastCheck", 0) > 3 * 3600 * 1000L)
-            web.postDelayed(() -> checkUpdates(false), 4000);
+
     }
 
     private class Bridge {
@@ -322,6 +320,14 @@ public class MainActivity extends Activity {
         }
         if (req == REQ_STT && grants.length > 0 && grants[0] == PackageManager.PERMISSION_GRANTED)
             toast("✔ تم السماح بالميكروفون، اضغط «اختبر نطقي» مجددًا");
+    }
+
+    // فحص التحديثات عند كل فتح للتطبيق أو الرجوع إليه (بحد أدنى 10 دقائق بين كل فحص)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (web != null && System.currentTimeMillis() - prefs.getLong("lastCheck", 0) > 10 * 60 * 1000L)
+            web.postDelayed(() -> checkUpdates(false), 3000);
     }
 
     @Override
