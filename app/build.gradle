@@ -6,9 +6,20 @@ android {
         applicationId "com.alshami.rihla"
         minSdk 26
         targetSdk 34
-        versionCode 4
-        versionName "3.0"
+        versionCode 12
+        versionName "11.0"
     }
-    buildTypes { release { minifyEnabled false } }
+    signingConfigs {
+        fixed {
+            storeFile file('dalwahy.keystore')
+            storePassword 'dalwahy2026'
+            keyAlias 'dalwahy'
+            keyPassword 'dalwahy2026'
+        }
+    }
+    buildTypes {
+        debug { signingConfig signingConfigs.fixed }
+        release { minifyEnabled false; signingConfig signingConfigs.fixed }
+    }
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
 }

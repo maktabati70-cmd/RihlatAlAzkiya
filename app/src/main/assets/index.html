@@ -565,6 +565,101 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .weekbar small{opacity:.85}.weekbar.ready{background:linear-gradient(135deg,#f59e0b,#ef4444);animation:bob 1.4s ease-in-out infinite}
 .wdots{display:flex;gap:4px}.wdots i{width:12px;height:12px;border-radius:50%;background:#fff4}.wdots i.on{background:#facc15}
 
+/* ===== v11: سماء حيّة، تلوين أكبر، أنشطة جديدة ===== */
+.ripple{position:absolute;border-radius:50%;background:#fff6;transform:scale(0);animation:rip .55s ease-out;pointer-events:none}
+@keyframes rip{to{transform:scale(2.4);opacity:0}}
+button:active{transform:translateY(2px) scale(.98)}
+/* السماء */
+#sky{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;transition:background 2s}
+#sky.day{background:linear-gradient(#1e40af,#3b82f6 45%,#7dd3fc)}
+#sky.dawn{background:linear-gradient(#1e1b4b,#7c3aed 40%,#f9a8d4 75%,#fdba74)}
+#sky.sunset{background:linear-gradient(#312e81,#be185d 45%,#f97316 75%,#fcd34d)}
+#sky.night{background:linear-gradient(#020617,#1e1b4b 55%,#3b0764)}
+#sky .plx{position:absolute;inset:-30px;transition:transform .25s ease-out}
+.stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff;animation:twk 2.8s ease-in-out infinite}
+@keyframes twk{0%,100%{opacity:.25}50%{opacity:1}}
+.sun{position:absolute;width:74px;height:74px;margin:-37px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#fff7c2,#fde047 45%,#f59e0b);box-shadow:0 0 40px 16px #fde04788,0 0 120px 50px #fbbf2433;animation:glowp 4s ease-in-out infinite}
+.sun.moon{width:58px;height:58px;margin:-29px;background:transparent;box-shadow:-14px 10px 0 0 #fef9c3;filter:drop-shadow(0 0 14px #fef9c3aa);animation:none}
+@keyframes glowp{50%{box-shadow:0 0 50px 22px #fde04799,0 0 140px 60px #fbbf2444}}
+.cloud{position:absolute;left:-30%;width:120px;height:36px;background:#fff;border-radius:40px;opacity:.85;filter:blur(.5px);animation:cloudm linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:56px;height:56px;top:-28px;left:18px}.cloud::after{width:42px;height:42px;top:-18px;left:62px}
+#sky.sunset .cloud{background:#fecaca}#sky.sunset .cloud::before,#sky.sunset .cloud::after{background:#fecaca}
+@keyframes cloudm{to{left:120%}}
+.birdsfly{position:absolute;top:18%;left:-20%;animation:birdm 26s linear infinite;font-size:18px}
+.birdsfly span{position:absolute;animation:flap .5s ease-in-out infinite alternate}
+@keyframes birdm{to{left:120%;top:10%}}@keyframes flap{to{transform:translateY(-5px) scaleY(.8)}}
+.shoot{position:absolute;top:12%;left:80%;width:120px;height:2px;background:linear-gradient(90deg,#fff,transparent);transform:rotate(-25deg);opacity:0;animation:shoot 7s ease-in infinite 2s}
+@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(-25deg)}3%{opacity:1}10%{opacity:0;transform:translate(-300px,140px) rotate(-25deg)}100%{opacity:0}}
+.skyline{position:absolute;left:0;right:0;bottom:0;width:100%}
+.skyline.far{height:150px;fill:#0006}.skyline.near{height:110px;fill:#0009;stroke:#0009}
+#sky.day .skyline.far{fill:#1e3a8a55}#sky.day .skyline.near{fill:#14532d88;stroke:#14532d88}
+#home{background:transparent!important}
+/* تلوين أكبر */
+.palette.strip{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:6px 4px;margin:0 -8px 6px;scrollbar-width:none}
+.palette.strip .pcol{flex:none;width:40px;height:40px}
+.colwrap{max-width:none;width:100%;max-height:calc(100vh - 210px);overflow:auto;padding:4px;box-sizing:border-box;-webkit-overflow-scrolling:touch}
+.colinner{min-width:100%}.colinner svg{display:block;width:100%;height:auto}
+.coltools{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.coltools button{font-family:inherit;font-weight:900;font-size:18px;min-width:52px;height:50px;padding:0 12px;border-radius:16px;background:#fff;color:#4c1d95;box-shadow:0 4px 0 #0003;display:flex;align-items:center;justify-content:center}
+.coltools button.g{background:#22c55e;color:#fff}
+.coltools .dot{display:inline-block;border-radius:50%}
+.puzlist .colthumb b{font-size:16px}
+.fdwrap{width:100%;height:calc(100vh - 230px);min-height:300px;border-radius:18px;overflow:hidden;box-shadow:0 6px 0 #0003}
+.fdwrap canvas{width:100%;height:100%;display:block;touch-action:none;background:#fff}
+/* البحث عن الكلمات */
+.wsgrid{display:grid;gap:3px;background:#fff;padding:6px;border-radius:16px;max-width:420px;margin:0 auto}
+.wsgrid.ar{direction:rtl}.wsgrid.en{direction:ltr}
+.wsc{aspect-ratio:1;border-radius:8px;background:#f5f3ff;color:#3b0764;font-family:inherit;font-weight:900;font-size:clamp(15px,4.6vw,22px);padding:0;transition:background .2s}
+.wsc.sel{background:#facc15;transform:scale(1.1)}
+.wswords{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.wswords span{background:#fff3;padding:4px 12px;border-radius:12px;font-weight:900;font-size:17px}
+.wswords span.on{background:var(--c);text-decoration:line-through}
+/* المتاهة */
+.mzwrap{width:min(92vw,420px);aspect-ratio:1;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 6px 0 #0003;border:4px solid #166534}
+.mzwrap canvas{width:100%;height:100%;display:block;touch-action:none}
+.mzpad{display:grid;grid-template-columns:repeat(3,64px);gap:6px;justify-content:center;margin-top:10px;direction:ltr}
+.mzpad button{height:56px;border-radius:16px;font-size:28px;background:#fff;box-shadow:0 4px 0 #0003}
+/* سودوكو */
+.sdgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-width:340px;margin:0 auto;background:#4c1d95;padding:6px;border-radius:16px}
+.sdc{aspect-ratio:1;font-size:40px;border-radius:10px;background:#fff;padding:0}
+.sdc:nth-child(4n+2){margin-left:4px}.sdc:nth-child(n+5):nth-child(-n+8){margin-bottom:4px}
+.sdc.fix{background:#e9d5ff}.sdc.sel{box-shadow:inset 0 0 0 4px #facc15}.sdc.bad{background:#fecaca;animation:shake .35s}
+.sdpick{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.sdpick button{font-size:34px;width:62px;height:62px;border-radius:16px;background:#fff;box-shadow:0 4px 0 #0003}
+/* الساعة */
+.clockbox{width:min(70vw,260px);margin:0 auto 12px}.clocksvg{width:100%;filter:drop-shadow(0 8px 0 #0003)}
+.clocksvg .hand{transform-origin:100px 100px;transition:transform 1.2s cubic-bezier(.3,1.4,.5,1)}
+.mmo.ck{font-size:19px;padding:14px 6px}
+/* سيمون */
+.smgrid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(86vw,340px);margin:10px auto}
+.smp{aspect-ratio:1;border-radius:30px;background:var(--c);opacity:.55;box-shadow:0 6px 0 #0004;transition:all .12s}
+.smp:nth-child(1){border-top-left-radius:100%}.smp:nth-child(2){border-top-right-radius:100%}.smp:nth-child(3){border-bottom-left-radius:100%}.smp:nth-child(4){border-bottom-right-radius:100%}
+.smp.on{opacity:1;transform:scale(1.05);box-shadow:0 0 30px var(--c),0 6px 0 #0004}
+.smc{position:absolute;inset:0;margin:auto;width:76px;height:76px;border-radius:50%;background:#1e1b4b;display:grid;place-items:center;font-size:30px;font-weight:900;border:5px solid #fff}
+/* النطق */
+.pron{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:6px}
+.pron .bigbtn{font-size:16px;padding:10px 14px}
+#pronOut{width:100%;text-align:center}
+.recdot{font-size:19px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px}
+.lvl{display:inline-flex;gap:3px;align-items:center;height:24px}.lvl i{width:5px;background:#f43f5e;border-radius:3px;animation:lv .6s ease-in-out infinite alternate}
+.lvl i:nth-child(2){animation-delay:.1s}.lvl i:nth-child(3){animation-delay:.2s}.lvl i:nth-child(4){animation-delay:.3s}.lvl i:nth-child(5){animation-delay:.4s}
+@keyframes lv{from{height:4px}to{height:24px}}
+.cmp{display:flex;justify-content:center;gap:8px}
+.pscore{font-size:40px;animation:pop .4s}.pscore small{font-size:17px;font-weight:800}
+/* v12 تلوين */
+.colcats{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
+.colcats button{flex:none;font-family:inherit;font-weight:800;font-size:14px;padding:6px 12px;border-radius:14px;background:#fff3;color:#fff}
+.colcats button.on{background:#facc15;color:#3b0764}
+.colgrid{grid-template-columns:repeat(2,1fr)}
+.colthumb .thsvg{display:block;width:100%;aspect-ratio:3/4;background:#f8fafc;border-radius:10px;overflow:hidden}
+.colthumb .thsvg svg{width:100%;height:100%}
+.colthumb.done{box-shadow:0 0 0 3px #22c55e,0 4px 0 #0003}
+.pats{display:flex;justify-content:center;gap:6px;margin:-2px 0 6px}
+.pats button{width:44px;height:36px;border-radius:12px;background:#fff3;font-size:18px}
+.pats button.on{background:#facc15}
+.colwrap{max-height:calc(100vh - 250px);background:#fff;border-radius:18px}
+
 </style>
 </head>
 <body>
@@ -592,6 +687,7 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
       <button class="ibtn new" onclick="openMuslim()"><b>🕌</b><span>ركن المسلم</span></button>
       <button class="ibtn new" onclick="openBrain()"><b>🧠</b><span>ألعاب العقل</span></button>
       <button class="ibtn new" onclick="openArt()"><b>🎨</b><span>الرسم والخط</span></button>
+      <button class="ibtn new" onclick="openFun()"><b>🎲</b><span>أنشطة ممتعة</span></button>
       <button class="ibtn" onclick="openStories()"><b>📖</b><span>القصص</span></button>
       <button class="ibtn" onclick="openSpell()"><b>✍️</b><span>الإملاء</span></button>
       <button class="ibtn" onclick="startReview()"><b>🔁</b><span id="hMist">دفتر الأخطاء</span></button>
@@ -3814,12 +3910,16 @@ function drawingSVG(d,fills,click){return`<svg viewBox="0 0 300 300" class="cols
 function openColoring(){S.colors=S.colors||{};openAct("🖍️ دفتر التلوين");
  $("actBody").innerHTML=girlTalk("m","happy")+`<div class="puzlist">${DRAWINGS.map((d,i)=>`<button class="colthumb" onclick="startColor(${i})">${drawingSVG(d,S.colors[d.id]||{},false)}<b>${d.ic} ${d.t}</b></button>`).join("")}</div>`;talkType("اختر رسمة ولوّنها بالألوان التي تحبها 🎨")}
 function startColor(i){const d=DRAWINGS[i];S.colors=S.colors||{};S.colors[d.id]=S.colors[d.id]||{};CL={i,d,col:CL?CL.col:"#ef4444"};openAct("🖍️ "+d.t);drawColor()}
-function drawColor(){const {d}=CL;$("actBody").innerHTML=`<div class="colwrap">${drawingSVG(d,S.colors[d.id],true)}</div>
- <div class="palette">${PALETTE.map(c=>`<button class="pcol ${CL.col===c?"on":""}" style="background:${c}" onclick="CL.col='${c}';drawColor()"></button>`).join("")}</div>
- <div class="row"><button class="bigbtn alt" onclick="S.colors[CL.d.id]={};save();drawColor()">🧽 امسح</button><button class="bigbtn green" onclick="saveColoring()">💾 حفظ الصورة</button><button class="bigbtn alt" onclick="openColoring()">الرسومات</button></div>`}
-function colorRegion(i){S.colors[CL.d.id][i]=CL.col;beep(500+i*20,.04,"triangle",.05);save();
+function drawColor(){const {d}=CL;CL.z=CL.z||1;
+ $("actBody").innerHTML=`<div class="palette strip">${PALETTE.map(c=>`<button class="pcol ${CL.col===c?"on":""}" style="background:${c}" onclick="pickCol('${c}',this)"></button>`).join("")}</div>
+ <div class="colwrap" id="colWrap"><div class="colinner" style="width:${CL.z*100}%">${drawingSVG(d,S.colors[d.id],true)}</div></div>
+ <div class="coltools"><button onclick="colZoom(1)">🔍＋</button><button onclick="colZoom(-1)">🔍－</button><button onclick="S.colors[CL.d.id]={};save();drawColor()">🧽</button><button class="g" onclick="saveColoring()">💾 حفظ</button><button onclick="openColoring()">📚</button></div>`}
+function pickCol(c,b){CL.col=c;document.querySelectorAll(".pcol").forEach(x=>x.classList.toggle("on",x===b));sfx.click()}
+function colZoom(k){const w=$("colWrap"),fx=(w.scrollLeft+w.clientWidth/2)/w.scrollWidth,fy=(w.scrollTop+w.clientHeight/2)/w.scrollHeight;
+ CL.z=Math.max(1,Math.min(3,CL.z+k*.5));w.firstElementChild.style.width=CL.z*100+"%";w.scrollLeft=fx*w.scrollWidth-w.clientWidth/2;w.scrollTop=fy*w.scrollHeight-w.clientHeight/2;sfx.click()}
+function colorRegion(i){S.colors[CL.d.id][i]=CL.col;beep(500+i*20,.04,"triangle",.05);vib(15);save();
  const el=document.querySelectorAll("#actBody .colwrap svg > *")[i];if(el){el.setAttribute("fill",CL.col);el.animate&&el.animate([{opacity:.4},{opacity:1}],{duration:250})}
- const n=Object.keys(S.colors[CL.d.id]).length;if(n===CL.d.r.length&&!S.colors[CL.d.id].done){S.colors[CL.d.id].done=1;addCoins(15);save();confetti();sfx.win();toast("🎨 لوحة رائعة! +15 🪙");checkBadges()}}
+ S.colDone=S.colDone||{};const n=Object.keys(S.colors[CL.d.id]).filter(k=>/^\d+$/.test(k)).length;if(n===CL.d.r.length&&!S.colDone[CL.d.id]){S.colDone[CL.d.id]=1;addCoins(15);save();confetti();sfx.win();toast("🎨 لوحة رائعة! +15 🪙");checkBadges()}}
 function saveColoring(){const svg=drawingSVG(CL.d,S.colors[CL.d.id],false),img=new Image();img.onload=()=>{const c=document.createElement("canvas");c.width=c.height=900;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,900,900);x.drawImage(img,0,0,900,900);
   x.font="bold 30px sans-serif";x.fillStyle="#7c3aed";x.textAlign="center";x.fillText(`رسم ${S.name||"البطل"} 🎨`,450,880);const url=c.toDataURL("image/png");
   if(window.Android&&Android.saveImage)Android.saveImage(url.split(",")[1],"تلوين_"+CL.d.t+".png");else{const a=document.createElement("a");a.href=url;a.download="تلوين_"+CL.d.t+".png";document.body.appendChild(a);a.click();a.remove()}};img.src=svgURL(svg)}
@@ -3882,7 +3982,7 @@ function crackWeek(){const c=$("wchest");if(c.dataset.open)return;c.dataset.open
 // ====== أوسمة ======
 BADGES.push(["deeds30","🌳","الشجرة المثمرة","سجّل 30 حسنة",()=>((S.deeds&&S.deeds.total)||0)>=30],
  ["puz5","🧩","حلّال الألغاز","أكمل 5 ألغاز صور",()=>Object.keys(S.puz||{}).length>=5],
- ["art3","🎨","الفنان","لوّن 3 رسومات كاملة",()=>Object.values(S.colors||{}).filter(x=>x&&x.done).length>=3],
+ ["art3","🎨","الفنان","لوّن 3 رسومات كاملة",()=>Object.keys(S.colDone||{}).length>=3],
  ["trace10","✍️","الخطّاط","أتقن 10 حروف",()=>Object.values((S.trace||{}).ar||{}).concat(Object.values((S.trace||{}).en||{})).filter(v=>v>0).length>=10]);
 
 // ====== ربط الشاشة الرئيسية ======
@@ -3897,6 +3997,370 @@ const _rh2=refreshHome2;
 refreshHome2=function(){_rh2();const r=$("hRank"),w=$("hWeek");if(r)r.innerHTML=rankHTML();if(w)w.innerHTML=weekHTML();
  const i=rankIdx(rankScore()),av=document.querySelector("#hAvatar .hme");if(av){av.style.setProperty("--rc",RANKS[i][3]);av.classList.add("rankframe")}
  setTimeout(checkRankUp,700)};
+
+// ====== اهتزاز خفيف ======
+function vib(ms){if(S.vib===false)return;try{if(window.Android&&Android.vibrate)Android.vibrate(ms);else if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}}
+(()=>{const w=(k,ms)=>{const f=sfx[k];sfx[k]=function(){vib(ms);return f.apply(this,arguments)}};w("ok",30);w("bad",[60,40,60]);w("win",[40,30,40,30,80]);w("hit",50)})();
+// تموّج عند لمس الأزرار
+document.addEventListener("pointerdown",e=>{const b=e.target.closest("button");if(!b||b.classList.contains("pcol"))return;const r=b.getBoundingClientRect(),s=document.createElement("span"),d=Math.max(r.width,r.height);
+ s.className="ripple";s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;if(getComputedStyle(b).position==="static")b.style.position="relative";b.style.overflow="hidden";b.appendChild(s);setTimeout(()=>s.remove(),550)},{passive:true});
+
+// ====== 🌅 سماء حيّة حسب الوقت الحقيقي ======
+function skyPhase(){const h=new Date().getHours()+new Date().getMinutes()/60;return h<4.5?"night":h<6.5?"dawn":h<16?"day":h<18.5?"sunset":"night"}
+function buildSky(){let el=$("sky");if(!el){el=document.createElement("div");el.id="sky";$("home").prepend(el)}const ph=skyPhase();if(el.dataset.ph===ph)return;el.dataset.ph=ph;el.className="sky "+ph;
+ const night=ph==="night",h=new Date().getHours()+new Date().getMinutes()/60;
+ const sunX=ph==="day"?15+(h-6.5)/9.5*70:ph==="sunset"?82:ph==="dawn"?12:70,sunY=ph==="day"?22-Math.sin((h-6.5)/9.5*Math.PI)*10:ph==="sunset"?44:ph==="dawn"?46:12;
+ let stars="";if(night||ph==="dawn")for(let i=0;i<60;i++)stars+=`<i style="left:${(i*37.3)%100}%;top:${(i*53.7)%62}%;animation-delay:${(i%7)*.4}s;transform:scale(${.5+(i%4)*.25})"></i>`;
+ const clouds=night?"":[0,1,2,3].map(i=>`<div class="cloud" style="top:${8+i*9}%;animation-duration:${40+i*17}s;animation-delay:-${i*13}s;transform:scale(${1-i*.15})"></div>`).join("");
+ const birds=ph==="day"||ph==="sunset"?`<div class="birdsfly">${[0,1,2].map(i=>`<span style="animation-delay:${i*.25}s;top:${i*10}px;left:${i*22}px">🕊️</span>`).join("")}</div>`:"";
+ const sky=`<svg class="skyline far" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice"><path d="M0,120V80h30v-20h10v20h40V70q20-30 40 0v10h20V40l6-14 6 14v40h30V60h40v20h30V50q25-35 50 0v30h20V30l6-14 6 14v50h30v40Z"/></svg>
+ <svg class="skyline near" viewBox="0 0 400 100" preserveAspectRatio="xMidYMax slice"><path d="M0,100V70q60-25 120 0t140 0t140-5V100Z"/><g><path d="M52,72V40" stroke-width="4"/><path d="M52,40q-18-2-26,8M52,40q18-2 26,8M52,40q-10-12-24-10M52,40q10-12 24-10M52,40q0-12 4-14" fill="none" stroke-width="5" stroke-linecap="round"/></g><g transform="translate(290,-6)"><path d="M52,72V40" stroke-width="4"/><path d="M52,40q-18-2-26,8M52,40q18-2 26,8M52,40q-10-12-24-10M52,40q10-12 24-10" fill="none" stroke-width="5" stroke-linecap="round"/></g></svg>`;
+ el.innerHTML=`<div class="stars plx" data-d="6">${stars}</div>${night?`<div class="shoot"></div>`:""}<div class="sun ${night?"moon":""} plx" data-d="10" style="left:${sunX}%;top:${sunY}%"></div><div class="plx" data-d="14">${clouds}</div>${birds}<div class="plx" data-d="20">${sky}</div>`}
+(()=>{let tx=0,ty=0;const mv=(x,y)=>{tx=x;ty=y;document.querySelectorAll("#sky .plx").forEach(l=>{const d=+l.dataset.d;l.style.transform=`translate(${-x*d}px,${-y*d*.5}px)`})};
+ window.addEventListener("deviceorientation",e=>{if(e.gamma==null)return;mv(Math.max(-1,Math.min(1,e.gamma/30)),Math.max(-1,Math.min(1,(e.beta-40)/30)))});
+ document.addEventListener("pointermove",e=>{if(e.pointerType==="mouse")mv(e.clientX/innerWidth*2-1,e.clientY/innerHeight*2-1)},{passive:true});
+ setInterval(()=>{if($("home").classList.contains("on"))buildSky()},60000)})();
+function greet(){return"السلام عليكم"}
+const _rh3=refreshHome2;refreshHome2=function(){_rh3();buildSky();const hh=$("hHello");if(hh)hh.textContent=S.name?`السلام عليكم يا ${S.name} 👋`:"السلام عليكم 👋";
+ if(S.colors)for(const k in S.colors)if(S.colors[k]&&S.colors[k].done){S.colDone=S.colDone||{};S.colDone[k]=1;delete S.colors[k].done}};
+
+// ====== 🖍️ رسومات تلوين إضافية ======
+const CRES=(cx,cy,r)=>`M${cx},${cy-r}a${r},${r} 0 1,0 0,${2*r}a${r*1.3},${r*1.3} 0 0,1 0,${-2*r}Z`;
+DRAWINGS.push(
+ {id:"kaaba",t:"الكعبة",ic:"🕋",r:["M0,0H300V220H0Z","M0,220H300V300H0Z","M70,110L150,88L250,108L170,130Z","M70,110L170,130V262L70,240Z","M170,130L250,108V236L170,262Z","M70,135L170,156V172L70,151Z","M170,156L250,134V150L170,172Z","M120,190L148,196V252L120,246Z",CRES(250,50,22),STAR(50,45,14),STAR(110,30,9)]},
+ {id:"butterfly",t:"الفراشة",ic:"🦋",r:["M0,0H300V300H0Z","M0,262H300V300H0Z","M150,140Q80,30 40,95Q38,150 150,152Z","M150,140Q220,30 260,95Q262,150 150,152Z","M150,156Q66,158 76,226Q118,250 150,168Z","M150,156Q234,158 224,226Q182,250 150,168Z",CIRC(92,108,16),CIRC(208,108,16),CIRC(106,206,11),CIRC(194,206,11),{e:[150,168,10,52,0]},CIRC(150,108,13),"M144,98Q130,62 116,60","M156,98Q170,62 184,60"]},
+ {id:"car",t:"السيارة",ic:"🚗",r:["M0,0H300V236H0Z","M0,236H300V300H0Z",CIRC(52,52,24),"M26,206V172Q26,160 42,158L88,154L118,112H200L236,154L264,160Q276,166 276,182V206Z","M128,122H158V152H102Z","M166,122H196L224,152H166Z","M260,168H276V184H260Z",CIRC(84,208,26),CIRC(220,208,26),CIRC(84,208,11),CIRC(220,208,11),"M120,266H180V276H120Z"]},
+ {id:"rocket",t:"الصاروخ",ic:"🚀",r:["M0,0H300V300H0Z",CIRC(62,72,28),"M150,36Q198,90 192,204H108Q102,90 150,36Z","M150,36Q178,60 186,92H114Q122,60 150,36Z",CIRC(150,134,22),"M108,160L68,226L108,210Z","M192,160L232,226L192,210Z","M118,204Q150,290 182,204Z","M134,204Q150,250 166,204Z",STAR(250,60,16),STAR(240,240,14),STAR(52,250,12)]},
+ {id:"cat",t:"القطة",ic:"🐱",r:["M0,0H300V250H0Z","M0,250H300V300H0Z",{e:[150,212,62,48,0]},"M206,228Q272,222 258,160Q252,148 242,160Q254,208 200,212Z",CIRC(150,128,50),"M110,104L102,56L140,86Z","M190,104L198,56L160,86Z",CIRC(130,124,10),CIRC(170,124,10),"M142,146H158L150,156Z",CIRC(56,256,24)]},
+ {id:"boat",t:"المركب",ic:"⛵",r:["M0,0H300V200H0Z",CIRC(250,50,26),"M30,60a16,16 0 0,1 28,-8a18,18 0 0,1 32,8a12,12 0 0,1 0,22H34a12,12 0 0,1 -4,-22Z","M146,58H154V190H146Z","M154,64L228,176H154Z","M146,80L82,176H146Z","M154,58L184,67L154,76Z","M56,186H244L212,232H88Z","M0,214Q75,196 150,214T300,214V300H0Z",{e:[70,262,20,10,0]},"M88,262L102,252V272Z"]},
+ {id:"night",t:"ليلة رمضان",ic:"🌙",r:["M0,0H300V300H0Z",CRES(110,110,70),STAR(220,60,20),STAR(250,140,14),STAR(200,180,10),STAR(60,220,12),"M0,300V250Q80,220 150,250T300,240V300Z","M182,250V214Q200,186 218,214V250Z","M226,250V180H236V250Z","M226,180L231,166L236,180Z"]},
+ {id:"tree",t:"شجرة التفاح",ic:"🍎",r:["M0,0H300V240H0Z","M0,240H300V300H0Z",CIRC(56,52,22),"M136,250V170H164V250Z",CIRC(150,118,64),CIRC(104,148,34),CIRC(196,148,34),CIRC(126,96,12),CIRC(176,108,12),CIRC(146,146,12),CIRC(196,150,11),CIRC(104,150,11),"M20,250V218H30V250Z","M260,250V218H270V250Z","M14,222H276V230H14Z"]},
+ {id:"castle",t:"القلعة",ic:"🏰",r:["M0,0H300V250H0Z","M0,250H300V300H0Z","M74,140H226V256H74Z","M38,104H92V256H38Z","M208,104H262V256H208Z","M32,106L65,52L98,106Z","M202,106L235,52L268,106Z","M128,256V206Q150,178 172,206V256Z","M56,140H74V168H56Z","M226,140H244V168H226Z","M65,52V28L88,36L65,44Z","M235,52V28L258,36L235,44Z","M100,170H124V194H100Z","M176,170H200V194H176Z"]});
+
+// ====== 🖌️ الرسم الحر ======
+let FD=null;
+function openFreeDraw(){openAct("🖌️ الرسم الحر");FD={col:"#ef4444",size:8,mode:"pen",stamp:"⭐",hist:[]};
+ $("actBody").innerHTML=`<div class="palette strip">${PALETTE.map(c=>`<button class="pcol ${FD.col===c?"on":""}" style="background:${c}" onclick="FD.col='${c}';FD.mode=FD.mode==='erase'?'pen':FD.mode;fdBar(this)"></button>`).join("")}</div>
+ <div class="fdwrap"><canvas id="fdC"></canvas></div>
+ <div class="coltools" id="fdTools"></div>`;fdTools();
+ setTimeout(()=>{const c=$("fdC"),w=c.clientWidth,h=c.clientHeight,dpr=devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;const x=c.getContext("2d");x.scale(dpr,dpr);x.fillStyle="#fff";x.fillRect(0,0,w,h);FD.x=x;FD.w=w;FD.h=h;
+  let on=false,lx,ly;const P=e=>{const r=c.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  c.onpointerdown=e=>{e.preventDefault();c.setPointerCapture(e.pointerId);FD.hist.push(x.getImageData(0,0,c.width,c.height));if(FD.hist.length>15)FD.hist.shift();const[a,b]=P(e);
+   if(FD.mode==="stamp"){x.save();x.setTransform(1,0,0,1,0,0);x.scale(dpr,dpr);x.font=`${FD.size*5+16}px "Noto Color Emoji",sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillText(FD.stamp,a,b);x.restore();beep(700,.05,"triangle",.05);vib(10);return}
+   on=true;lx=a;ly=b;x.lineCap=x.lineJoin="round";x.strokeStyle=FD.mode==="erase"?"#fff":FD.col;x.lineWidth=FD.mode==="erase"?FD.size*3:FD.size;x.beginPath();x.moveTo(a,b);x.lineTo(a+.1,b);x.stroke()};
+  c.onpointermove=e=>{if(!on)return;const[a,b]=P(e);x.beginPath();x.moveTo(lx,ly);x.lineTo(a,b);x.stroke();lx=a;ly=b};
+  c.onpointerup=c.onpointercancel=()=>on=false},60)}
+function fdBar(b){document.querySelectorAll(".pcol").forEach(x=>x.classList.toggle("on",x===b));fdTools()}
+function fdTools(){const t=$("fdTools");if(!t)return;t.innerHTML=`${[4,8,16].map(s=>`<button class="${FD.size===s&&FD.mode!=="stamp"?"g":""}" onclick="FD.size=${s};if(FD.mode==='stamp')FD.mode='pen';fdTools()"><i class="dot" style="width:${s+4}px;height:${s+4}px;background:${FD.col}"></i></button>`).join("")}
+ <button class="${FD.mode==="erase"?"g":""}" onclick="FD.mode='erase';fdTools()">🧽</button><button class="${FD.mode==="stamp"?"g":""}" onclick="fdStamp()">${FD.stamp}</button><button onclick="fdUndo()">↩️</button><button onclick="fdClear()">🗑️</button><button class="g" onclick="fdSave()">💾</button>`}
+function fdStamp(){if(FD.mode==="stamp"){const L=["⭐","🌸","❤️","🦋","🌙","☀️","🌳","🐱","🕌","🎈","🍎","🌈"];FD.stamp=L[(L.indexOf(FD.stamp)+1)%L.length]}FD.mode="stamp";fdTools()}
+function fdUndo(){const h=FD.hist.pop();if(h)FD.x.putImageData(h,0,0)}
+function fdClear(){FD.hist.push(FD.x.getImageData(0,0,$("fdC").width,$("fdC").height));FD.x.fillStyle="#fff";FD.x.fillRect(0,0,FD.w,FD.h)}
+function fdSave(){const url=$("fdC").toDataURL("image/png"),n="رسمتي_"+Date.now()%100000+".png";S.drawings=(S.drawings||0)+1;if(S.drawings===1){addCoins(10);toast("🎨 أول رسمة! +10 🪙")}save();checkBadges();
+ if(window.Android&&Android.saveImage)Android.saveImage(url.split(",")[1],n);else{const a=document.createElement("a");a.href=url;a.download=n;document.body.appendChild(a);a.click();a.remove()}}
+openArt=function(){hub("🎨 الرسم والخط",[["🖍️","دفتر التلوين",`${DRAWINGS.length} رسمة ملوّنة`,"openColoring()"],["🖌️","الرسم الحر","ارسم بالألوان والملصقات","openFreeDraw()"],["✍️","تعلّم الخط","تتبّع الحروف بإصبعك","openTrace()"]])};
+
+// ====== 🎲 أنشطة ممتعة ======
+function openFun(){hub("🎲 أنشطة ممتعة",[["🔎","البحث عن الكلمات","جد الكلمات المخفية","openWS()"],["🌀","المتاهة","أوصل سلمى إلى المسجد","openMaze()"],["🔢","سودوكو الصور","لا تكرر الصورة في صف أو عمود","openSudoku()"],["🕐","تعلّم الساعة","كم الساعة الآن؟","openClock()"],["🎵","تذكّر النغمات","كرّر ترتيب الألوان","openSimon()"]])}
+const actDone=(c,msg,again)=>{addCoins(c);save();sfx.win();confetti();praise("win");$("actBody").insertAdjacentHTML("beforeend",`<div class="row"><p class="ctip">🎉 ${msg} 🪙 +${c}</p></div><div class="row"><button class="bigbtn green" onclick="${again}">🔁 مرة أخرى</button><button class="bigbtn alt" onclick="actHome()">🏠</button></div>`);checkBadges()};
+
+// --- البحث عن الكلمات ---
+const WS_AR={"🦁 حيوانات":["أسد","نمر","فيل","جمل","قطة","أرنب","حصان","غزال","دب","ذئب","بطة","نحلة"],"🍎 فواكه":["تفاح","موز","عنب","رمان","تين","تمر","خوخ","مشمش","ليمون","بطيخ","كرز","جوافة"],
+ "🌙 أنبياء":["نوح","هود","صالح","موسى","عيسى","يوسف","يونس","داود","أيوب","يحيى","زكريا","إبراهيم"],"🏫 المدرسة":["قلم","كتاب","دفتر","مسطرة","حقيبة","معلم","سبورة","صف","ممحاة","طالب","درس","مكتبة"]};
+let WS=null;
+function openWS(lang){const r=rng(Date.now()%99991),g=gradeOf(),n=g>=5?9:8;lang=lang||(r()<.5?"ar":"en");let theme,words;
+ if(lang==="ar"){const ks=Object.keys(WS_AR);theme=ks[ri(r,0,ks.length-1)];words=shuffle(WS_AR[theme].filter(w=>[...w].length<=n),r)}
+ else{const us=ENG_UNITS.filter(u=>u.words.filter(w=>/^[a-z]{3,7}$/.test(w.en)).length>=8),u=us[ri(r,0,us.length-1)];theme=u.ic+" "+u.en;words=shuffle(u.words.map(w=>w.en).filter(w=>/^[a-z]{3,7}$/.test(w)),r).map(w=>w.toUpperCase())}
+ const grid=Array(n*n).fill(""),placed=[],dirs=g>=5?[[0,1],[1,0],[1,1]]:[[0,1],[1,0]];
+ for(const w of words){if(placed.length>=(g>=5?7:6))break;const L=[...w];for(let t=0;t<120;t++){const[dr,dc]=dirs[ri(r,0,dirs.length-1)],r0=ri(r,0,n-1-dr*(L.length-1)),c0=ri(r,0,n-1-dc*(L.length-1));
+  if(r0<0||c0<0)continue;if(L.every((ch,k)=>{const v=grid[(r0+dr*k)*n+c0+dc*k];return!v||v===ch})){const cells=L.map((ch,k)=>{const i=(r0+dr*k)*n+c0+dc*k;grid[i]=ch;return i});placed.push({w,cells});break}}}
+ const AB=lang==="ar"?[..."ابتثجحخدذرزسشصضطظعغفقكلمنهوي"]:[..."ABCDEFGHIJKLMNOPRSTUVWY"];for(let i=0;i<grid.length;i++)if(!grid[i])grid[i]=AB[ri(r,0,AB.length-1)];
+ WS={n,grid,placed,found:[],sel:null,lang,theme};openAct("🔎 البحث عن الكلمات",`0/${placed.length}`);drawWS()}
+const WSC=["#f87171","#60a5fa","#4ade80","#facc15","#c084fc","#fb923c","#2dd4bf"];
+function drawWS(){const {n,grid,placed,found,sel,lang}=WS,col={};found.forEach(k=>placed[k].cells.forEach(i=>col[i]=WSC[k%WSC.length]));
+ $("actInfo").textContent=`${found.length}/${placed.length}`;
+ $("actBody").innerHTML=`<p class="ctip">${WS.theme} • اضغط على أول حرف ثم آخر حرف 👆</p><div class="wsgrid ${lang}" style="grid-template-columns:repeat(${n},1fr)">${grid.map((ch,i)=>`<button class="wsc ${sel===i?"sel":""}" style="${col[i]?`background:${col[i]};color:#fff`:""}" onclick="wsTap(${i})">${ch}</button>`).join("")}</div>
+ <div class="wswords ${lang}">${placed.map((p,k)=>`<span class="${found.includes(k)?"on":""}" style="--c:${WSC[k%WSC.length]}">${p.w}</span>`).join("")}</div>
+ <div class="row"><button class="bigbtn alt" onclick="openWS('ar')">🔤 عربي</button><button class="bigbtn alt" onclick="openWS('en')">🔠 English</button></div>`}
+function wsTap(i){if(WS.sel===null){WS.sel=i;sfx.click();drawWS();return}const a=WS.sel;WS.sel=null;
+ const k=WS.placed.findIndex((p,k)=>!WS.found.includes(k)&&((p.cells[0]===a&&p.cells.at(-1)===i)||(p.cells[0]===i&&p.cells.at(-1)===a)));
+ if(k>=0){WS.found.push(k);sfx.ok();drawWS();if(WS.lang==="en")sayEn(WS.placed[k].w.toLowerCase());else say(WS.placed[k].w,true);if(WS.found.length===WS.placed.length){S.wsDone=(S.wsDone||0)+1;actDone(15,"وجدت كل الكلمات!","openWS()")}}
+ else{if(a!==i)sfx.bad();drawWS()}}
+
+// --- المتاهة ---
+let MZ=null;
+function openMaze(){const g=gradeOf(),n=g<=3?7:g===4?8:g===5?9:10,r=rng(Date.now()%99991),W=Array(n*n).fill(0).map(()=>[1,1,1,1]),seen=new Set([0]),st=[0];// top,right,bottom,left
+ while(st.length){const c=st.at(-1),x=c%n,y=Math.floor(c/n),nb=[[0,-1,0,2],[1,0,1,3],[0,1,2,0],[-1,0,3,1]].filter(([dx,dy])=>{const X=x+dx,Y=y+dy;return X>=0&&Y>=0&&X<n&&Y<n&&!seen.has(Y*n+X)});
+  if(!nb.length){st.pop();continue}const[dx,dy,a,b]=nb[ri(r,0,nb.length-1)],m=(y+dy)*n+x+dx;W[c][a]=0;W[m][b]=0;seen.add(m);st.push(m)}
+ const stars=[];while(stars.length<3){const k=ri(r,n,n*n-2);if(!stars.includes(k))stars.push(k)}
+ MZ={n,W,p:0,goal:n*n-1,stars,got:[],steps:0,t0:Date.now(),ax:0,ay:0};openAct("🌀 المتاهة",`⭐ 0/3`);
+ $("actBody").innerHTML=`<p class="ctip">اسحب إصبعك أو استخدم الأسهم لتوصل 🧕 إلى 🕌</p><div class="mzwrap"><canvas id="mzC"></canvas></div>
+ <div class="mzpad"><span></span><button onclick="mzMove(0,-1)">⬆️</button><span></span><button onclick="mzMove(-1,0)">⬅️</button><button onclick="mzMove(0,1)">⬇️</button><button onclick="mzMove(1,0)">➡️</button></div>`;
+ setTimeout(()=>{const c=$("mzC"),w=c.clientWidth,dpr=devicePixelRatio||1;c.width=c.height=w*dpr;MZ.x=c.getContext("2d");MZ.x.scale(dpr,dpr);MZ.w=w;MZ.ax=MZ.p%n;MZ.ay=0;
+  let sx,sy;c.onpointerdown=e=>{sx=e.clientX;sy=e.clientY};c.onpointerup=e=>{const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<20)return;Math.abs(dx)>Math.abs(dy)?mzMove(dx>0?1:-1,0):mzMove(0,dy>0?1:-1)};
+  mzLoop()},60)}
+function mzMove(dx,dy){if(!MZ||MZ.win)return;const {n,W}=MZ;let moved=0;
+ for(let k=0;k<n;k++){const c=MZ.p,side=dx===1?1:dx===-1?3:dy===1?2:0;if(W[c][side])break;MZ.p=c+dx+dy*n;moved++;MZ.steps++;
+  if(MZ.stars.includes(MZ.p)&&!MZ.got.includes(MZ.p)){MZ.got.push(MZ.p);sfx.ok();$("actInfo").textContent=`⭐ ${MZ.got.length}/3`}
+  const x=MZ.p%n,y=Math.floor(MZ.p/n),open=W[MZ.p].filter(v=>!v).length;if(MZ.p===MZ.goal||open!==2||(side%2===0?W[MZ.p][side]:W[MZ.p][side]))break}
+ if(!moved){vib(40);beep(150,.08,"square",.05);return}beep(520,.04,"triangle",.04);
+ if(MZ.p===MZ.goal){MZ.win=1;const c=10+MZ.got.length*5;S.mazes=(S.mazes||0)+1;setTimeout(()=>actDone(c,`وصلت إلى المسجد! جمعت ${MZ.got.length} نجوم`,"openMaze()"),400)}}
+function mzLoop(){if(!MZ||!$("mzC"))return;const {n,W,x,w}=MZ,s=w/n,tx=MZ.p%n,ty=Math.floor(MZ.p/n);MZ.ax+=(tx-MZ.ax)*.3;MZ.ay+=(ty-MZ.ay)*.3;
+ const g=x.createLinearGradient(0,0,w,w);g.addColorStop(0,"#ecfccb");g.addColorStop(1,"#bbf7d0");x.fillStyle=g;x.fillRect(0,0,w,w);
+ x.strokeStyle="#166534";x.lineWidth=Math.max(3,s*.12);x.lineCap="round";x.beginPath();
+ for(let i=0;i<n*n;i++){const cx=(i%n)*s,cy=Math.floor(i/n)*s,c=W[i];if(c[0]){x.moveTo(cx,cy);x.lineTo(cx+s,cy)}if(c[1]){x.moveTo(cx+s,cy);x.lineTo(cx+s,cy+s)}if(c[2]){x.moveTo(cx,cy+s);x.lineTo(cx+s,cy+s)}if(c[3]){x.moveTo(cx,cy);x.lineTo(cx,cy+s)}}x.stroke();
+ const t=Date.now()/300;x.textAlign="center";x.textBaseline="middle";x.font=`${s*.7}px "Noto Color Emoji",sans-serif`;
+ MZ.stars.forEach(k=>{if(!MZ.got.includes(k))x.fillText("⭐",(k%n+.5)*s,(Math.floor(k/n)+.5)*s+Math.sin(t+k)*2)});
+ x.fillText("🕌",(n-.5)*s,(n-.5)*s);x.font=`${s*.78}px "Noto Color Emoji",sans-serif`;x.fillText("🧕",(MZ.ax+.5)*s,(MZ.ay+.5)*s+Math.sin(t*2)*1.5);
+ requestAnimationFrame(mzLoop)}
+
+// --- سودوكو الصور 4×4 ---
+let SD=null;
+function openSudoku(){const r=rng(Date.now()%99991),sets=[["🍎","🍌","🍇","🍊"],["🐱","🐶","🐰","🐻"],["⭐","🌙","☀️","☁️"],["🚗","🚲","✈️","🚀"]],em=sets[ri(r,0,3)];
+ const base=[0,1,2,3,2,3,0,1,1,0,3,2,3,2,1,0],p=shuffle([0,1,2,3],r),rs=r()<.5?[0,1,2,3]:[1,0,3,2],sol=[];for(let y=0;y<4;y++)for(let x=0;x<4;x++)sol.push(p[base[rs[y]*4+x]]);
+ const hide=shuffle([...Array(16).keys()],r).slice(0,[0,0,0,7,8,9,10][gradeOf()]||8);SD={em,sol,cur:sol.map((v,i)=>hide.includes(i)?-1:v),fixed:sol.map((v,i)=>!hide.includes(i)),sel:hide[0],mist:0};
+ openAct("🔢 سودوكو الصور");drawSudoku()}
+function drawSudoku(){const {em,cur,fixed,sel}=SD,bad=i=>{if(cur[i]<0)return false;const y=Math.floor(i/4),x=i%4,bx=x-x%2,by=y-y%2;for(let j=0;j<16;j++){if(j===i||cur[j]!==cur[i])continue;const Y=Math.floor(j/4),X=j%4;if(Y===y||X===x||(X-X%2===bx&&Y-Y%2===by))return true}return false};
+ $("actBody").innerHTML=`<p class="ctip">كل صورة مرة واحدة في كل صف وعمود ومربّع 🧩</p><div class="sdgrid">${cur.map((v,i)=>`<button class="sdc ${fixed[i]?"fix":""} ${sel===i?"sel":""} ${bad(i)?"bad":""}" onclick="SD.sel=${i};drawSudoku()">${v>=0?em[v]:""}</button>`).join("")}</div>
+ <div class="sdpick">${em.map((e,k)=>`<button onclick="sdPut(${k})">${e}</button>`).join("")}<button onclick="sdPut(-1)">🧽</button></div>`}
+function sdPut(k){const i=SD.sel;if(i==null||SD.fixed[i])return;SD.cur[i]=k;beep(600+k*80,.05,"triangle",.05);drawSudoku();
+ if(SD.cur.every((v,j)=>v===SD.sol[j])){S.sudoku=(S.sudoku||0)+1;SD.sel=null;drawSudoku();actDone(15,"حللت السودوكو!","openSudoku()")}}
+
+// --- تعلّم الساعة ---
+const HRS=["الثانية عشرة","الواحدة","الثانية","الثالثة","الرابعة","الخامسة","السادسة","السابعة","الثامنة","التاسعة","العاشرة","الحادية عشرة"];
+function clockName(h,m){if(gradeOf()>=5)return`${L}${h===0?12:h}:${String(m).padStart(2,"0")}${R}`;
+ if(m===0)return HRS[h]+" تمامًا";if(m===15)return HRS[h]+" والربع";if(m===30)return HRS[h]+" والنصف";if(m===45)return HRS[(h+1)%12]+" إلا ربعًا";return HRS[h]+` و${m} دقيقة`}
+function clockSVG(h,m){const ha=(h%12)*30+m*.5,ma=m*6;return`<svg viewBox="0 0 200 200" class="clocksvg"><defs><radialGradient id="cf"><stop offset=".7" stop-color="#fff"/><stop offset="1" stop-color="#e0e7ff"/></radialGradient></defs>
+ <circle cx="100" cy="100" r="94" fill="#7c3aed"/><circle cx="100" cy="100" r="84" fill="url(#cf)"/>${[...Array(60).keys()].map(i=>{const a=i*6*Math.PI/180,r1=i%5?78:72;return`<line x1="${100+Math.sin(a)*r1}" y1="${100-Math.cos(a)*r1}" x2="${100+Math.sin(a)*80}" y2="${100-Math.cos(a)*80}" stroke="#4c1d95" stroke-width="${i%5?1:3}"/>`}).join("")}
+ ${[...Array(12).keys()].map(i=>{const a=(i+1)*30*Math.PI/180;return`<text x="${100+Math.sin(a)*60}" y="${100-Math.cos(a)*60+7}" text-anchor="middle" font-size="18" font-weight="900" fill="#1e1b4b">${i+1}</text>`}).join("")}
+ <g class="hand" style="transform:rotate(${ha}deg)"><rect x="96" y="52" width="8" height="52" rx="4" fill="#1e1b4b"/></g><g class="hand" style="transform:rotate(${ma}deg)"><rect x="97.5" y="28" width="5" height="76" rx="2.5" fill="#ef4444"/></g><circle cx="100" cy="100" r="7" fill="#facc15"/></svg>`}
+let CK=null;
+function ckTime(r){const g=gradeOf(),h=ri(r,0,11),m=g===3?[0,30][ri(r,0,1)]:g===4?[0,15,30,45][ri(r,0,3)]:ri(r,0,11)*5;return[h,m]}
+function openClock(){CK={r:rng(Date.now()%99991),i:0,right:0};openAct("🕐 تعلّم الساعة","1/8");ckNext()}
+function ckNext(){const r=CK.r,[h,m]=ckTime(r),ans=clockName(h,m),opts=new Set([ans]);while(opts.size<4){const[a,b]=ckTime(r);opts.add(clockName(a,b));if(r()<.4)opts.add(clockName((h+ri(r,1,11))%12,m))}
+ CK.ans=ans;$("actInfo").textContent=`${CK.i+1}/8`;
+ $("actBody").innerHTML=`${girlTalk(CK.i%2?"s":"m","talk")}<div class="clockbox">${clockSVG(0,0)}</div><div class="mmopts">${shuffle([...opts].slice(0,4),r).map(o=>`<button class="mmo ck" onclick="ckAns(this)">${o}</button>`).join("")}</div>`;
+ setTimeout(()=>{const hs=document.querySelectorAll(".clockbox .hand");if(hs[0]){hs[0].style.transform=`rotate(${(h%12)*30+m*.5}deg)`;hs[1].style.transform=`rotate(${m*6+360}deg)`}},50);talkType("كم الساعة؟ 🕐")}
+function ckAns(b){if(CK.lock)return;CK.lock=1;const ok=b.textContent===CK.ans.replace(/[⁦-⁩]/g,"")||b.textContent===CK.ans;if(ok){CK.right++;b.classList.add("ok");sfx.ok()}else{b.classList.add("bad");sfx.bad();document.querySelectorAll(".mmo.ck").forEach(x=>{if(x.textContent===CK.ans)x.classList.add("ok")})}
+ setTimeout(()=>{CK.lock=0;CK.i++;if(CK.i<8)ckNext();else{const c=CK.right*2;S.clockBest=Math.max(S.clockBest||0,CK.right);$("actBody").innerHTML=`<div class="mmstart"><div style="font-size:70px">🕐</div><h2>${CK.right} من 8</h2></div>`;actDone(c,"أنهيت درس الساعة!","openClock()")}},ok?700:1500)}
+
+// --- تذكّر النغمات ---
+let SM=null;const SMF=[330,415,494,587];
+function openSimon(){SM={seq:[],i:0,busy:true};openAct("🎵 تذكّر النغمات",`🏆 ${S.simonBest||0}`);
+ $("actBody").innerHTML=`<p class="ctip" id="smTip">استمع وانظر… ثم كرّر الترتيب 👀</p><div class="smgrid">${["#ef4444","#3b82f6","#22c55e","#facc15"].map((c,k)=>`<button class="smp" id="sm${k}" style="--c:${c}" onclick="smTap(${k})"></button>`).join("")}<div class="smc" id="smN">0</div></div>`;setTimeout(smAdd,700)}
+function smFlash(k){const b=$("sm"+k);if(!b)return;b.classList.add("on");beep(SMF[k],.3,"sine",.18);setTimeout(()=>b.classList.remove("on"),280)}
+function smAdd(){if(!$("smN"))return;SM.seq.push(Math.floor(Math.random()*4));SM.i=0;SM.busy=true;$("smN").textContent=SM.seq.length-1;$("smTip").textContent="👀 انتبه…";
+ SM.seq.forEach((k,j)=>setTimeout(()=>smFlash(k),j*520));setTimeout(()=>{SM.busy=false;if($("smTip"))$("smTip").textContent="👆 دورك!"},SM.seq.length*520)}
+function smTap(k){if(SM.busy)return;smFlash(k);if(k!==SM.seq[SM.i]){SM.busy=true;sfx.bad();const sc=SM.seq.length-1;const rec=sc>(S.simonBest||0);if(rec)S.simonBest=sc;
+  setTimeout(()=>{$("actBody").innerHTML=`<div class="mmstart"><div style="font-size:70px">${rec?"🏆":"🎵"}</div><h2>${rec?"رقم قياسي جديد!":"انتهت اللعبة"}</h2><p style="font-size:22px">تذكّرت ${sc} نغمات</p></div>`;actDone(Math.max(2,sc*2),"أحسنت!","openSimon()")},500);return}
+ SM.i++;if(SM.i===SM.seq.length){SM.busy=true;setTimeout(smAdd,800)}}
+
+// ====== 🗣️ تسجيل النطق في الإنجليزية ======
+const hasSTT=()=>(window.Android&&Android.hasSTT&&Android.hasSTT())||!!(window.webkitSpeechRecognition||window.SpeechRecognition);
+const NUMW=["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
+function normEn(s){s=String(s).toLowerCase().trim();if(/^\d+$/.test(s)&&NUMW[+s])return NUMW[+s];return s.replace(/[^a-z ]/g,"").replace(/^(a|an|the) /,"")}
+function lev(a,b){const d=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]}
+function sttScore(word,list){const w=normEn(word);let best=0;(list||[]).forEach(x=>{const n=normEn(x);if(n===w||n.split(" ").includes(w)){best=3;return}const d=lev(n,w);if(w.length>=4&&d<=1)best=Math.max(best,2);else if(w.length>=5&&d<=2)best=Math.max(best,1)});return best}
+let STT=null;
+function listenEn(cb){STT={cb};stopSay();
+ if(window.Android&&Android.hasSTT&&Android.hasSTT()){Android.listenEn();return}
+ const SR=window.webkitSpeechRecognition||window.SpeechRecognition;if(!SR){cb(null,"none");return}const r=new SR();r.lang="en-US";r.maxAlternatives=5;
+ r.onresult=e=>{const L=[...e.results[0]].map(a=>a.transcript);onSTT(L)};r.onerror=e=>onSTTErr(e.error);r.start()}
+window.onSTT=function(list){if(STT&&STT.cb){const c=STT.cb;STT=null;c(list)}};
+window.onSTTErr=function(err){if(STT&&STT.cb){const c=STT.cb;STT=null;c(null,err)}};
+// تسجيل صوت الطفل ثم سماعه
+let REC=null;
+function recMine(ms,onDone){if(!navigator.mediaDevices||!window.MediaRecorder){toast("⚠️ التسجيل غير مدعوم على هذا الجهاز");return}stopSay();
+ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{const rec=new MediaRecorder(stream),ch=[];REC=rec;rec.ondataavailable=e=>ch.push(e.data);
+  rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());REC=null;const url=URL.createObjectURL(new Blob(ch,{type:rec.mimeType}));onDone(url)};rec.start();setTimeout(()=>{if(rec.state==="recording")rec.stop()},ms)})
+ .catch(()=>toast("⚠️ اسمح للتطبيق باستخدام الميكروفون"))}
+function pronPanel(word){return`<div class="pron" id="pron"><button class="bigbtn" onclick="pronRec('${word}')">🎤 سجّل صوتك</button>${hasSTT()?`<button class="bigbtn green" onclick="pronCheck('${word}')">🗣️ اختبر نطقي</button>`:""}<div id="pronOut"></div></div>`}
+function pronRec(word){const o=$("pronOut");o.innerHTML=`<div class="recdot">🔴 تكلّم الآن: <b>${word}</b><span class="lvl"><i></i><i></i><i></i><i></i><i></i></span></div>`;
+ setTimeout(()=>recMine(2200,url=>{o.innerHTML=`<div class="cmp"><button class="bigbtn alt" onclick="new Audio('${url}').play()">👧 صوتي</button><button class="bigbtn alt" onclick="sayEn('${word}')">🇬🇧 الصحيح</button></div><p class="ctip">قارن بين صوتك والنطق الصحيح 👂</p>`;
+  const a=new Audio(url);a.onended=()=>setTimeout(()=>sayEn(word),300);a.play().catch(()=>sayEn(word));S.recs=(S.recs||0)+1;save();checkBadges()}),150)}
+function pronCheck(word){const o=$("pronOut");o.innerHTML=`<div class="recdot">🎙️ أنا أستمع… قل: <b>${word}</b><span class="lvl"><i></i><i></i><i></i><i></i><i></i></span></div>`;
+ listenEn((list,err)=>{if(!$("pronOut"))return;if(!list){o.innerHTML=`<p class="ctip">${err==="perm"||err==="not-allowed"?"⚠️ اسمح باستخدام الميكروفون ثم حاول":"لم أسمعك جيدًا، حاول مرة أخرى 🙂"}</p>`;return}
+  const sc=sttScore(word,list);o.innerHTML=`<div class="pscore s${sc}">${sc?"⭐".repeat(sc):"🤔"}<br><small>${sc===3?"Perfect! نطق ممتاز":sc===2?"Very good! قريب جدًا":sc===1?"Good try! حاول مرة أخرى":"سمعت: «"+esc(list[0]||"")+"» — حاول مجددًا"}</small></div>`;
+  if(sc){sfx.ok();if(sc===3){confetti();addCoins(1);S.pron=S.pron||{};S.pron[word]=1;save();checkBadges()}}else sfx.bad()})}
+// إضافة لوحة النطق إلى بطاقة التعلّم
+const _dec=drawEngCard;drawEngCard=function(){_dec();const w=EL.u.words[EL.i];$("elBtns").insertAdjacentHTML("afterbegin",pronPanel(w.en.replace(/'/g,"\\'")))};
+// تحدي النطق للوحدة
+let PC=null;
+function pronChallenge(id){const u=ENG_UNITS.find(x=>x.id===id),r=rng(Date.now()%9999);PC={u,list:shuffle(u.words,r).slice(0,8),i:0,score:0};show("act");pcNext()}
+function pcNext(){const {u,list,i}=PC;if(i>=list.length){const st=PC.score>=20?3:PC.score>=14?2:PC.score>=8?1:0;openAct("🗣️ تحدي النطق",u.t);
+  $("actBody").innerHTML=`<div class="mmstart"><div style="font-size:70px">🗣️</div><h2>${"⭐".repeat(st)||"💪"}</h2><p style="font-size:20px">مجموع نجوم النطق: ${PC.score} من ${list.length*3}</p></div>`;actDone(PC.score,"أنهيت تحدي النطق!",`pronChallenge('${u.id}')`);return}
+ const w=list[i];openAct("🗣️ تحدي النطق",`${i+1}/${list.length}`);
+ $("actBody").innerHTML=`<div class="ecard"><div class="epic">${engPic(w,96)}</div><div class="een">${esc(w.en)}</div><div class="ear">${esc(w.ar)}</div></div>
+ <div class="row"><button class="bigbtn alt" onclick="sayEn('${w.en.replace(/'/g,"\\'")}')">🔊 اسمع</button><button class="bigbtn green" id="pcGo" onclick="pcSay()">🎙️ قل الكلمة</button></div><div id="pronOut"></div>`;setTimeout(()=>sayEn(w.en),300)}
+function pcSay(){const w=PC.list[PC.i];$("pcGo").disabled=true;$("pronOut").innerHTML=`<div class="recdot">🎙️ أستمع…<span class="lvl"><i></i><i></i><i></i><i></i><i></i></span></div>`;
+ listenEn((list,err)=>{const sc=list?sttScore(w.en,list):0;if(!list&&err!=="no-match"&&err!=="7"){$("pronOut").innerHTML=`<p class="ctip">⚠️ لم أسمعك، حاول مجددًا</p>`;$("pcGo").disabled=false;return}
+  PC.score+=sc;$("pronOut").innerHTML=`<div class="pscore s${sc}">${sc?"⭐".repeat(sc):"🤔"}</div>`;sc?sfx.ok():sfx.bad();if(sc===3)engState().learned[engKey(w)]=1;setTimeout(()=>{PC.i++;pcNext()},1300)})}
+const _ou=openUnit;openUnit=function(id){_ou(id);if(hasSTT()){const b=document.querySelector("#modalBox .row");b&&b.insertAdjacentHTML("afterend",`<div class="row"><button class="bigbtn" style="background:#f59e0b;color:#fff" onclick="closeModal();pronChallenge('${id}')">🗣️ تحدي النطق</button></div>`)}};
+
+BADGES.push(["maze5","🌀","سيّد المتاهات","أنهِ 5 متاهات",()=>(S.mazes||0)>=5],["ws5","🔎","صيّاد الكلمات","أنهِ 5 ألغاز كلمات",()=>(S.wsDone||0)>=5],
+ ["pron20","🗣️","النطق الذهبي","انطق 20 كلمة إنجليزية بنجاح",()=>Object.keys(S.pron||{}).length>=20],["artist","🖌️","الرسّام","احفظ رسمتك الأولى",()=>(S.drawings||0)>=1]);
+
+// ====== 🔄 التحديث من GitHub ======
+let UPD=null;
+window.onAppUpdate=function(){UPD={web:1};updShow()};
+window.onApkUpdate=function(name,url){UPD=Object.assign(UPD||{},{apk:url,name});updShow()};
+function updShow(){if(!UPD||!$("home").classList.contains("on")||$("modal").classList.contains("on"))return;const u=UPD;UPD=null;
+ if(u.web)modal(`<div style="font-size:64px">🎁</div><h2>تحديث جديد للعبة!</h2><p>وصلت أنشطة وتحسينات جديدة 🎉<br>تقدّمك محفوظ ولن يضيع.</p><div class="row"><button class="bigbtn green" onclick="closeModal();save();Android.reloadApp()">🔄 حدّث الآن</button><button class="bigbtn alt" onclick="closeModal()">لاحقًا</button></div>`);
+ else if(u.apk)modal(`<div style="font-size:64px">📲</div><h2>إصدار جديد من التطبيق</h2><p>${esc(u.name||"")}<br>حمّل الملف ثم افتحه لتثبيته فوق النسخة الحالية — تقدّمك محفوظ.</p><div class="row"><button class="bigbtn green" onclick="closeModal();Android.openUrl('${u.apk}')">⬇️ تحميل</button><button class="bigbtn alt" onclick="closeModal()">لاحقًا</button></div>`)}
+const _rh4=refreshHome2;refreshHome2=function(){_rh4();setTimeout(updShow,1200)};
+const _os=openSettings;openSettings=function(){_os();const v=window.Android&&Android.appVersion?Android.appVersion():"ويب";const r=document.querySelector("#modalBox .setrow");
+ r&&r.insertAdjacentHTML("beforebegin",`<div class="setrow">📳 الاهتزاز <div class="toggle ${S.vib!==false?"on":""}" onclick="S.vib=S.vib===false;save();this.classList.toggle('on');vib(40)"></div></div>`);
+ const last=[...document.querySelectorAll("#modalBox .row")].pop();last&&last.insertAdjacentHTML("beforebegin",`<div class="setrow">📦 الإصدار <span>${esc(v)}</span></div>${window.Android&&Android.checkUpdate?`<div class="row"><button class="bigbtn alt" style="font-size:17px" onclick="Android.checkUpdate();toast('🔄 جارٍ البحث عن تحديث…')">🔄 التحقق من التحديثات</button></div>`:""}`)};
+
+// ====== 🖍️ مكتبة رسومات التلوين الكبيرة ======
+// أدوات رسم
+const RR=(x,y,w,h,r)=>r?`M${x+r},${y}H${x+w-r}A${r},${r} 0 0 1 ${x+w},${y+r}V${y+h-r}A${r},${r} 0 0 1 ${x+w-r},${y+h}H${x+r}A${r},${r} 0 0 1 ${x},${y+h-r}V${y+r}A${r},${r} 0 0 1 ${x+r},${y}Z`:`M${x},${y}h${w}v${h}h${-w}Z`;
+const PL=pts=>"M"+pts.map(p=>p.join(",")).join("L")+"Z";
+const EL_=(cx,cy,rx,ry,a)=>({e:[cx,cy,rx,ry,a||0]});
+const HRT=(cx,cy,s)=>`M${cx},${cy+s*.9}C${cx-s*1.6},${cy-s*.1} ${cx-s*.6},${cy-s*1.1} ${cx},${cy-s*.35}C${cx+s*.6},${cy-s*1.1} ${cx+s*1.6},${cy-s*.1} ${cx},${cy+s*.9}Z`;
+const CLD=(x,y,s)=>`M${x-40*s},${y}a${16*s},${16*s} 0 0 1 ${10*s},${-24*s}a${22*s},${22*s} 0 0 1 ${38*s},${-10*s}a${18*s},${18*s} 0 0 1 ${30*s},${8*s}a${14*s},${14*s} 0 0 1 ${2*s},${26*s}Z`;
+const ring=(n,cx,cy,d,f)=>[...Array(n).keys()].map(i=>{const a=i*2*Math.PI/n-Math.PI/2;return f(cx+Math.cos(a)*d,cy+Math.sin(a)*d,a*180/Math.PI)});
+const mir=r=>typeof r==="string"?r.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g,(m,x,y)=>`${-x},${y}`):r;
+
+// القطع (إحداثيات محلية: الأرض عند y=0)
+const CP={
+ tree:a=>["M-8,0L-6,-50Q-20,-62 -24,-70L-18,-73Q-8,-62 -4,-58L-2,-80H4L5,-60Q14,-66 20,-76L25,-72Q16,-60 8,-50L10,0Z",CIRC(-28,-82,24),CIRC(28,-82,24),CIRC(0,-104,30),CIRC(-10,-74,18),CIRC(14,-72,18),...(a?[CIRC(-24,-86,5),CIRC(16,-100,5),CIRC(30,-74,5),CIRC(-4,-118,5),CIRC(2,-80,5)]:[])],
+ pine:()=>[RR(-6,-16,12,16),PL([[-34,-16],[34,-16],[0,-58]]),PL([[-28,-44],[28,-44],[0,-82]]),PL([[-20,-68],[20,-68],[0,-102]]),STAR(0,-106,8)],
+ palm:()=>["M-6,0Q-2,-50 10,-96L18,-94Q8,-50 8,0Z","M14,-96Q-20,-110 -40,-84Q-12,-100 14,-92Z","M14,-96Q50,-114 70,-86Q42,-102 14,-92Z","M14,-96Q0,-130 -24,-128Q4,-118 12,-98Z","M14,-96Q34,-132 58,-126Q32,-116 16,-98Z","M14,-96Q-6,-80 -18,-56Q4,-74 16,-94Z",CIRC(9,-90,5),CIRC(19,-88,5)],
+ flower:()=>["M-2,0Q-6,-30 -1,-60H3Q-2,-30 2,0Z","M-2,-20Q-26,-30 -30,-14Q-14,-10 -2,-16Z","M1,-34Q24,-46 30,-30Q14,-24 2,-30Z",...ring(8,1,-74,14,(x,y,a)=>EL_(x,y,11,6,a)),CIRC(1,-74,9)],
+ tulip:()=>["M-2,0Q-4,-30 -1,-58H3Q0,-30 2,0Z","M-1,-14Q-24,-30 -20,-50Q-8,-30 0,-22Z","M-14,-56Q-16,-82 -10,-88L-4,-76L1,-90L6,-76L12,-88Q18,-82 16,-56Q1,-46 -14,-56Z"],
+ sunflower:()=>["M-3,0Q-6,-50 -2,-96H4Q0,-50 3,0Z","M-2,-40Q-30,-50 -36,-30Q-16,-26 -2,-34Z","M2,-60Q30,-72 36,-52Q16,-48 2,-54Z",...ring(14,1,-112,22,(x,y,a)=>EL_(x,y,14,6,a)),CIRC(1,-112,16),CIRC(1,-112,9)],
+ grass:()=>["M-20,0L-16,-14L-12,0L-6,-18L-2,0L4,-16L8,0L14,-12L18,0Z"],
+ bush:()=>["M-36,0A16,16 0 0 1 -30,-24A20,20 0 0 1 0,-38A20,20 0 0 1 30,-24A16,16 0 0 1 36,0Z",CIRC(-16,-20,3.5),CIRC(10,-26,3.5),CIRC(20,-12,3.5)],
+ rock:()=>["M-24,0Q-28,-16 -12,-22Q4,-30 18,-18Q28,-8 24,0Z"],
+ house:()=>[RR(22,-112,12,30),RR(-45,-70,90,70),PL([[-56,-66],[0,-118],[56,-66]]),CIRC(0,-88,9),"M-12,0V-28A12,12 0 0 1 12,-28V0Z",CIRC(7,-16,2.5),RR(-38,-56,22,22,2),RR(16,-56,22,22,2),RR(-36,-54,8.5,8.5),RR(-25.5,-54,8.5,8.5),RR(-36,-43.5,8.5,8.5),RR(-25.5,-43.5,8.5,8.5),RR(18,-54,8.5,8.5),RR(28.5,-54,8.5,8.5),RR(18,-43.5,8.5,8.5),RR(28.5,-43.5,8.5,8.5),RR(-24,-4,48,4)],
+ mosque:()=>[RR(-70,-130,14,130),RR(56,-130,14,130),RR(-74,-102,22,6),RR(52,-102,22,6),PL([[-72,-130],[-54,-130],[-63,-154]]),PL([[54,-130],[72,-130],[63,-154]]),CRES(-63,-162,5),CRES(63,-162,5),RR(-50,-70,100,70),RR(-40,-78,80,8),"M-34,-78Q-36,-122 0,-130Q36,-122 34,-78Z","M-2,-130V-140H2V-130Z",CRES(0,-150,8),"M-14,0V-32Q0,-50 14,-32V0Z","M-40,-28V-46Q-33,-56 -26,-46V-28Z","M26,-28V-46Q33,-56 40,-46V-28Z",STAR(0,-56,6),RR(-50,-6,100,6)],
+ kaaba:()=>["M-80,-102L0,-122L80,-102L0,-84Z","M-80,-102L0,-84V0L-80,-16Z","M0,-84L80,-102V-16L0,0Z","M-80,-78L0,-60V-48L-80,-66Z","M0,-60L80,-78V-66L0,-48Z","M-46,-40L-24,-36V-6L-46,-10Z","M-44,-36L-26,-33V-30L-44,-33Z"],
+ lantern:()=>[CIRC(0,-118,8),"M-24,-96H24L14,-108H-14Z",RR(-28,-96,56,6,3),"M-20,-90H20L26,-26H-26Z","M-36,-90H-20L-26,-26H-38Z","M36,-90H20L26,-26H38Z","M0,-76Q-12,-56 0,-38Q12,-56 0,-76Z",RR(-40,-26,80,8,3),"M-20,-18H20L0,0Z"],
+ sun:()=>[...ring(10,0,0,40,(x,y,a)=>{const r=a*Math.PI/180,p=Math.PI/14;return PL([[Math.cos(r-p)*26,Math.sin(r-p)*26],[x*1.05,y*1.05],[Math.cos(r+p)*26,Math.sin(r+p)*26]])}),CIRC(0,0,26),CIRC(-9,-5,3),CIRC(9,-5,3),"M-10,6Q0,15 10,6Q0,11 -10,6Z"],
+ moon:()=>[CRES(0,0,30)],
+ cloud:()=>[CLD(0,0,1)],
+ rainbow:()=>[...[0,1,2,3,4,5].map(i=>{const r1=90-i*9,r2=r1-9;return`M${-r1},0A${r1},${r1} 0 0 1 ${r1},0L${r2},0A${r2},${r2} 0 0 0 ${-r2},0Z`})],
+ mountain:()=>[PL([[-80,0],[-10,-110],[60,0]]),"M-10,-110L-28,-82Q-20,-88 -14,-80Q-6,-90 2,-82L8,-82Z",PL([[10,0],[60,-70],[110,0]]),"M60,-70L48,-53Q54,-57 60,-50Q66,-57 72,-53Z"],
+ butterfly:()=>["M0,-4Q-46,-70 -72,-28Q-74,6 0,6Z","M0,-4Q46,-70 72,-28Q74,6 0,6Z","M0,10Q-54,10 -48,52Q-22,66 0,18Z","M0,10Q54,10 48,52Q22,66 0,18Z",CIRC(-38,-24,10),CIRC(38,-24,10),CIRC(-54,-30,5),CIRC(54,-30,5),CIRC(-28,40,7),CIRC(28,40,7),EL_(0,10,6,32),CIRC(0,-28,8),"M-3,-34Q-12,-54 -20,-56L-19,-58Q-9,-56 -1,-35Z","M3,-34Q12,-54 20,-56L19,-58Q9,-56 1,-35Z"],
+ bird:()=>["M-16,0L-32,-10L-30,6Z",EL_(0,0,19,12),CIRC(17,-9,10),PL([[25,-11],[36,-8],[25,-4]]),"M-8,-4Q2,-28 14,-6Z",CIRC(19,-11,2.2),"M-4,10V18H-1V10Z","M4,10V18H7V10Z"],
+ fish:()=>["M-28,0L-48,-18L-42,0L-48,18Z","M-30,0Q0,-28 32,0Q0,28 -30,0Z","M-6,-15Q4,-30 16,-12Z","M-6,15Q2,26 10,14Z","M2,-18Q-6,0 2,18L8,16Q2,0 8,-16Z","M-12,-12Q-18,0 -12,12L-8,12Q-12,0 -8,-12Z",CIRC(20,-4,5),CIRC(21,-4,2)],
+ cat:()=>["M24,-10Q58,-14 50,-52Q46,-58 42,-52Q48,-22 22,-18Z",EL_(0,-30,30,30),EL_(0,-26,16,20),EL_(-13,-3,10,5),EL_(13,-3,10,5),PL([[-22,-80],[-20,-106],[-4,-92]]),PL([[22,-80],[20,-106],[4,-92]]),CIRC(0,-72,24),PL([[-18,-86],[-17,-99],[-9,-91]]),PL([[18,-86],[17,-99],[9,-91]]),CIRC(-9,-74,4.5),CIRC(9,-74,4.5),PL([[-3,-66],[3,-66],[0,-62]]),"M-6,-58Q0,-54 6,-58Q0,-56 -6,-58Z"],
+ dog:()=>["M24,-24Q46,-34 42,-50Q38,-52 36,-48Q38,-38 22,-32Z",EL_(0,-30,32,28),EL_(0,-24,18,18),EL_(-14,-3,11,5),EL_(14,-3,11,5),CIRC(0,-72,25),EL_(-24,-70,9,20,15),EL_(24,-70,9,20,-15),EL_(0,-62,12,9),CIRC(-9,-78,4),CIRC(9,-78,4),EL_(0,-66,5,3.5),"M-4,-55Q0,-48 4,-55Z",CIRC(14,-86,6)],
+ bunny:()=>[EL_(-10,-96,7,22,-10),EL_(10,-96,7,22,10),EL_(-10,-96,3.5,15,-10),EL_(10,-96,3.5,15,10),CIRC(-26,-18,9),EL_(0,-28,26,28),EL_(0,-24,14,18),EL_(-12,-2,10,5),EL_(12,-2,10,5),CIRC(0,-66,21),CIRC(-8,-68,3.5),CIRC(8,-68,3.5),EL_(0,-60,3,2.2),EL_(-13,-58,5,3),EL_(13,-58,5,3)],
+ owl:()=>[RR(-56,-4,112,8,4),EL_(0,-48,32,46),"M-30,-56Q-46,-24 -24,-12Z","M30,-56Q46,-24 24,-12Z",EL_(0,-38,20,30),PL([[-26,-82],[-18,-104],[-8,-86]]),PL([[26,-82],[18,-104],[8,-86]]),CIRC(-13,-70,12),CIRC(13,-70,12),CIRC(-13,-70,5),CIRC(13,-70,5),PL([[-4,-60],[4,-60],[0,-50]]),"M-12,-30Q-6,-36 0,-30Q6,-36 12,-30","M-10,-16Q-5,-22 0,-16Q5,-22 10,-16",EL_(-10,-2,6,4),EL_(10,-2,6,4)],
+ turtle:()=>[PL([[-40,-14],[-56,-20],[-40,-24]]),EL_(-26,-6,10,8),EL_(26,-6,10,8),CIRC(48,-22,13),"M-42,-12Q-38,-62 0,-64Q38,-62 42,-12Z",PL([[-12,-48],[12,-48],[20,-34],[12,-20],[-12,-20],[-20,-34]]),"M-12,-48L-20,-58Q-6,-63 -2,-62L-12,-48Z","M12,-48L20,-58Q6,-63 2,-62L12,-48Z","M-20,-34L-36,-38L-34,-20L-12,-20Z","M20,-34L36,-38L34,-20L12,-20Z",RR(-44,-16,88,9,4),CIRC(52,-25,2.5)],
+ snail:()=>["M-44,0Q-48,-14 -28,-14H48Q58,-14 60,-32L64,-32Q70,-4 50,0Z",CIRC(4,-40,30),CIRC(6,-40,20),CIRC(8,-40,10),RR(54,-56,3,24),RR(61,-54,3,22),CIRC(55,-58,4),CIRC(63,-56,4)],
+ bee:()=>[EL_(-6,-26,10,17,-25),EL_(8,-28,10,17,25),PL([[-28,0],[-38,-2],[-28,4]]),EL_(0,0,28,19),"M-10,-18Q-14,0 -10,18L-3,19Q-7,0 -3,-19Z","M6,-18Q2,0 6,18L13,16Q9,0 13,-16Z",CIRC(30,-2,12),CIRC(34,-5,2.5),"M28,-12Q26,-26 20,-30L21,-32Q29,-27 30,-12Z"],
+ ladybug:()=>[CIRC(0,-28,12),CIRC(0,0,28),"M-1.5,-27H1.5V28H-1.5Z",CIRC(-13,-8,6),CIRC(13,-8,6),CIRC(-12,12,5),CIRC(12,12,5),CIRC(-5,-20,3),CIRC(5,-20,3)],
+ lion:()=>[EL_(0,-24,30,24),EL_(-14,-2,10,5),EL_(14,-2,10,5),"M26,-20Q48,-20 50,-40L54,-38Q52,-14 26,-12Z",CIRC(52,-42,6),...ring(14,0,-70,30,(x,y,a)=>EL_(x,y,14,9,a)),CIRC(0,-70,26),CIRC(-18,-88,7),CIRC(18,-88,7),EL_(0,-60,13,10),PL([[-5,-66],[5,-66],[0,-60]]),CIRC(-9,-76,3.5),CIRC(9,-76,3.5)],
+ sheep:()=>[RR(-22,-20,7,20),RR(-6,-20,7,20),RR(10,-20,7,20),RR(22,-20,7,20),...ring(10,0,-38,22,(x,y)=>CIRC(x,y,13)),EL_(0,-38,26,18),EL_(34,-48,11,15,20),EL_(26,-56,8,4,-30),CIRC(37,-50,2.5)],
+ car:()=>["M-124,-26V-60Q-124,-72 -108,-74L-62,-78L-32,-120H50L86,-78L114,-72Q126,-66 126,-50V-26Z","M-22,-110H8V-80H-48Z","M16,-110H46L74,-80H16Z",RR(110,-64,16,16,3),RR(-124,-56,12,12,3),RR(-10,-62,16,4,2),CIRC(-66,-24,26),CIRC(70,-24,26),CIRC(-66,-24,11),CIRC(70,-24,11)],
+ bus:()=>[RR(-70,-92,140,72,10),RR(-60,-82,26,24,3),RR(-28,-82,26,24,3),RR(4,-82,26,24,3),RR(36,-82,26,30,3),RR(36,-48,26,26,0),RR(-70,-46,106,8),CIRC(62,-30,4),CIRC(-44,-18,16),CIRC(44,-18,16),CIRC(-44,-18,7),CIRC(44,-18,7)],
+ train:()=>[RR(-70,-82,46,58,4),RR(-62,-74,30,20,3),RR(-24,-60,48,36,4),RR(-14,-86,14,26,2),"M-18,-92H4L0,-86H-14Z",PL([[24,-30],[40,-30],[40,-50],[24,-40]]),RR(44,-70,40,46,4),RR(50,-64,12,12,2),RR(68,-64,12,12,2),CIRC(-54,-16,12),CIRC(-24,-16,12),CIRC(8,-16,12),CIRC(54,-16,10),CIRC(76,-16,10),CIRC(-6,-102,7),CIRC(6,-114,9),CIRC(22,-124,11)],
+ plane:()=>[PL([[-6,-6],[22,-6],[0,30]]),"M-62,-6Q-62,-16 -40,-16H42Q62,-16 70,-6Q62,4 42,4H-40Q-62,4 -62,-6Z",PL([[-58,-14],[-46,-14],[-64,-40]]),PL([[-6,-14],[18,-14],[4,-36]]),"M44,-14Q58,-14 64,-8H44Z",CIRC(-28,-6,4),CIRC(-14,-6,4),CIRC(0,-6,4),CIRC(14,-6,4),CIRC(28,-6,4)],
+ rocket:()=>["M-30,-60L-58,0L-30,-14Z","M30,-60L58,0L30,-14Z","M0,-170Q46,-120 40,-12H-40Q-46,-120 0,-170Z","M0,-170Q28,-146 36,-114H-36Q-28,-146 0,-170Z",CIRC(0,-82,20),CIRC(0,-82,13),"M-30,-12Q0,74 30,-12Z","M-16,-12Q0,34 16,-12Z",RR(-40,-34,80,8)],
+ boat:()=>["M-4,-150H4V-20H-4Z","M4,-144L74,-36H4Z","M-4,-126L-66,-36H-4Z","M4,-150L32,-141L4,-132Z","M-96,-26H96L66,24H-66Z",CIRC(-44,0,6),CIRC(-14,0,6),CIRC(16,0,6),CIRC(46,0,6)],
+ balloon:()=>["M-1,-30Q6,-10 -1,14H1Q8,-10 1,-30Z",PL([[-5,-24],[5,-24],[0,-31]]),EL_(0,-62,24,32),EL_(-9,-74,5,9,-20)],
+ hotair:()=>["M-36,-110Q-42,-170 0,-172Q42,-170 36,-110Q22,-74 12,-62H-12Q-22,-74 -36,-110Z","M-12,-170Q-30,-140 -12,-62H-4Q-16,-140 -4,-172Z","M12,-170Q30,-140 12,-62H4Q16,-140 4,-172Z",RR(-12,-62,24,6,2),"M-11,-56L-14,-36H-11L-8,-56Z","M11,-56L14,-36H11L8,-56Z",RR(-16,-36,32,22,3)],
+ kite:()=>[PL([[0,-120],[-34,-70],[0,-70]]),PL([[0,-120],[34,-70],[0,-70]]),PL([[-34,-70],[0,-10],[0,-70]]),PL([[34,-70],[0,-10],[0,-70]]),"M-1,-10Q10,10 -2,30Q-14,50 0,70H2Q-12,50 0,30Q12,10 1,-10Z",PL([[-10,14],[0,20],[-10,26]]),PL([[10,14],[0,20],[10,26]]),PL([[-12,50],[-1,56],[-12,62]]),PL([[10,50],[-1,56],[10,62]])],
+ umbrella:()=>["M-2,-60V-6Q-2,4 -12,4Q-20,4 -20,-4H-15Q-15,0 -12,0Q-6,0 -6,-6V-60Z","M-56,-60Q0,-118 56,-60Q42,-70 28,-60Q14,-70 0,-60Q-14,-70 -28,-60Q-42,-70 -56,-60Z","M0,-112Q-16,-90 -28,-60Q-14,-70 0,-60Z","M0,-112Q16,-90 28,-60Q14,-70 0,-60Z",CIRC(0,-114,4)],
+ castle:()=>[RR(-56,-90,112,90),RR(-90,-130,40,130),RR(50,-130,40,130),PL([[-94,-128],[-70,-176],[-46,-128]]),PL([[46,-128],[70,-176],[94,-128]]),"M-70,-176V-200L-50,-192L-70,-184Z","M70,-176V-200L90,-192L70,-184Z","M-56,-90V-102H-44V-90ZM-32,-90V-102H-20V-90ZM-8,-90V-102H4V-90ZM16,-90V-102H28V-90ZM40,-90V-102H52V-90Z","M-22,0V-40Q0,-66 22,-40V0Z",RR(-78,-104,16,22,2),RR(62,-104,16,22,2),RR(-44,-70,16,20,2),RR(28,-70,16,20,2),CIRC(0,-74,8)],
+ cake:()=>[RR(-62,-8,124,8,4),RR(-52,-50,104,42,6),"M-52,-38Q-44,-28 -36,-38Q-28,-28 -20,-38Q-12,-28 -4,-38Q4,-28 12,-38Q20,-28 28,-38Q36,-28 44,-38Q48,-30 52,-38V-50H-52Z",RR(-38,-84,76,34,6),"M-38,-74Q-30,-66 -22,-74Q-14,-66 -6,-74Q2,-66 10,-74Q18,-66 26,-74Q32,-66 38,-74V-84H-38Z",RR(-22,-108,6,24,2),RR(-3,-108,6,24,2),RR(16,-108,6,24,2),"M-19,-110Q-24,-118 -19,-126Q-14,-118 -19,-110Z","M0,-110Q-5,-118 0,-126Q5,-118 0,-110Z","M19,-110Q14,-118 19,-126Q24,-118 19,-110Z",CIRC(-30,-22,4),CIRC(0,-22,4),CIRC(30,-22,4)],
+ icecream:()=>[PL([[-22,-60],[22,-60],[0,0]]),"M-16,-50L10,-24M-6,-58L16,-36","M-10,-40L-3,-50L6,-36L0,-26Z",CIRC(-14,-70,16),CIRC(14,-70,16),CIRC(0,-92,17),"M-26,-66Q0,-56 26,-66V-60H-26Z",CIRC(0,-114,7),"M0,-120Q4,-128 10,-130"],
+ cupcake:()=>["M-28,-36H28L20,0H-20Z","M-14,-36L-10,0M0,-36V0M14,-36L10,0","M-32,-36Q-36,-56 -18,-58Q-14,-76 4,-72Q22,-78 24,-58Q38,-54 32,-36Z",CIRC(0,-80,7),CIRC(-12,-50,3),CIRC(10,-54,3),CIRC(18,-44,3),CIRC(-22,-44,3)],
+ rehal:()=>[PL([[-50,0],[-40,0],[40,-60],[30,-60]]),PL([[50,0],[40,0],[-40,-60],[-30,-60]]),"M-56,-58Q-28,-74 0,-62Q28,-74 56,-58L50,-30Q26,-44 0,-34Q-26,-44 -50,-30Z","M-48,-56Q-26,-68 -2,-58L-2,-40Q-26,-50 -44,-38Z","M48,-56Q26,-68 2,-58L2,-40Q26,-50 44,-38Z",STAR(-24,-50,5),STAR(24,-50,5)],
+ tent:()=>[PL([[-60,0],[0,-80],[60,0]]),PL([[0,-80],[-16,0],[16,0]]),"M0,-80V-96L16,-90L0,-84Z"],
+ fence:w=>{const r=[RR(-w/2,-34,w,6),RR(-w/2,-16,w,6)];for(let x=-w/2;x<w/2-4;x+=18)r.push(`M${x},0V-38L${x+6},-46L${x+12},-38V0Z`);return r},
+ heart:()=>[HRT(0,-30,30)],
+ star:()=>[STAR(0,-30,30),STAR(0,-30,14)],
+ gift:()=>[RR(-34,-50,68,50,4),RR(-38,-64,76,16,4),RR(-6,-64,12,64),"M0,-64Q-24,-90 -28,-72Q-24,-62 0,-64Z","M0,-64Q24,-90 28,-72Q24,-62 0,-64Z"],
+ apple:()=>["M0,-64Q-20,-76 -32,-56Q-40,-30 -20,-6Q-8,4 0,-4Q8,4 20,-6Q40,-30 32,-56Q20,-76 0,-64Z","M0,-64Q-2,-76 4,-84L7,-82Q2,-74 3,-64Z","M4,-78Q16,-92 28,-84Q18,-72 4,-78Z",EL_(-16,-50,5,9,25)],
+ watermelon:()=>["M-60,-40A60,60 0 0 0 60,-40Z","M-52,-40A52,52 0 0 0 52,-40Z",EL_(-24,-28,3,5,20),EL_(0,-20,3,5),EL_(24,-28,3,5,-20),EL_(-12,-10,3,5,10),EL_(12,-10,3,5,-10)],
+ pencil:()=>[RR(-10,-130,20,100),PL([[-10,-30],[10,-30],[0,0]]),PL([[-4,-12],[4,-12],[0,0]]),RR(-10,-142,20,12,0),RR(-10,-152,20,10,4)],
+ book:()=>["M-60,-10L-60,-80Q-30,-90 0,-78V-8Q-30,-20 -60,-10Z","M60,-10L60,-80Q30,-90 0,-78V-8Q30,-20 60,-10Z","M-50,-62Q-30,-68 -10,-60M-50,-48Q-30,-54 -10,-46M10,-60Q30,-68 50,-62M10,-46Q30,-54 50,-48"],
+};
+// تجميع المشاهد
+function S_(id,t,ic,c,bg,items){const r=[...bg];items.forEach(([k,x,y,s,fl,arg])=>{const tf=`translate(${x},${y}) scale(${fl?-s:s},${s})`;(CP[k](arg)).forEach(p=>r.push(typeof p==="string"?{p,tf}:{...p,tf}))});return{id,t,ic,c,vb:"0 0 300 400",r}}
+const SKY=(gy)=>[RR(0,0,300,400),`M0,${gy}Q75,${gy-14} 150,${gy}T300,${gy}V400H0Z`];
+const SEA=(gy)=>[RR(0,0,300,400),`M0,${gy}Q38,${gy-8} 75,${gy}T150,${gy}T225,${gy}T300,${gy}V400H0Z`];
+const NIGHT=gy=>[RR(0,0,300,400),STAR(40,40,8),STAR(250,70,6),STAR(120,30,5),STAR(200,120,5),`M0,${gy}Q75,${gy-14} 150,${gy}T300,${gy}V400H0Z`];
+const BIG=[
+ S_("s_mosque2","المسجد الكبير","🕌","deen",[...NIGHT(330),STAR(80,100,6)],[["moon",230,60,1.1],["mosque",150,338,1.55],["palm",28,352,.95],["palm",272,352,.95,1],["bush",70,372,.8],["bush",230,372,.8],["grass",150,392,1]]),
+ S_("s_kaaba2","حول الكعبة","🕋","deen",[RR(0,0,300,400),"M0,300H300V400H0Z","M0,330Q150,300 300,330V400H0Z"],[["kaaba",150,300,1.5],["moon",250,50,.8],["bird",60,70,1],["bird",100,110,.8,1],["cloud",80,40,.8]]),
+ S_("s_ramadan","فوانيس رمضان","🏮","deen",[RR(0,0,300,400),"M0,0Q150,40 300,0V8Q150,48 0,8Z"],[["lantern",70,180,1],["lantern",160,240,1.15],["lantern",250,170,.9],["moon",220,320,1.1],["star",80,330,.9],["star",140,370,.5]]),
+ S_("s_quran","المصحف الشريف","📖","deen",[RR(0,0,300,400),"M0,320H300V400H0Z",RR(20,20,260,260,20)],[["rehal",150,320,2.1],["lantern",50,120,.6],["lantern",250,120,.6],["star",150,110,.9]]),
+ S_("s_eid","فرحة العيد","🎉","deen",SKY(330),[["balloon",50,200,1.2],["balloon",95,160,1.4],["balloon",255,190,1.3],["gift",200,360,1.2],["cake",110,370,1.1],["moon",150,60,.9],["star",240,60,.7],["star",60,60,.6]]),
+ S_("s_lanterns","هلال وفوانيس","🌙","deen",NIGHT(340),[["moon",150,140,2.6],["lantern",60,280,.8],["lantern",240,280,.8],["mosque",150,370,.7],["grass",30,395,1.2],["grass",270,395,1.2]]),
+ S_("s_garden","حديقة الأزهار","🌷","nature",SKY(300),[["sun",250,60,1],["cloud",80,60,1],["tree",60,320,1.2,0,1],["sunflower",250,330,1.3],["flower",130,360,1],["tulip",170,370,1],["flower",200,380,.9],["tulip",100,385,.9],["butterfly",150,170,.7],["grass",40,395,1],["grass",280,395,1]]),
+ S_("s_forest","الغابة","🌲","nature",SKY(310),[["sun",60,60,.8],["pine",50,330,1.5],["pine",120,320,1.9],["pine",200,330,1.6],["pine",265,340,1.3],["bush",90,385,.9],["bush",220,390,.8],["bird",210,100,.9,1],["rock",150,395,1]]),
+ S_("s_mountain","الجبال","🏔️","nature",SKY(330),[["mountain",120,320,1.6],["sun",240,70,.9],["cloud",80,80,.9],["cloud",200,140,.7],["pine",40,360,.9],["pine",260,365,1],["tent",150,385,.9],["grass",90,395,1]]),
+ S_("s_rainbow","قوس قزح","🌈","nature",SKY(320),[["rainbow",150,280,1.55],["cloud",50,280,1.1],["cloud",260,280,1.1],["sun",250,60,.7],["flower",60,380,.8],["flower",240,380,.8],["umbrella",150,385,.8]]),
+ S_("s_farm","المزرعة","🐑","animals",SKY(300),[["house",210,310,1.1],["fence",95,360,1,0,160],["sheep",80,380,1],["sheep",170,390,.9,1],["tree",40,300,.8],["sun",60,60,.8],["cloud",150,60,.8],["grass",270,395,1]]),
+ S_("s_sea","تحت البحر","🐠","animals",[RR(0,0,300,400),"M0,370Q60,350 120,370T240,365T300,370V400H0Z"],[["fish",90,100,1.4],["fish",210,180,1.2,1],["fish",110,250,1],["turtle",200,320,1],["snail",60,385,.6],["grass",30,390,1.3],["grass",270,390,1.3],["star",160,380,.5],["balloon",250,80,0]].filter(x=>x[3])),
+ S_("s_beach","الشاطئ","🏖️","nature",SEA(260),[["sun",70,60,.9],["boat",200,250,.65],["palm",260,390,1.2,1],["umbrella",90,385,1],["bird",160,80,.7],["bird",190,100,.6],["cloud",230,50,.7],["star",170,380,.4],["star",210,392,.3]]),
+ S_("s_cat","القطة اللطيفة","🐱","animals",SKY(330),[["cat",130,360,2],["flower",250,380,.9],["flower",30,385,.7],["butterfly",240,130,.6],["sun",60,60,.7],["grass",210,395,1]]),
+ S_("s_dog","الكلب الوفي","🐶","animals",SKY(330),[["house",230,330,.9],["dog",110,365,1.9],["bush",270,385,.6],["cloud",70,60,.9],["sun",250,50,.6]]),
+ S_("s_bunny","الأرنب","🐰","animals",SKY(320),[["bunny",150,370,2.2],["tulip",50,380,1],["tulip",250,385,1],["cloud",80,70,.9],["cloud",230,110,.7],["grass",100,395,1]]),
+ S_("s_owl","البومة الحكيمة","🦉","animals",NIGHT(380),[["moon",230,70,1.1],["owl",150,290,2.4],"tree"].filter(x=>Array.isArray(x)).concat([["grass",60,395,1.2],["grass",240,395,1.2]])),
+ S_("s_turtle","السلحفاة","🐢","animals",SKY(310),[["turtle",140,360,2.1],["snail",250,385,.6],["sun",240,70,.9],["flower",40,375,.9],["cloud",80,80,.8]]),
+ S_("s_lion","الأسد","🦁","animals",SKY(320),[["lion",150,370,2],["sun",50,60,.8],["palm",260,350,.9,1],["bush",50,385,.8]]),
+ S_("s_bugs","عالم الحشرات","🐝","animals",SKY(330),[["sunflower",80,360,1.4],["flower",200,370,1.2],["tulip",260,380,1],["bee",200,130,1.4],["ladybug",100,250,1.1],["butterfly",230,240,.7],["grass",150,395,1.2]]),
+ S_("s_butterflies","الفراشات","🦋","animals",SKY(340),[["butterfly",150,150,1.5],["butterfly",70,280,.7],["butterfly",240,270,.7,1],["flower",60,385,.9],["flower",150,390,1],["flower",240,385,.9]]),
+ S_("s_birds","العصافير","🐦","animals",SKY(340),[["tree",150,370,2,0,1],["bird",80,90,1.3],["bird",230,70,1.1,1],["bird",250,330,1],["cloud",150,50,.8]]),
+ S_("s_car2","سيارتي","🚗","vehicles",[RR(0,0,300,400),"M0,320H300V400H0Z",RR(20,358,50,6),RR(125,358,50,6),RR(230,358,50,6)],[["car",150,330,1.05],["sun",240,70,.9],["cloud",80,80,1],["tree",40,300,.8],["tree",260,300,.7]]),
+ S_("s_bus","حافلة المدرسة","🚌","vehicles",[RR(0,0,300,400),"M0,330H300V400H0Z"],[["bus",150,340,1.8],["sun",60,60,.8],["cloud",200,70,.9],["house",250,240,.6]]),
+ S_("s_train","القطار","🚂","vehicles",[RR(0,0,300,400),"M0,320H300V400H0Z",RR(0,318,300,6)],[["train",140,320,1.6],["mountain",120,190,.8],["sun",240,60,.7],["cloud",60,60,.7]]),
+ S_("s_plane","الطائرة","✈️","vehicles",[RR(0,0,300,400)],[["plane",150,170,1.9],["cloud",60,300,1.2],["cloud",240,330,1],["cloud",220,60,.8],["sun",50,60,.7]]),
+ S_("s_rocket2","رحلة إلى الفضاء","🚀","vehicles",[RR(0,0,300,400),CIRC(60,330,40),"M30,325Q60,300 90,320"],[["rocket",160,300,1.3],["moon",250,60,.9],["star",40,60,.6],["star",260,250,.7],["star",90,200,.4],["star",240,370,.4]]),
+ S_("s_balloons","المناطيد","🎈","vehicles",SKY(350),[["hotair",100,250,1.2],["hotair",220,190,.8],["cloud",230,300,1],["cloud",60,80,.8],["mountain",150,400,.6]]),
+ S_("s_boat2","المركب الشراعي","⛵","vehicles",SEA(280),[["boat",150,290,1.2],["sun",250,60,.8],["bird",70,80,.8],["bird",100,100,.6],["fish",80,350,.7],["fish",230,370,.6,1]]),
+ S_("s_house2","بيتنا الجميل","🏡","places",SKY(320),[["house",150,340,2],["tree",30,340,.9,0,1],["fence",250,380,.7,0,80],["sun",250,50,.8],["cloud",80,60,.8],["flower",60,390,.6],["tulip",100,392,.6]]),
+ S_("s_castle2","القلعة","🏰","places",SKY(330),[["castle",150,350,1.4],["cloud",60,60,.9],["cloud",240,90,.7],["flower",30,385,.7],["flower",270,385,.7]]),
+ S_("s_camp","التخييم","⛺","places",NIGHT(320),[["tent",150,340,2],["moon",240,60,.9],["pine",30,330,1.1],["pine",270,330,1.1],["rock",90,380,1],["rock",210,385,.8]]),
+ S_("s_cake","كعكة الاحتفال","🎂","food",[RR(0,0,300,400),"M0,320H300V400H0Z"],[["cake",150,330,2.2],["balloon",40,220,1],["balloon",260,220,1],["gift",250,380,.8],["star",50,60,.6],["star",250,60,.6]]),
+ S_("s_sweets","حلويات لذيذة","🍦","food",[RR(0,0,300,400),RR(0,300,300,100)],[["icecream",80,300,1.6],["cupcake",210,300,1.7],["heart",150,120,.9],["cupcake",150,390,.8],["star",40,60,.5],["star",260,60,.5]]),
+ S_("s_fruits","سلة الفواكه","🍎","food",[RR(0,0,300,400),"M30,250H270L240,380H60Z","M30,250Q150,226 270,250"],[["apple",100,240,1.3],["apple",200,240,1.3],["watermelon",150,130,1.6],["apple",150,250,1]]),
+ S_("s_school","أدوات المدرسة","✏️","places",[RR(0,0,300,400),RR(0,330,300,70)],[["book",150,330,2],["pencil",60,330,1.4],["pencil",250,330,1.3],["apple",200,190,.8],["star",80,80,.7]]),
+ S_("s_hearts","قلوب ونجوم","💖","fun",[RR(0,0,300,400)],[["heart",150,210,3],["star",60,90,1],["star",240,90,1],["heart",60,360,1],["heart",240,360,1],["star",150,380,.6]]),
+];
+DRAWINGS.forEach(d=>d.c=d.c||({mosque:"deen",lantern:"deen",kaaba:"deen",night:"deen",fish:"animals",butterfly:"animals",cat:"animals",flower:"nature",tree:"nature",house:"places",castle:"places",car:"vehicles",rocket:"vehicles",boat:"vehicles"}[d.id]||"fun"));
+DRAWINGS.unshift(...BIG);
+const COLCATS=[["all","🎨 الكل"],["deen","🕌 إسلامية"],["animals","🐾 حيوانات"],["nature","🌳 طبيعة"],["vehicles","🚗 مركبات"],["places","🏠 أماكن"],["food","🍰 حلويات"],["fun","⭐ منوّعة"]];
+const PATS=[["","⬤"],["grad","✨"],["dots","⚪"],["stripes","〰️"],["stars","⭐"]];
+
+// رسم المنطقة (يدعم التحويل والزخارف)
+const isLine=r=>{const d=typeof r==="string"?r:r.p;return!!d&&!/Z\s*$/i.test(d.trim())};
+function regionSVG(r,i,fill,click,pid){if(isLine(r))return`<path d="${typeof r==="string"?r:r.p}"${r.tf?` transform="${r.tf}"`:""} fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke" pointer-events="none" data-i="${i}"/>`;const ev=click?` onclick="colorRegion(${i})"`:"";const f=fill&&fill.includes("|")?`url(#${pid[fill]})`:(fill||"#ffffff");
+ const st=`data-i="${i}" fill="${f}" stroke="#1f2937" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"${ev}`;
+ if(typeof r==="string")return`<path d="${r}" ${st}/>`;if(r.p)return`<path d="${r.p}" transform="${r.tf}" ${st}/>`;
+ const e=r.e;return`<ellipse cx="${e[0]}" cy="${e[1]}" rx="${e[2]}" ry="${e[3]}" transform="${r.tf?r.tf+" ":""}rotate(${e[4]} ${e[0]} ${e[1]})" ${st}/>`}
+function lighten(h,k){const n=parseInt(h.slice(1),16),f=c=>Math.round(c+(255-c)*k);return`rgb(${f(n>>16)},${f(n>>8&255)},${f(n&255)})`}
+function patDefs(fills){const pid={};let d="";[...new Set(Object.values(fills).filter(v=>typeof v==="string"&&v.includes("|")))].forEach((v,k)=>{const[c,t]=v.split("|"),id="pt"+k;pid[v]=id;
+  if(t==="grad")d+=`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lighten(c,.55)}"/><stop offset="1" stop-color="${c}"/></linearGradient>`;
+  else d+=`<pattern id="${id}" patternUnits="userSpaceOnUse" width="14" height="14"><rect width="14" height="14" fill="${c}"/>${t==="dots"?`<circle cx="7" cy="7" r="2.6" fill="#fff" opacity=".75"/>`:t==="stripes"?`<path d="M-2,4L4,-2M0,14L14,0M10,16L16,10" stroke="#fff" stroke-width="3" opacity=".6"/>`:`<path d="${STAR(7,7,5)}" fill="#fff" opacity=".7"/>`}</pattern>`});return{pid,d}}
+function drawingSVG(d,fills,click){const {pid,d:defs}=patDefs(fills);return`<svg viewBox="${d.vb||"0 0 300 300"}" class="colsvg" xmlns="http://www.w3.org/2000/svg">${d.r.map((r,i)=>regionSVG(r,i,fills[i],click,pid)).join("")}${defs?`<defs>${defs}</defs>`:""}</svg>`}
+let COLCAT="all";
+function openColoring(cat){S.colors=S.colors||{};if(cat)COLCAT=cat;const list=DRAWINGS.map((d,i)=>[d,i]).filter(([d])=>COLCAT==="all"||d.c===COLCAT);
+ openAct("🖍️ دفتر التلوين",`🎨 ${Object.keys(S.colDone||{}).length}/${DRAWINGS.length}`);
+ $("actBody").innerHTML=`<div class="colcats">${COLCATS.map(c=>`<button class="${COLCAT===c[0]?"on":""}" onclick="openColoring('${c[0]}')">${c[1]}</button>`).join("")}</div>
+ <div class="puzlist colgrid">${list.map(([d,i])=>`<button class="colthumb ${(S.colDone||{})[d.id]?"done":""}" onclick="startColor(${i})"><span class="thsvg" data-k="${i}"></span><b>${d.ic} ${d.t}</b></button>`).join("")}</div>`;
+ // رسم المصغرات تدريجيًا لسرعة الفتح
+ const els=[...document.querySelectorAll(".thsvg")];let k=0;(function step(){const t=performance.now();while(k<els.length&&performance.now()-t<12){const e=els[k++],d=DRAWINGS[+e.dataset.k];e.innerHTML=drawingSVG(d,S.colors[d.id]||{},false)}if(k<els.length&&document.contains(els[0]))requestAnimationFrame(step)})()}
+function drawColor(){const {d}=CL;CL.z=CL.z||1;CL.pat=CL.pat||"";
+ $("actBody").innerHTML=`<div class="palette strip">${PALETTE.concat(["#fca5a5","#fdba74","#a7f3d0","#c4b5fd","#f9a8d4","#94a3b8","#d6b48a"]).map(c=>`<button class="pcol ${CL.col===c?"on":""}" style="background:${c}" onclick="pickCol('${c}',this)"></button>`).join("")}</div>
+ <div class="pats">${PATS.map(p=>`<button class="${CL.pat===p[0]?"on":""}" onclick="CL.pat='${p[0]}';document.querySelectorAll('.pats button').forEach(b=>b.classList.toggle('on',b===this));sfx.click()">${p[1]}</button>`).join("")}</div>
+ <div class="colwrap" id="colWrap"><div class="colinner" style="width:${CL.z*100}%">${drawingSVG(d,S.colors[d.id],true)}</div></div>
+ <div class="coltools"><button onclick="colZoom(1)">🔍＋</button><button onclick="colZoom(-1)">🔍－</button><button onclick="colUndo()">↩️</button><button onclick="S.colors[CL.d.id]={};save();drawColor()">🧽</button><button class="g" onclick="saveColoring()">💾 حفظ</button><button onclick="openColoring()">📚</button></div>`}
+function colorRegion(i){const F=S.colors[CL.d.id],v=CL.pat?CL.col+"|"+CL.pat:CL.col;CL.hist=CL.hist||[];CL.hist.push([i,F[i]]);F[i]=v;beep(500+(i%20)*20,.04,"triangle",.05);vib(12);save();
+ {const inner=document.querySelector("#colWrap .colinner");if(inner){inner.innerHTML=drawingSVG(CL.d,F,true);const el=inner.querySelector(`[data-i="${i}"]`);el&&el.animate&&el.animate([{opacity:.35},{opacity:1}],{duration:260})}}
+ S.colDone=S.colDone||{};const need=CL.d.r.filter(r=>!isLine(r)).length,n=Object.keys(F).filter(k=>/^\d+$/.test(k)&&F[k]).length;if(n>=need&&!S.colDone[CL.d.id]){S.colDone[CL.d.id]=1;addCoins(15);save();confetti();sfx.win();toast("🎨 لوحة رائعة! +15 🪙");checkBadges()}}
+function colUndo(){const h=(CL.hist||[]).pop();if(!h)return;const F=S.colors[CL.d.id];if(h[1]===undefined)delete F[h[0]];else F[h[0]]=h[1];save();const inner=document.querySelector("#colWrap .colinner");if(inner)inner.innerHTML=drawingSVG(CL.d,F,true)}
+function saveColoring(){const vb=(CL.d.vb||"0 0 300 300").split(" ").map(Number),W=900,H=Math.round(900*vb[3]/vb[2]),svg=drawingSVG(CL.d,S.colors[CL.d.id],false),img=new Image();
+ img.onload=()=>{const c=document.createElement("canvas");c.width=W;c.height=H+60;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,W,H+60);x.drawImage(img,0,0,W,H);
+  x.font="bold 30px sans-serif";x.fillStyle="#7c3aed";x.textAlign="center";x.fillText(`رسم ${S.name||"البطل"} 🎨 — أطفال دار الوحي`,W/2,H+42);const url=c.toDataURL("image/png");
+  if(window.Android&&Android.saveImage)Android.saveImage(url.split(",")[1],"تلوين_"+CL.d.t+".png");else{const a=document.createElement("a");a.href=url;a.download="تلوين_"+CL.d.t+".png";document.body.appendChild(a);a.click();a.remove()}};img.src=svgURL(svg)}
+const _sc=startColor;startColor=function(i){CL=Object.assign(CL||{},{hist:[]});_sc(i)};
 
 </script>
 </body>
