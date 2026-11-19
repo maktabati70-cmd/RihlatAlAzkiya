@@ -659,6 +659,40 @@ button:active{transform:translateY(2px) scale(.98)}
 .pats button{width:44px;height:36px;border-radius:12px;background:#fff3;font-size:18px}
 .pats button.on{background:#facc15}
 .colwrap{max-height:calc(100vh - 250px);background:#fff;border-radius:18px}
+/* أداء صفحة الخريطة على الجوال */
+#map.on{animation:none}
+svg.path.seg{inset:auto;left:0;width:100%}
+.road .deco{filter:none;will-change:auto}
+.road .deco.sway{will-change:transform}
+.node .spark{animation:none}
+.road .zone{contain:strict}
+.mcloud{will-change:transform}
+#mapScroll{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+/* جزء عمّ */
+.ammodes{display:flex;gap:6px;overflow-x:auto;margin-bottom:8px;scrollbar-width:none}
+.ammodes button{flex:none;font-family:inherit;font-weight:800;font-size:14px;padding:7px 12px;border-radius:14px;background:#fff3;color:#fff}
+.ammodes button.on{background:#facc15;color:#3b0764}
+.amlist{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.amc{background:#fff;color:#14532d;border-radius:16px;padding:10px 4px;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 4px 0 #0003}
+.amc b{font-size:17px;font-family:"Noto Naskh Arabic","Amiri",serif}.amc small{font-size:11px;opacity:.7}.amc i{font-style:normal;color:#f59e0b;font-size:13px}
+.amc.on{background:#ecfccb}.amc.full{background:#bbf7d0;box-shadow:0 0 0 2px #16a34a,0 4px 0 #0003}
+.amnote{font-size:11px;opacity:.7;text-align:center;margin-top:10px}
+.amcard{background:linear-gradient(#fffdf5,#fdf6e3);color:#1c1917;border-radius:22px;padding:14px;border:3px solid #d4a017;box-shadow:0 6px 0 #0003,inset 0 0 0 6px #fff8e1;font-family:"Noto Naskh Arabic","Amiri","Scheherazade New",serif}
+.amprev{font-size:19px;line-height:2;color:#78716c;border-bottom:1px dashed #d6d3d1;padding-bottom:6px;margin-bottom:8px;text-align:center}
+.amayah{font-size:27px;line-height:2.1;text-align:center;min-height:60px}
+.amn{color:#b45309;font-size:.8em}
+.amb{display:inline-block;min-width:70px;border-bottom:3px dashed #7c3aed;color:#7c3aed;padding:0 6px;border-radius:8px;background:#f3e8ff}
+.amb.ok{background:#bbf7d0;color:#166534;border-color:#16a34a;animation:pop .35s}.amb.fix{background:#fee2e2;color:#991b1b;border-color:#dc2626}
+.amph{font-size:16px;color:#a8a29e;font-family:inherit}
+.amopts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.amopts.col{grid-template-columns:1fr}
+.amo{font-family:"Noto Naskh Arabic","Amiri",serif;font-size:23px;padding:10px 6px;border-radius:16px;background:#fff;color:#1c1917;border:2px solid #e7e5e4;box-shadow:0 4px 0 #0002}
+.amo.long{font-size:19px;line-height:1.8}
+.amo.ok{background:#22c55e;color:#fff;border-color:#16a34a}.amo.bad{background:#ef4444;color:#fff;animation:shake .35s}
+.amtiles{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px}
+.amt{font-family:"Noto Naskh Arabic","Amiri",serif;font-size:23px;padding:6px 14px;border-radius:14px;background:#fff;color:#1c1917;border:2px solid #d4a017;box-shadow:0 4px 0 #0002}
+.amt.used{opacity:.25}
+.amfull{background:#fff;color:#14532d;border-radius:16px;padding:10px;margin-top:10px;text-align:center;font-weight:800}
+.amfull b{font-family:"Noto Naskh Arabic","Amiri",serif;font-size:22px;line-height:2;color:#1c1917;font-weight:500}
 
 </style>
 </head>
@@ -684,6 +718,7 @@ button:active{transform:translateY(2px) scale(.98)}
     <button class="bigbtn wide engbtn" onclick="openEnglish()">🇬🇧 تعلّم الإنجليزية <small>250 كلمة</small></button>
     <button class="bigbtn daily wide" id="hDaily" style="font-size:20px;padding:14px" onclick="startDaily()">📅 تحدي اليوم</button>
     <div class="icons wide">
+      <button class="ibtn new" onclick="openAmma()"><b>📗</b><span>جزء عمّ</span></button>
       <button class="ibtn new" onclick="openMuslim()"><b>🕌</b><span>ركن المسلم</span></button>
       <button class="ibtn new" onclick="openBrain()"><b>🧠</b><span>ألعاب العقل</span></button>
       <button class="ibtn new" onclick="openArt()"><b>🎨</b><span>الرسم والخط</span></button>
@@ -2512,18 +2547,20 @@ function openMap(scrollToCurrent){
   let st=0;for(let i=1;i<=10;i++)st+=G().stars[w*10+i]||0;
   h+=`<div class="zone" style="top:${yTop}px;height:${yBot-yTop}px;background:linear-gradient(0deg,${ZONEBG[w]})"><div class="zname">${WORLDS[w][0]} ${WORLDS[w][1]}<small>⭐${st}/30</small></div></div>`;
   for(let k=0;k<7;k++){const n=w*10+1+Math.floor(r()*10),p=nodePos(n);let x=p.x>50?ri(r,6,22):ri(r,78,94);
-   const y=p.y+ri(r,-40,40);h+=`<div class="deco ${k%3===0?"big":""} ${k%2?"sway":""}" style="left:${x}%;top:${y}px;animation-delay:-${k}s">${DECO[w][k%5]}</div>`}
+   const y=p.y+ri(r,-40,40);h+=`<div class="deco ${k%3===0?"big":""} ${k===1?"sway":""}" style="left:${x}%;top:${y}px;animation-delay:-${k}s">${DECO[w][k%5]}</div>`}
  }
  // الطريق
  let d="";for(let n=1;n<=100;n++){const p=nodePos(n);if(n===1){const s=nodePos(1);d=`M${s.x},${s.y+110} L${p.x},${p.y}`}else{const q=nodePos(n-1);const my=(p.y+q.y)/2;d+=` C${q.x},${my} ${p.x},${my} ${p.x},${p.y}`}}
  const e=nodePos(100);d+=` L${e.x},${e.y-110}`;
  // الجزء المقطوع من الطريق
  let dd="";{const s=nodePos(1);dd=`M${s.x},${s.y+110} L${s.x},${s.y}`;for(let n=2;n<=mu;n++){const p=nodePos(n),q=nodePos(n-1),my=(p.y+q.y)/2;dd+=` C${q.x},${my} ${p.x},${my} ${p.x},${p.y}`}}
- h+=`<svg class="path" viewBox="0 0 100 ${H}" preserveAspectRatio="none"><defs><linearGradient id="rainbow" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="700" spreadMethod="repeat"><stop offset="0" stop-color="#f43f5e"/><stop offset=".2" stop-color="#f59e0b"/><stop offset=".4" stop-color="#facc15"/><stop offset=".6" stop-color="#22c55e"/><stop offset=".8" stop-color="#3b82f6"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+ // الطريق مقسوم إلى قطع صغيرة (أخف على الجوال من صورة واحدة طويلة جدًا)
+ for(let w=0;w<10;w++){const y0=Math.max(0,(w===9?0:nodePos(w*10+10).y-STEP/2)-60),y1=Math.min(H,(w===0?H:nodePos(w*10+1).y+STEP/2)+60);
+  h+=`<svg class="path seg" style="top:${y0}px;height:${y1-y0}px" viewBox="0 ${y0} 100 ${y1-y0}" preserveAspectRatio="none">${w===0?`<defs><linearGradient id="rainbow" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="700" spreadMethod="repeat"><stop offset="0" stop-color="#f43f5e"/><stop offset=".2" stop-color="#f59e0b"/><stop offset=".4" stop-color="#facc15"/><stop offset=".6" stop-color="#22c55e"/><stop offset=".8" stop-color="#3b82f6"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>`:""}
   <path d="${d}" fill="none" stroke="#0005" stroke-width="34" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
   <path d="${d}" fill="none" stroke="#f3e2b8" stroke-width="26" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
   <path d="${dd}" fill="none" stroke="${roadColor()}" stroke-width="26" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
-  <path d="${d}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="10 12" vector-effect="non-scaling-stroke"/></svg>`;
+  <path d="${d}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="10 12" vector-effect="non-scaling-stroke"/></svg>`}
  // البداية والنهاية
  {const p=nodePos(1);h+=`<div class="gradeflag" style="left:${p.x>50?p.x-30:p.x+30}%;top:${p.y+48}px">🎒 ${GRADE_NAME[gradeOf()]}</div>`}
  const s1=nodePos(1);h+=`<div class="flag" style="left:${s1.x}%;top:${s1.y+115}px"><b>🚩</b>البداية</div>`;
@@ -2533,8 +2570,8 @@ function openMap(scrollToCurrent){
  for(let n=1;n<=100;n++){const p=nodePos(n),locked=n>mu,s=G().stars[n]||0,ch=n%10===0,mi=n%5===0&&!ch;
   h+=`<button class="node ${locked?"locked":""} ${ch?"challenge":""} ${mi?"mission":""} ${n===mu&&!s?"current":""}" style="left:${p.x}%;top:${p.y}px" id="lv${n}" onclick="levelInfo(${n})">
   ${ch?`<span class="tag">${BOSSES[n/10-1][0]}</span>`:""}${mi?'<span class="tag">🎯</span>':""}${s===3&&!locked?'<span class="spark">✨</span>':""}${locked?"🔒":n}${locked?"":`<span class="st">${"★".repeat(s)}${"☆".repeat(3-s)}</span>`}</button>`}
- for(let c=0;c<14;c++)h+=`<div class="mcloud" style="top:${(c*733)%H}px;animation-duration:${40+(c*13)%30}s;animation-delay:-${(c*11)%40}s">☁️</div>`;
- const from=Math.min(G().pos||1,mu),fp=nodePos(from);
+ for(let c=0;c<4;c++)h+=`<div class="mcloud" style="top:${H-600-c*2400}px;animation-duration:${40+(c*13)%30}s;animation-delay:-${(c*11)%40}s">☁️</div>`;
+ let from=Math.min(G().pos||1,mu);if(mu-from>2)from=mu-1;const fp=nodePos(from);
  h+=`<div id="avatar" style="left:${fp.x}%;top:${fp.y-18}px"><span>${avatarHTML(46)}</span></div></div>`;
  $("mapScroll").innerHTML=h;$("mStars").textContent=totalStars();$("mPts").textContent=S.points;$("mCoins").textContent=S.coins;
  show("map");
@@ -4061,7 +4098,7 @@ function fdSave(){const url=$("fdC").toDataURL("image/png"),n="رسمتي_"+Date
 openArt=function(){hub("🎨 الرسم والخط",[["🖍️","دفتر التلوين",`${DRAWINGS.length} رسمة ملوّنة`,"openColoring()"],["🖌️","الرسم الحر","ارسم بالألوان والملصقات","openFreeDraw()"],["✍️","تعلّم الخط","تتبّع الحروف بإصبعك","openTrace()"]])};
 
 // ====== 🎲 أنشطة ممتعة ======
-function openFun(){hub("🎲 أنشطة ممتعة",[["🔎","البحث عن الكلمات","جد الكلمات المخفية","openWS()"],["🌀","المتاهة","أوصل سلمى إلى المسجد","openMaze()"],["🔢","سودوكو الصور","لا تكرر الصورة في صف أو عمود","openSudoku()"],["🕐","تعلّم الساعة","كم الساعة الآن؟","openClock()"],["🎵","تذكّر النغمات","كرّر ترتيب الألوان","openSimon()"]])}
+function openFun(){hub("🎲 أنشطة ممتعة",[["🔎","البحث عن الكلمات","جد الكلمات المخفية","openWS()"],["🌀","المتاهة","أوصل سلمى إلى المسجد","openMaze()"],["🔢","سودوكو الصور","لا تكرر الصورة في صف أو عمود","openSudoku()"],["🕐","تعلّم الساعة","كم الساعة الآن؟","openClock()"]])}
 const actDone=(c,msg,again)=>{addCoins(c);save();sfx.win();confetti();praise("win");$("actBody").insertAdjacentHTML("beforeend",`<div class="row"><p class="ctip">🎉 ${msg} 🪙 +${c}</p></div><div class="row"><button class="bigbtn green" onclick="${again}">🔁 مرة أخرى</button><button class="bigbtn alt" onclick="actHome()">🏠</button></div>`);checkBadges()};
 
 // --- البحث عن الكلمات ---
@@ -4361,6 +4398,73 @@ function saveColoring(){const vb=(CL.d.vb||"0 0 300 300").split(" ").map(Number)
   x.font="bold 30px sans-serif";x.fillStyle="#7c3aed";x.textAlign="center";x.fillText(`رسم ${S.name||"البطل"} 🎨 — أطفال دار الوحي`,W/2,H+42);const url=c.toDataURL("image/png");
   if(window.Android&&Android.saveImage)Android.saveImage(url.split(",")[1],"تلوين_"+CL.d.t+".png");else{const a=document.createElement("a");a.href=url;a.download="تلوين_"+CL.d.t+".png";document.body.appendChild(a);a.click();a.remove()}};img.src=svgURL(svg)}
 const _sc=startColor;startColor=function(i){CL=Object.assign(CL||{},{hist:[]});_sc(i)};
+
+// ====== 📗 اختبار جزء عمّ (أكمل الآية) ======
+// النص القرآني يُحمَّل مرة واحدة من api.alquran.cloud (رواية حفص، الرسم الإملائي المبسّط) ثم يُحفظ في الجهاز
+const AMMA_KEY="dw_amma_v1",AMMA_URL="https://api.alquran.cloud/v1/juz/30/quran-simple";
+let AMMA=null,AM=null,ammaLoading=null;
+function ammaLoad(){if(AMMA)return Promise.resolve(AMMA);try{const c=JSON.parse(localStorage.getItem(AMMA_KEY)||"null");if(c&&c.length===37){AMMA=c;return Promise.resolve(c)}}catch(e){}
+ if(ammaLoading)return ammaLoading;
+ ammaLoading=fetch(AMMA_URL).then(r=>r.json()).then(j=>{const by={};j.data.ayahs.forEach(a=>{const s=a.surah.number;by[s]=by[s]||{n:s,name:a.surah.name.replace(/^سُورَةُ\s*/,""),a:[],g:a.number};
+   let w=a.text.trim().split(/\s+/);if(a.numberInSurah===1&&w[0].startsWith("بِسْمِ")&&w.length>4)w=w.slice(4);
+   const t=[];w.forEach(x=>{if(/^[ؐ-ؚۖ-ًۭ-ٟ]+$/.test(x)&&t.length)t[t.length-1]+=" "+x;else t.push(x)});by[s].a.push(t)});
+  const arr=Object.values(by).sort((x,y)=>x.n-y.n);if(arr.length!==37)throw new Error("bad");AMMA=arr;try{localStorage.setItem(AMMA_KEY,JSON.stringify(arr))}catch(e){}ammaLoading=null;return arr})
+  .catch(e=>{ammaLoading=null;throw e});return ammaLoading}
+const arNum=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
+const stripT=s=>s.replace(/[ؐ-ًؚ-ٰٟۖ-ۭـ]/g,"").replace(/[أإآٱ]/g,"ا");
+function openAmma(){S.amma=S.amma||{};openAct("📗 اختبار جزء عمّ");$("actBody").innerHTML=girlTalk("m","happy")+`<div class="mmstart" id="amLoad"><div style="font-size:50px">📗</div><p>جارٍ تحميل سور جزء عمّ…</p></div>`;talkType("هيا نختبر حفظنا لجزء عمّ! اختر سورة");
+ ammaLoad().then(()=>{if($("amLoad"))ammaList()}).catch(()=>{const b=$("amLoad");if(b)b.innerHTML=`<div style="font-size:50px">📶</div><p>نحتاج اتصالًا بالإنترنت <b>مرة واحدة فقط</b> لتحميل سور جزء عمّ، ثم يعمل الاختبار دائمًا بدون إنترنت.</p><button class="bigbtn green" onclick="openAmma()">🔄 حاول مجددًا</button>`})}
+function ammaList(){const done=Object.values(S.amma).filter(v=>v>0).length;$("actInfo").textContent=`⭐ ${done}/37`;
+ const list=[...AMMA].reverse();
+ $("actBody").innerHTML=`<div class="ammodes">${[["w","كلمة ناقصة"],["w2","كلمتان"],["o","رتّب الآية"],["n","الآية التالية"]].map(m=>`<button class="${ammaMode()===m[0]?"on":""}" onclick="S.ammaMode='${m[0]}';save();ammaList()">${m[1]}</button>`).join("")}</div>
+ <button class="bigbtn wide green" style="width:100%;margin-bottom:10px" onclick="ammaStart(0)">🎲 اختبار شامل من سور مختلفة</button>
+ <div class="amlist">${list.map(s=>{const st=S.amma[s.n]||0;return`<button class="amc ${st===3?"full":st?"on":""}" onclick="ammaStart(${s.n})"><b>${s.name}</b><small>${arNum(s.a.length)} آيات</small><i>${st?"★".repeat(st)+"☆".repeat(3-st):"☆☆☆"}</i></button>`}).join("")}</div>
+ <p class="amnote">النص القرآني: رواية حفص عن عاصم — المصدر: alquran.cloud (Tanzil)</p>`}
+function ammaMode(){return S.ammaMode||(gradeOf()<=3?"w":"w2")}
+function ammaPick(r,arr,k,ex){const out=[],seen=new Set(ex.map(stripT));for(const x of shuffle(arr,r)){const s=stripT(x);if(!seen.has(s)){seen.add(s);out.push(x)}if(out.length===k)break}return out}
+function ammaQs(sn,r){const mode=ammaMode(),pool=sn?[AMMA.find(s=>s.n===sn)]:shuffle(AMMA,r).slice(0,6),qs=[];const allW=pool.flatMap(s=>s.a.flat()),allA=AMMA.flatMap(s=>s.a.map(a=>a.join(" ")));
+ const items=[];pool.forEach(s=>s.a.forEach((a,i)=>items.push({s,i,a})));const pick=shuffle(items,r).slice(0,sn?Math.min(8,Math.max(4,items.length)):8);
+ const want=sn?Math.min(8,Math.max(4,items.length)):8;while(pick.length<want)pick.push(items[ri(r,0,items.length-1)]);
+ pick.forEach(({s,i,a})=>{const prev=i>0?s.a[i-1].join(" "):null;let m=mode;
+  if(m==="o"&&(a.length<3||a.length>9))m="w";if(m==="w2"&&a.length<3)m="w";if(m==="n"&&i===0)m="w";
+  const base={s,i,prev,full:a.join(" "),m};
+  if(m==="w"||m==="w2"){const L=m==="w2"?2:1,k=ri(r,0,a.length-L),ans=a.slice(k,k+L).join(" ");let wr;
+   if(L===1)wr=ammaPick(r,allW.filter(w=>Math.abs(w.length-ans.length)<=5),3,[ans]);else{const spans=pool.flatMap(z=>z.a.flatMap(x=>x.length>=2?[...Array(x.length-1).keys()].map(j=>x.slice(j,j+2).join(" ")):[]));wr=ammaPick(r,spans,3,[ans])}
+   if(wr.length<3)wr=wr.concat(ammaPick(r,AMMA.flatMap(z=>z.a.flat()),3-wr.length,[ans,...wr]));
+   qs.push({...base,k,L,ans,opts:shuffle([ans,...wr],r)})}
+  else if(m==="n"){const ans=a.join(" "),wr=ammaPick(r,s.a.filter((x,j)=>j!==i).map(x=>x.join(" ")).concat(allA),3,[ans]);qs.push({...base,ans,opts:shuffle([ans,...wr],r)})}
+  else qs.push({...base,tiles:shuffle(a.map((w,j)=>({w,j})),r),got:[]})});return qs}
+function ammaStart(sn){const r=rng(Date.now()%99991);AM={sn,qs:ammaQs(sn,r),i:0,right:0,lock:false};const s=sn?AMMA.find(x=>x.n===sn):null;AM.title=s?`سورة ${s.name}`:"اختبار شامل";ammaQ()}
+function ayahHTML(words,i,blankFrom,L,fill){return words.map((w,j)=>j===blankFrom?`<span class="amb ${fill?"ok":""}" id="amB">${fill||"‏ ـــــ ".repeat(L)}</span>`:j>blankFrom&&j<blankFrom+L?"":`<span>${w}</span>`).join(" ")+` <span class="amn">﴿${arNum(i+1)}﴾</span>`}
+function ammaQ(){const q=AM.qs[AM.i];AM.lock=false;openAct("📗 "+AM.title,`${AM.i+1}/${AM.qs.length}`);
+ const ctx=q.prev?`<div class="amprev">${q.prev} <span class="amn">﴿${arNum(q.i)}﴾</span></div>`:`<div class="amprev">سورة ${q.s.name} — بداية السورة</div>`;
+ let body="",tip="";
+ if(q.m==="w"||q.m==="w2"){tip=q.L>1?"أكمل الكلمتين الناقصتين":"أكمل الكلمة الناقصة";body=`<div class="amayah">${ayahHTML(q.s.a[q.i],q.i,q.k,q.L)}</div><div class="amopts">${q.opts.map((o,j)=>`<button class="amo" onclick="ammaAns(${j},this)">${o}</button>`).join("")}</div>`}
+ else if(q.m==="n"){tip="ما الآية التالية؟";body=`<div class="amayah"><span class="amb">ـــــ ؟</span> <span class="amn">﴿${arNum(q.i+1)}﴾</span></div><div class="amopts col">${q.opts.map((o,j)=>`<button class="amo long" onclick="ammaAns(${j},this)">${o}</button>`).join("")}</div>`}
+ else{tip="رتّب كلمات الآية";body=`<div class="amayah" id="amBuild">${q.got.map(t=>`<span>${t.w}</span>`).join(" ")||"<span class='amph'>اضغط الكلمات بالترتيب 👇</span>"}</div><div class="amtiles">${q.tiles.map((t,j)=>`<button class="amt" id="amt${j}" onclick="ammaTile(${j})">${t.w}</button>`).join("")}</div>`}
+ $("actBody").innerHTML=`<p class="ctip">${tip} ✍️</p><div class="amcard">${ctx}${body}</div><div class="row"><button class="bigbtn alt" onclick="ammaAudio(${q.s.g+q.i})">🔊 استمع للآية</button></div><div id="amRes"></div>`}
+let amAud=null;function ammaAudio(g){try{stopSay();if(amAud)amAud.pause();amAud=new Audio(`https://cdn.islamic.network/quran/audio/128/ar.alafasy/${g}.mp3`);amAud.play().catch(()=>toast("🔊 تشغيل التلاوة يحتاج إنترنت"))}catch(e){}}
+function ammaAns(j,b){if(AM.lock)return;AM.lock=true;const q=AM.qs[AM.i],ok=q.opts[j]===q.ans;document.querySelectorAll(".amo").forEach(x=>{if(x.textContent===q.ans)x.classList.add("ok")});
+ if(ok){AM.right++;sfx.ok();praise("ok")}else{b.classList.add("bad");sfx.bad()}
+ if(q.m!=="n"){const B=$("amB");if(B){B.textContent=q.ans;B.classList.add(ok?"ok":"fix")}}
+ ammaNextBtn(ok)}
+function ammaTile(j){if(AM.lock)return;const q=AM.qs[AM.i],t=q.tiles[j],need=q.got.length;
+ if(stripT(t.w)===stripT(q.s.a[q.i][need])){q.got.push(t);$("amt"+j).disabled=true;$("amt"+j).classList.add("used");beep(560+need*40,.06,"triangle",.06);
+  $("amBuild").innerHTML=q.got.map(x=>`<span>${x.w}</span>`).join(" ")+(q.got.length===q.tiles.length?` <span class="amn">﴿${arNum(q.i+1)}﴾</span>`:"");
+  if(q.got.length===q.tiles.length){AM.lock=true;if(!q.mist)AM.right++;sfx.ok();praise("ok");ammaNextBtn(!q.mist)}}
+ else{q.mist=(q.mist||0)+1;sfx.bad();const e=$("amt"+j);e.classList.add("shake");setTimeout(()=>e.classList.remove("shake"),400)}}
+function ammaNextBtn(ok){$("amRes").innerHTML=`<div class="amfull">${ok?"✅ أحسنت!":"📖 الآية كاملة:"}<br><b>${AM.qs[AM.i].full}</b></div><div class="row"><button class="bigbtn green" onclick="ammaNext()">${AM.i<AM.qs.length-1?"التالي ◀":"🏁 النتيجة"}</button></div>`;$("amRes").scrollIntoView({behavior:"smooth",block:"nearest"})}
+function ammaNext(){if(amAud)amAud.pause();AM.i++;if(AM.i<AM.qs.length)return ammaQ();
+ const n=AM.qs.length,p=AM.right/n,st=p>=.9?3:p>=.7?2:p>=.5?1:0;let c=AM.right*2;
+ if(AM.sn){const old=S.amma[AM.sn]||0;if(st>old){S.amma[AM.sn]=st;if(st===3)c+=10}}S.ammaQ=(S.ammaQ||0)+AM.right;addCoins(c);save();
+ $("actBody").innerHTML=`<div class="mmstart"><div style="font-size:64px">${st===3?"🏆":st?"📗":"💪"}</div><h2>${"⭐".repeat(st)||"راجع السورة وحاول مجددًا"}</h2><p style="font-size:20px">${AM.right} من ${n} إجابات صحيحة<br>🪙 +${c}</p>
+ <div class="row"><button class="bigbtn green" onclick="ammaStart(${AM.sn})">🔁 مرة أخرى</button><button class="bigbtn alt" onclick="openAmma()">📚 السور</button></div></div>`;
+ if(st){sfx.win();if(st===3)confetti()}else sfx.lose();say(st===3?"ما شاء الله! حفظ ممتاز":st?"أحسنت! واصل المراجعة":"راجع السورة وحاول مرة أخرى");checkBadges()}
+// إضافة إلى ركن المسلم وتحميل مسبق
+openMuslim=function(){hub("🕌 ركن المسلم الصغير",[["📗","اختبار جزء عمّ","أكمل الآيات الناقصة","openAmma()"],["🧎","مساعد الوضوء والصلاة","خطوة بخطوة مع مريم وسلمى","openPrayer()"],["🌳","شجرة الحسنات","كل عمل طيب يُنبت ورقة","openDeeds()"],["🤲","أدعية يومية","احفظ أدعية اليوم والليلة","openDuas()"]])};
+setTimeout(()=>{if(navigator.onLine!==false)ammaLoad().catch(()=>{})},5000);
+BADGES.push(["amma10","📗","حافظ صغير","3 نجوم في 10 سور من جزء عمّ",()=>Object.values(S.amma||{}).filter(v=>v===3).length>=10],
+ ["amma37","🌟","حافظ جزء عمّ","3 نجوم في كل سور جزء عمّ",()=>Object.values(S.amma||{}).filter(v=>v===3).length>=37]);
 
 </script>
 </body>
