@@ -1,1 +1,25 @@
-plugins { id 'com.android.application' version '8.5.2' apply false }
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.alshami.rihla'
+    compileSdk 34
+    defaultConfig {
+        applicationId "com.alshami.rihla"
+        minSdk 26
+        targetSdk 34
+        versionCode 13
+        versionName "11.1"
+    }
+    signingConfigs {
+        fixed {
+            storeFile file('dalwahy.keystore')
+            storePassword 'dalwahy2026'
+            keyAlias 'dalwahy'
+            keyPassword 'dalwahy2026'
+        }
+    }
+    buildTypes {
+        debug { signingConfig signingConfigs.fixed }
+        release { minifyEnabled false; signingConfig signingConfigs.fixed }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
