@@ -568,7 +568,7 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 /* ===== v11: سماء حيّة، تلوين أكبر، أنشطة جديدة ===== */
 .ripple{position:absolute;border-radius:50%;background:#fff6;transform:scale(0);animation:rip .55s ease-out;pointer-events:none}
 @keyframes rip{to{transform:scale(2.4);opacity:0}}
-button:active{transform:translateY(2px) scale(.98)}
+button:active{filter:brightness(.9)}
 /* السماء */
 #sky{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;transition:background 2s}
 #sky.day{background:linear-gradient(#1e40af,#3b82f6 45%,#7dd3fc)}
@@ -693,6 +693,16 @@ svg.path.seg{inset:auto;left:0;width:100%}
 .amt.used{opacity:.25}
 .amfull{background:#fff;color:#14532d;border-radius:16px;padding:10px;margin-top:10px;text-align:center;font-weight:800}
 .amfull b{font-family:"Noto Naskh Arabic","Amiri",serif;font-size:22px;line-height:2;color:#1c1917;font-weight:500}
+/* البومة قابلة للضغط */
+#avatar{pointer-events:auto;cursor:pointer;padding:6px}
+#avatar span{pointer-events:none}
+#avatar.hop span{animation:owlhop .5s ease-out}
+@keyframes owlhop{30%{transform:translateY(-22px) scale(1.15)}60%{transform:translateY(0) scale(.95)}}
+/* أسماء السور كاملة */
+.amlist{grid-template-columns:repeat(2,1fr)}
+.amc{overflow:visible!important;padding:8px 6px}
+.amc b{font-size:20px;line-height:2;white-space:normal;word-break:keep-all;overflow:visible;padding:2px 0}
+.ripw{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none}
 
 </style>
 </head>
@@ -2572,7 +2582,7 @@ function openMap(scrollToCurrent){
   ${ch?`<span class="tag">${BOSSES[n/10-1][0]}</span>`:""}${mi?'<span class="tag">🎯</span>':""}${s===3&&!locked?'<span class="spark">✨</span>':""}${locked?"🔒":n}${locked?"":`<span class="st">${"★".repeat(s)}${"☆".repeat(3-s)}</span>`}</button>`}
  for(let c=0;c<4;c++)h+=`<div class="mcloud" style="top:${H-600-c*2400}px;animation-duration:${40+(c*13)%30}s;animation-delay:-${(c*11)%40}s">☁️</div>`;
  let from=Math.min(G().pos||1,mu);if(mu-from>2)from=mu-1;const fp=nodePos(from);
- h+=`<div id="avatar" style="left:${fp.x}%;top:${fp.y-18}px"><span>${avatarHTML(46)}</span></div></div>`;
+ h+=`<div id="avatar" onclick="owlTap(event)" style="left:${fp.x}%;top:${fp.y-18}px"><span>${avatarHTML(46)}</span></div></div>`;
  $("mapScroll").innerHTML=h;$("mStars").textContent=totalStars();$("mPts").textContent=S.points;$("mCoins").textContent=S.coins;
  show("map");
  const sc=$("mapScroll"),center=y=>{sc.scrollTop=y-sc.clientHeight/2};
@@ -4039,8 +4049,9 @@ refreshHome2=function(){_rh2();const r=$("hRank"),w=$("hWeek");if(r)r.innerHTML=
 function vib(ms){if(S.vib===false)return;try{if(window.Android&&Android.vibrate)Android.vibrate(ms);else if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}}
 (()=>{const w=(k,ms)=>{const f=sfx[k];sfx[k]=function(){vib(ms);return f.apply(this,arguments)}};w("ok",30);w("bad",[60,40,60]);w("win",[40,30,40,30,80]);w("hit",50)})();
 // تموّج عند لمس الأزرار
-document.addEventListener("pointerdown",e=>{const b=e.target.closest("button");if(!b||b.classList.contains("pcol"))return;const r=b.getBoundingClientRect(),s=document.createElement("span"),d=Math.max(r.width,r.height);
- s.className="ripple";s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;if(getComputedStyle(b).position==="static")b.style.position="relative";b.style.overflow="hidden";b.appendChild(s);setTimeout(()=>s.remove(),550)},{passive:true});
+document.addEventListener("pointerdown",e=>{const b=e.target.closest("button");if(!b||b.classList.contains("pcol")||b.closest(".road"))return;const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height);
+ if(getComputedStyle(b).position==="static")b.style.position="relative";const w=document.createElement("span");w.className="ripw";const s=document.createElement("span");s.className="ripple";
+ s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;w.appendChild(s);b.appendChild(w);setTimeout(()=>w.remove(),550)},{passive:true});
 
 // ====== 🌅 سماء حيّة حسب الوقت الحقيقي ======
 function skyPhase(){const h=new Date().getHours()+new Date().getMinutes()/60;return h<4.5?"night":h<6.5?"dawn":h<16?"day":h<18.5?"sunset":"night"}
@@ -4465,6 +4476,8 @@ openMuslim=function(){hub("🕌 ركن المسلم الصغير",[["📗","اخ
 setTimeout(()=>{if(navigator.onLine!==false)ammaLoad().catch(()=>{})},5000);
 BADGES.push(["amma10","📗","حافظ صغير","3 نجوم في 10 سور من جزء عمّ",()=>Object.values(S.amma||{}).filter(v=>v===3).length>=10],
  ["amma37","🌟","حافظ جزء عمّ","3 نجوم في كل سور جزء عمّ",()=>Object.values(S.amma||{}).filter(v=>v===3).length>=37]);
+// الضغط على البومة في الخريطة يفتح المرحلة الحالية
+function owlTap(e){e&&e.stopPropagation();const n=maxUnlocked(),a=$("avatar");if(a){a.classList.remove("hop");void a.offsetWidth;a.classList.add("hop")}beep(700,.08,"triangle",.07);vib(20);setTimeout(()=>levelInfo(Math.min(100,n)),250)}
 
 </script>
 </body>
